@@ -5,6 +5,12 @@ const routes: RouteRecordRaw[] = [{
     component: () => import('layouts/MainLayout.vue'),
     children: [{
         path: '',
+        redirect: {
+            name: 'TxBuilder',
+        },
+    }, {
+        name: 'TxBuilder',
+        path: '/tx-builder',
         component: () => import('pages/IndexPage.vue'),
     }],
 },

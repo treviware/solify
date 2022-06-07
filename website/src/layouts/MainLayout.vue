@@ -1,25 +1,63 @@
-<template>
-    <q-layout view="lHh Lpr lFf">
-        <q-header elevated>
-            <q-toolbar>
-                <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer"/>
+<script lang="ts" setup>
+import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {storeToRefs} from 'pinia';
+import RightDrawer from 'components/MainLayout/RightDrawer.vue';
+import {computed} from 'vue';
+import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 
+const rightDrawerStore = useRightDrawerStore();
+
+// REFS -----------------------------------------------------------------------
+
+const {
+    size: rightDrawerSize,
+} = storeToRefs(rightDrawerStore);
+
+// COMPUTED -------------------------------------------------------------------
+
+const isDrawerStateOpen = computed(() => rightDrawerStore.drawerState !== RightDrawerState.CLOSED);
+
+// METHODS --------------------------------------------------------------------
+
+const openPrograms = rightDrawerStore.openPrograms;
+
+// WATCHES --------------------------------------------------------------------
+// HOOKS ----------------------------------------------------------------------
+</script>
+
+<template>
+    <q-layout view="lHr LpR fFf">
+
+        <q-header class="global-toolbar">
+            <q-toolbar class="full-height">
                 <q-toolbar-title>
-                    Quasar App
+                    <b>Solify</b>
                 </q-toolbar-title>
 
-                <div>Quasar v{{ $q.version }}</div>
+                <a @click="openPrograms">Open Programs</a>
             </q-toolbar>
         </q-header>
 
-        <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-            <q-list>
-                <q-item-label header>
-                    Essential Links
-                </q-item-label>
+        <q-drawer :model-value="true"
+                  :width="80"
+                  behavior="desktop"
+                  no-swipe-backdrop
+                  no-swipe-close
+                  no-swipe-open
+                  side="left">
+            <LeftDrawer/>
+        </q-drawer>
 
-                <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
-            </q-list>
+        <q-drawer v-model="isDrawerStateOpen"
+                  :width="rightDrawerSize"
+                  behavior="desktop"
+                  elevated
+                  no-swipe-backdrop
+                  no-swipe-close
+                  no-swipe-open
+                  overlay
+                  side="right">
+            <RightDrawer/>
         </q-drawer>
 
         <q-page-container>
@@ -28,64 +66,10 @@
     </q-layout>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref} from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
-
-const linksList = [{
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-}, {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-}, {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-}, {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-}, {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-}, {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-}, {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-}];
-
-export default defineComponent({
-    name: 'MainLayout',
-
-    components: {
-        EssentialLink,
-    },
-
-    setup() {
-        const leftDrawerOpen = ref(false);
-
-        return {
-            essentialLinks: linksList,
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value;
-            },
-        };
-    },
-});
-</script>
+<style lang="scss" scoped>
+.global-toolbar {
+    background-color: transparent;
+    border-bottom: 2px solid #1a1e23 !important;
+    height: 80px;
+}
+</style>
