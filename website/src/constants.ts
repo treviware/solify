@@ -1,0 +1,1 @@
+export const MAX_SPL_DECIMALS = 16;

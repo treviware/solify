@@ -5,6 +5,14 @@ const menuButtons = [{
     icon: 'fa-solid fa-code-commit',
     name: 'Transaction Builder',
     pathName: 'TxBuilder',
+    drawerOverlay: true,
+}, {
+    icon: 'BPS',
+    name: 'Basis Points Utility',
+    pathName: 'BPSUtility',
+    drawerOverlay: false,
+    iconAsText: true,
+    subText: 'utility',
 }];
 
 // REFS -----------------------------------------------------------------------

@@ -10,8 +10,12 @@ const routes: RouteRecordRaw[] = [{
         },
     }, {
         name: 'TxBuilder',
-        path: '/tx-builder',
-        component: () => import('pages/IndexPage.vue'),
+        path: '/builder',
+        component: () => import('pages/TxBuilderPage.vue'),
+    }, {
+        name: 'BPSUtility',
+        path: '/utility/bps',
+        component: () => import('pages/utilities/BasisPointsPage.vue'),
     }],
 },
 

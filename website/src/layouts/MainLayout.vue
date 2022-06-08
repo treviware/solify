@@ -2,8 +2,8 @@
 import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
 import {storeToRefs} from 'pinia';
 import RightDrawer from 'components/MainLayout/RightDrawer.vue';
-import {computed} from 'vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
+import {computed} from 'vue';
 
 const rightDrawerStore = useRightDrawerStore();
 
@@ -11,15 +11,18 @@ const rightDrawerStore = useRightDrawerStore();
 
 const {
     size: rightDrawerSize,
+    overlay: rightDrawerOverlay,
 } = storeToRefs(rightDrawerStore);
 
 // COMPUTED -------------------------------------------------------------------
 
-const isDrawerStateOpen = computed(() => rightDrawerStore.drawerState !== RightDrawerState.CLOSED);
+const isRightDrawerOpen = computed(() => !rightDrawerStore.isClosed);
 
 // METHODS --------------------------------------------------------------------
 
-const openPrograms = rightDrawerStore.openPrograms;
+function openPrograms() {
+    rightDrawerStore.open(RightDrawerState.PROGRAMS);
+}
 
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
@@ -27,11 +30,15 @@ const openPrograms = rightDrawerStore.openPrograms;
 
 <template>
     <q-layout view="lHr LpR fFf">
-
         <q-header class="global-toolbar">
             <q-toolbar class="full-height">
-                <q-toolbar-title>
-                    <b>Solify</b>
+                <q-toolbar-title style="overflow: visible">
+                    <div class="text-bold relative-position" style="overflow: visible">
+                        Solify
+                        <div class="absolute-bottom-left text-caption text-bold" style="bottom: -10px">by
+                            <a class="text-secondary" href="https://treviware.com" target="_blank">Treviware</a>
+                        </div>
+                    </div>
                 </q-toolbar-title>
 
                 <a @click="openPrograms">Open Programs</a>
@@ -48,7 +55,8 @@ const openPrograms = rightDrawerStore.openPrograms;
             <LeftDrawer/>
         </q-drawer>
 
-        <q-drawer v-model="isDrawerStateOpen"
+        <q-drawer :model-value="isRightDrawerOpen"
+                  @update:model-value="()=>{}"
                   :width="rightDrawerSize"
                   behavior="desktop"
                   elevated
@@ -60,7 +68,7 @@ const openPrograms = rightDrawerStore.openPrograms;
             <RightDrawer/>
         </q-drawer>
 
-        <q-page-container>
+        <q-page-container :style="{'padding-right': rightDrawerStore.isClosed || rightDrawerOverlay ? '0px' : rightDrawerSize + 'px'}">
             <router-view/>
         </q-page-container>
     </q-layout>

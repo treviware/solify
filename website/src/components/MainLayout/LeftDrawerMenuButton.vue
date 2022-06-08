@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import {computed} from 'vue';
+import {computed, onBeforeMount} from 'vue';
 import {useRouter} from 'vue-router';
+import {useRightDrawerStore} from 'stores/rightDrawer';
 
 const props = defineProps<{
-    icon: string, name?: string, pathName: string,
+    icon: string, name?: string, pathName: string, drawerOverlay: boolean, iconAsText: boolean, subText?: string
 }>();
 
 const router = useRouter();
+const rightDrawerStore = useRightDrawerStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -23,10 +25,17 @@ function open() {
     router.push({
         name: props.pathName,
     });
+    rightDrawerStore.overlay = props.drawerOverlay;
 }
 
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
+
+onBeforeMount(() => {
+    if (isActive.value) {
+        rightDrawerStore.overlay = props.drawerOverlay;
+    }
+});
 </script>
 
 <template>
@@ -38,7 +47,13 @@ function open() {
            size="20px"
            :unelevated="isActive"
            @click="open">
-        <q-icon :name="icon" size="18px"/>
+        <div class="relative-position">
+            <div>
+                <q-icon :name="icon" size="18px" v-if="!iconAsText"/>
+                <span v-else class="text">{{ icon }}</span>
+            </div>
+            <div class="sub-text text-center absolute-bottom" v-if="subText">{{ subText }}</div>
+        </div>
         <q-tooltip anchor="center end"
                    self="center start"
                    transition-hide="jump-left"
@@ -51,4 +66,14 @@ function open() {
     </q-btn>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.text {
+    font-size: 16px;
+    font-style: italic;
+}
+
+.sub-text {
+    font-size: 8px;
+    bottom: -12px;
+}
+</style>

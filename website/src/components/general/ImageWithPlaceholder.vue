@@ -1,18 +1,26 @@
 <script lang="ts" setup>
-import {useRightDrawerStore} from 'stores/rightDrawer';
 
-const rightDrawerStore = useRightDrawerStore();
+import {ref} from 'vue';
+
+const props = defineProps<{
+    src: string,
+}>();
 
 // REFS -----------------------------------------------------------------------
+
+const imgSrc = ref(props.src);
+
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
+
+function onError() {
+    imgSrc.value = '/placeholder.jpg';
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
 
 <template>
-    <q-page class="row items-center justify-evenly">
-        Home
-        <q-input v-model.number="rightDrawerStore.size"/>
-    </q-page>
+    <q-img :src="imgSrc" @error="onError"/>
 </template>
