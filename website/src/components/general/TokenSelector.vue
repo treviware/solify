@@ -101,6 +101,9 @@ onBeforeMount(() => {
                     </template>
                 </q-infinite-scroll>
             </div>
+            <div class="row justify-center q-my-md" v-else>
+                <q-spinner-dots color="primary" size="40px"/>
+            </div>
         </q-card-section>
     </q-card>
 </template>

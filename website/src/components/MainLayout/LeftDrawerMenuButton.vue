@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 
 const props = defineProps<{
-    icon: string, name?: string, pathName: string, drawerOverlay: boolean, iconAsText: boolean, subText?: string
+    icon: string, name?: string, pathName: string, drawerOverlay: boolean, minContentSize?: number, iconAsText?: boolean, subText?: string
 }>();
 
 const router = useRouter();
@@ -25,7 +25,7 @@ function open() {
     router.push({
         name: props.pathName,
     });
-    rightDrawerStore.overlay = props.drawerOverlay;
+    rightDrawerStore.setOverlay(props.drawerOverlay, props.minContentSize ?? 0);
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -33,7 +33,7 @@ function open() {
 
 onBeforeMount(() => {
     if (isActive.value) {
-        rightDrawerStore.overlay = props.drawerOverlay;
+        rightDrawerStore.setOverlay(props.drawerOverlay, props.minContentSize ?? 0);
     }
 });
 </script>

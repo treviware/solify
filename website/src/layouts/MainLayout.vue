@@ -1,22 +1,25 @@
 <script lang="ts" setup>
 import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
-import {storeToRefs} from 'pinia';
 import RightDrawer from 'components/MainLayout/RightDrawer.vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 import {computed} from 'vue';
+import {useGlobalStore} from 'stores/global';
 
 const rightDrawerStore = useRightDrawerStore();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
-
-const {
-    size: rightDrawerSize,
-    overlay: rightDrawerOverlay,
-} = storeToRefs(rightDrawerStore);
-
 // COMPUTED -------------------------------------------------------------------
 
 const isRightDrawerOpen = computed(() => !rightDrawerStore.isClosed);
+const paddingRight = computed(() => {
+    if (rightDrawerStore.isClosed || rightDrawerStore.overlay || globalStore.windowWidth <=
+        rightDrawerStore.minWindowSize) {
+        return '0px';
+    }
+
+    return rightDrawerStore.maxSize + 'px';
+});
 
 // METHODS --------------------------------------------------------------------
 
@@ -57,7 +60,7 @@ function openPrograms() {
 
         <q-drawer :model-value="isRightDrawerOpen"
                   @update:model-value="()=>{}"
-                  :width="rightDrawerSize"
+                  :width="rightDrawerStore.maxSize"
                   behavior="desktop"
                   elevated
                   no-swipe-backdrop
@@ -68,7 +71,7 @@ function openPrograms() {
             <RightDrawer/>
         </q-drawer>
 
-        <q-page-container :style="{'padding-right': rightDrawerStore.isClosed || rightDrawerOverlay ? '0px' : rightDrawerSize + 'px'}">
+        <q-page-container :style="{'padding-right': paddingRight}">
             <router-view/>
         </q-page-container>
     </q-layout>
@@ -79,5 +82,9 @@ function openPrograms() {
     background-color: transparent;
     border-bottom: 2px solid #1a1e23 !important;
     height: 80px;
+}
+
+.q-page-container {
+    transition: padding-right 0.3s;
 }
 </style>

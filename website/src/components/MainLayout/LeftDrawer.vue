@@ -13,6 +13,7 @@ const menuButtons = [{
     drawerOverlay: false,
     iconAsText: true,
     subText: 'utility',
+    minContentSize: 400,
 }];
 
 // REFS -----------------------------------------------------------------------
