@@ -5,10 +5,12 @@ import {useRentExemptionStore} from 'stores/pages/utilities/rentExemption';
 import {computed, ref, watch} from 'vue';
 import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';
+import {useCoingeckoStore} from 'stores/coingecko';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
 const rentExemptionStore = useRentExemptionStore();
+const coingeckoStore = useCoingeckoStore();
 
 // REFS -----------------------------------------------------------------------
 
@@ -38,6 +40,12 @@ const byteInHigherUnits = computed(() => {
 
     return `= ${bytes.value} B`;
 });
+const vsCoinPrice = computed(() => coingeckoStore.getVsCoinPrice());
+const solPrice = computed(() => coingeckoStore.getSolPrice() / vsCoinPrice.value);
+const rentPrice = computed(() => {
+    const value = solPrice.value * rent.value / Math.pow(10, 9);
+    return `${value.toFixed(2)} ${coingeckoStore.vsCoinName}`;
+});
 
 // METHODS --------------------------------------------------------------------
 
@@ -66,6 +74,18 @@ watch(() => solanaStore.connection, () => {
 });
 
 // HOOKS ----------------------------------------------------------------------
+
+// onMounted(async () => {
+//     try {
+//         solPrice.value = await getSolPrice();
+//     } catch (e) {
+//         console.error(e);
+//         quasar.notify({
+//             message: 'Cannot get the price of SOL',
+//             color: 'negative',
+//         });
+//     }
+// });
 </script>
 
 <template>
@@ -95,7 +115,11 @@ watch(() => solanaStore.connection, () => {
             <q-separator/>
             <q-card-section>
                 <div class="text-secondary text-caption text-bold q-mt-md">Rent (SOL)</div>
-                <q-input :model-value="rent / Math.pow(10, 9)" :hint="'LAMPORTS = ' + rent" readonly outlined dense/>
+                <q-input :model-value="rent / Math.pow(10, 9)" :hint="'LAMPORTS = ' + rent" readonly outlined dense>
+                    <template v-slot:after>
+                        <span class="text-bold text-body1 q-pl-md">{{ rentPrice }}</span>
+                    </template>
+                </q-input>
             </q-card-section>
         </q-card>
     </q-page>
