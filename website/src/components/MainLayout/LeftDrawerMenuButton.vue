@@ -24,6 +24,7 @@ function open() {
 
     router.push({
         name: props.pathName,
+        query: router.currentRoute.value.query,
     });
     rightDrawerStore.setOverlay(props.drawerOverlay, props.minContentSize ?? 0);
 }

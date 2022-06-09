@@ -5,9 +5,13 @@ import RightDrawerMenuButton from 'components/MainLayout/RightDrawerMenuButton.v
 const rightDrawerStore = useRightDrawerStore();
 
 const menuButtons = [{
-    option: RightDrawerState.PROGRAMS,
+    option: RightDrawerState.Programs,
     icon: 'fa-solid fa-code',
     name: 'Solana Programs',
+}, {
+    option: RightDrawerState.Settings,
+    icon: 'fa-solid fa-gear',
+    name: 'Settings',
 }];
 
 // REFS -----------------------------------------------------------------------

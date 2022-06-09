@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [{
         name: 'BPSUtility',
         path: '/utility/bps',
         component: () => import('pages/utilities/BasisPointsPage.vue'),
+    }, {
+        name: 'RentExemptionUtility',
+        path: '/utility/rent-exemption',
+        component: () => import('pages/utilities/RentExemptionPage.vue'),
     }],
 },
 

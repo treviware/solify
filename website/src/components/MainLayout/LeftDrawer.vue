@@ -14,6 +14,14 @@ const menuButtons = [{
     iconAsText: true,
     subText: 'utility',
     minContentSize: 400,
+}, {
+    icon: 'Rent',
+    name: 'Rent Exemption Utility',
+    pathName: 'RentExemptionUtility',
+    drawerOverlay: false,
+    iconAsText: true,
+    subText: 'utility',
+    minContentSize: 400,
 }];
 
 // REFS -----------------------------------------------------------------------

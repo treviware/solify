@@ -4,6 +4,7 @@ import RightDrawer from 'components/MainLayout/RightDrawer.vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 import {computed} from 'vue';
 import {useGlobalStore} from 'stores/global';
+import NetworkButton from 'components/MainLayout/NetworkButton.vue';
 
 const rightDrawerStore = useRightDrawerStore();
 const globalStore = useGlobalStore();
@@ -24,7 +25,7 @@ const paddingRight = computed(() => {
 // METHODS --------------------------------------------------------------------
 
 function openPrograms() {
-    rightDrawerStore.open(RightDrawerState.PROGRAMS);
+    rightDrawerStore.open(RightDrawerState.Programs);
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -44,6 +45,7 @@ function openPrograms() {
                     </div>
                 </q-toolbar-title>
 
+                <NetworkButton class="q-mr-md"/>
                 <a @click="openPrograms">Open Programs</a>
             </q-toolbar>
         </q-header>
