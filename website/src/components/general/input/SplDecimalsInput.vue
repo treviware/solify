@@ -33,7 +33,6 @@ function emitUpdate(newValue: number) {
 
 <template>
     <q-input :model-value="modelValue"
-             type="number"
              outlined
              dense
              min="0"

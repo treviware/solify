@@ -2,7 +2,7 @@
 import {MAX_SPL_DECIMALS} from 'src/constants';
 import {storeToRefs} from 'pinia';
 import {useRentExemptionStore} from 'stores/pages/utilities/rentExemption';
-import {computed, onBeforeMount, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';
 
@@ -58,11 +58,14 @@ async function loadRentExempt() {
 }
 
 // WATCHES --------------------------------------------------------------------
-// HOOKS ----------------------------------------------------------------------
 
-onBeforeMount(() => {
+watch(() => solanaStore.connection, () => {
     loadRentExempt();
+}, {
+    immediate: true,
 });
+
+// HOOKS ----------------------------------------------------------------------
 </script>
 
 <template>
@@ -77,7 +80,6 @@ onBeforeMount(() => {
             <q-card-section>
                 <div class="text-secondary text-caption text-bold">Bytes</div>
                 <q-input :model-value="bytes"
-                         type="number"
                          outlined
                          dense
                          min="0"

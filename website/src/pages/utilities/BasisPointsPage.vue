@@ -54,18 +54,13 @@ function onRealAmountUpdate() {
             <q-card-section>
                 <div class="text-secondary text-caption text-bold">Basis points (BPS)</div>
                 <q-input v-model.number="bps"
-                         type="number"
                          outlined
                          dense
                          min="0"
                          step="1"
                          @update:model-value="onBasisPointsUpdate"/>
                 <div class="text-secondary text-caption text-bold q-mt-md">Real Amount</div>
-                <q-input v-model.number="realAmount"
-                         type="number"
-                         outlined
-                         dense
-                         @update:model-value="onRealAmountUpdate"/>
+                <q-input v-model.number="realAmount" outlined dense @update:model-value="onRealAmountUpdate"/>
             </q-card-section>
         </q-card>
     </q-page>

@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 
 const props = defineProps<{
-    icon: string, name?: string, pathName: string, drawerOverlay: boolean, minContentSize?: number, iconAsText?: boolean, subText?: string
+    icon: string, name?: string, pathName: string, drawerOverlay: boolean, minContentSize?: number, iconAsText?: boolean
 }>();
 
 const router = useRouter();
@@ -47,13 +47,13 @@ onBeforeMount(() => {
            round
            size="20px"
            :unelevated="isActive"
+           no-caps
            @click="open">
         <div class="relative-position">
             <div>
                 <q-icon :name="icon" size="18px" v-if="!iconAsText"/>
                 <span v-else class="text">{{ icon }}</span>
             </div>
-            <div class="sub-text text-center absolute-bottom" v-if="subText">{{ subText }}</div>
         </div>
         <q-tooltip anchor="center end"
                    self="center start"
@@ -71,10 +71,5 @@ onBeforeMount(() => {
 .text {
     font-size: 16px;
     font-style: italic;
-}
-
-.sub-text {
-    font-size: 8px;
-    bottom: -12px;
 }
 </style>

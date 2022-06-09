@@ -82,7 +82,7 @@ function openPrograms() {
 <style lang="scss" scoped>
 .global-toolbar {
     background-color: transparent;
-    border-bottom: 2px solid #1a1e23 !important;
+    border-bottom: 2px solid $dark2 !important;
     height: 80px;
 }
 

@@ -6,21 +6,19 @@ const menuButtons = [{
     name: 'Transaction Builder',
     pathName: 'TxBuilder',
     drawerOverlay: true,
-}, {
-    icon: 'BPS',
+}];
+
+const utilityMenuButtons = [{
+    icon: 'fa-solid fa-right-left',
     name: 'Basis Points Utility',
     pathName: 'BPSUtility',
     drawerOverlay: false,
-    iconAsText: true,
-    subText: 'utility',
     minContentSize: 400,
 }, {
-    icon: 'Rent',
+    icon: 'fa-solid fa-hand-holding-dollar',
     name: 'Rent Exemption Utility',
     pathName: 'RentExemptionUtility',
     drawerOverlay: false,
-    iconAsText: true,
-    subText: 'utility',
     minContentSize: 400,
 }];
 
@@ -36,12 +34,16 @@ const menuButtons = [{
         <div class="flex flex-center logo-container">
             <img src="/logos/Logo.png"/>
         </div>
-        <div class="menu column" style="gap: 6px">
+        <div class="menu column q-py-md" style="gap: 6px">
             <q-space/>
             <div class="flex flex-center" v-for="button in menuButtons" :key="button.name">
                 <LeftDrawerMenuButton v-bind="button"></LeftDrawerMenuButton>
             </div>
             <q-space/>
+            <div class="text-secondary text-caption text-bold text-center q-mt-md">Utilities</div>
+            <div class="flex flex-center" v-for="button in utilityMenuButtons" :key="button.name">
+                <LeftDrawerMenuButton v-bind="button"></LeftDrawerMenuButton>
+            </div>
         </div>
     </div>
 </template>

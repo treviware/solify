@@ -1,10 +1,9 @@
 import {defineStore} from 'pinia';
 import {useGlobalStore} from 'stores/global';
-import {useRouter} from 'vue-router';
+import {Router} from 'src/router';
 
 export const useRightDrawerStore = defineStore('rightDrawer', {
     state: () => ({
-        router: useRouter(),
         drawerState: RightDrawerState.Closed,
         size: 740,
         overlay: true,
@@ -29,9 +28,9 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
             }
 
             this.drawerState = newState;
-            this.router.replace({
+            Router.replace({
                 query: {
-                    ...this.router.currentRoute.query,
+                    ...Router.currentRoute.value.query,
                     drawer: newState,
                 },
             });
@@ -39,9 +38,9 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
         close() {
             this.drawerState = RightDrawerState.Closed;
 
-            this.router.replace({
+            Router.replace({
                 query: {
-                    ...this.router.currentRoute.query,
+                    ...Router.currentRoute.value.query,
                     drawer: undefined,
                 },
             });

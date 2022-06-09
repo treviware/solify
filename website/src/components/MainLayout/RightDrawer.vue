@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
 import RightDrawerMenuButton from 'components/MainLayout/RightDrawerMenuButton.vue';
+import {computed} from 'vue';
+import SettingsPage from 'pages/drawer/SettingsPage.vue';
+import SolanaProgramsPage from 'pages/drawer/SolanaProgramsPage.vue';
 
 const rightDrawerStore = useRightDrawerStore();
 
@@ -8,14 +11,19 @@ const menuButtons = [{
     option: RightDrawerState.Programs,
     icon: 'fa-solid fa-code',
     name: 'Solana Programs',
+    pageComponent: SolanaProgramsPage,
 }, {
     option: RightDrawerState.Settings,
     icon: 'fa-solid fa-gear',
     name: 'Settings',
+    pageComponent: SettingsPage,
 }];
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
+
+const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.drawerState === button.option) ?? null);
+
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
@@ -23,7 +31,9 @@ const menuButtons = [{
 
 <template>
     <div class="full-width full-height row no-wrap right-drawer">
-        <div class="content">content</div>
+        <div class="content">
+            <component v-if="activeOption" :is="activeOption.pageComponent"></component>
+        </div>
         <div class="menu column" style="gap: 6px">
             <div class="close-container flex flex-center">
                 <q-btn dense flat icon="fa-solid fa-times" round @click="rightDrawerStore.close"/>
