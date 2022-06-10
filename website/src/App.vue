@@ -4,7 +4,7 @@ import {watch} from 'vue';
 import {useRoute} from 'vue-router';
 import {reverseEnum} from 'src/utils/objects';
 import {useSolanaStore} from 'stores/solana';
-import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY, VS_COIN_SETTINGS_KEY} from 'src/constants';
+import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY, VS_CURRENCY_SETTINGS_KEY} from 'src/constants';
 import {useCoingeckoStore} from 'stores/coingecko';
 
 const route = useRoute();
@@ -38,9 +38,9 @@ watch(route, async (route) => {
         await solanaStore.setCommitment(commitment);
     }
 
-    const vs_coin = route.query.vs_coin as string ?? localStorage.getItem(VS_COIN_SETTINGS_KEY);
-    if (vs_coin) {
-        await coingeckoStore.setVsCoin(vs_coin);
+    const vs_currency = route.query.vs_Currency as string ?? localStorage.getItem(VS_CURRENCY_SETTINGS_KEY);
+    if (vs_currency) {
+        await coingeckoStore.setVsCurrency(vs_currency);
     }
 });
 </script>

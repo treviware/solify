@@ -1,16 +1,16 @@
 import {defineStore} from 'pinia';
 import {Router} from 'src/router';
-import {VS_COIN_SETTINGS_KEY} from 'src/constants';
+import {VS_CURRENCY_SETTINGS_KEY} from 'src/constants';
 import axios from 'axios';
 import {PublicKey} from '@solana/web3.js';
 
 const CACHE_RELOAD_INTERVAL = 60 * 1000; // 1 minute
 const API_URL = 'https://api.coingecko.com/api/v3';
-export const VS_COINS = ['USD', 'EUR', 'SOL'];
+export const VS_CURRENCYS = ['USD', 'EUR', 'SOL'];
 
 export const useCoingeckoStore = defineStore('coingecko', {
     state: () => ({
-        vsCoinName: 'USD',
+        vsCurrencyName: 'USD',
         cache: {
             USD: {
                 price: 1,
@@ -21,42 +21,42 @@ export const useCoingeckoStore = defineStore('coingecko', {
         }>,
     }),
     actions: {
-        async setVsCoin(vsCoinName: string) {
-            if (VS_COINS.indexOf(vsCoinName) === -1) {
+        async setVsCurrency(vsCurrencyName: string) {
+            if (VS_CURRENCYS.indexOf(vsCurrencyName) === -1) {
                 return;
             }
 
-            this.vsCoinName = vsCoinName;
+            this.vsCurrencyName = vsCurrencyName;
 
-            if (vsCoinName === 'USD') {
-                localStorage.removeItem(VS_COIN_SETTINGS_KEY);
+            if (vsCurrencyName === 'USD') {
+                localStorage.removeItem(VS_CURRENCY_SETTINGS_KEY);
             } else {
-                localStorage.setItem(VS_COIN_SETTINGS_KEY, vsCoinName);
+                localStorage.setItem(VS_CURRENCY_SETTINGS_KEY, vsCurrencyName);
             }
 
             await Router.replace({
                 query: {
                     ...Router.currentRoute.value.query,
-                    vs_coin: vsCoinName === 'USD' ? undefined : vsCoinName,
+                    vs_currency: vsCurrencyName === 'USD' ? undefined : vsCurrencyName,
                 },
             });
         },
 
-        getVsCoinPrice(): number {
-            const cachedData = this.cache[this.vsCoinName];
+        getVsCurrencyPrice(): number {
+            const cachedData = this.cache[this.vsCurrencyName];
             if (cachedData) {
                 if (cachedData.timestamp.getTime() + CACHE_RELOAD_INTERVAL <= Date.now()) {
-                    this.loadVsCoinPrice();
+                    this.loadVsCurrencyPrice();
                 }
 
                 return cachedData.price;
             } else {
-                this.cache[this.vsCoinName] = {
+                this.cache[this.vsCurrencyName] = {
                     price: 0,
                     timestamp: new Date(),
                 };
 
-                this.loadVsCoinPrice();
+                this.loadVsCurrencyPrice();
             }
 
             return 0;
@@ -103,8 +103,8 @@ export const useCoingeckoStore = defineStore('coingecko', {
             return 0;
         },
 
-        async loadVsCoinPrice(): Promise<number> {
-            switch (this.vsCoinName) {
+        async loadVsCurrencyPrice(): Promise<number> {
+            switch (this.vsCurrencyName) {
                 case 'USD':
                     return this.cache['USD'].price;
                 case 'EUR': {

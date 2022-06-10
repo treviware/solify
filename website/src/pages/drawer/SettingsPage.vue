@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import SolanaNetworkSettings from 'components/drawer/SettingsPage/SolanaNetworkSettings.vue';
 import SolanaCommitmentSettings from 'components/drawer/SettingsPage/SolanaCommitmentSettings.vue';
-import VsCoinSettings from 'components/drawer/SettingsPage/VsCoinSettings.vue';
+import VsCurrencySettings from 'components/drawer/SettingsPage/VsCurrencySettings.vue';
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -18,7 +18,7 @@ import VsCoinSettings from 'components/drawer/SettingsPage/VsCoinSettings.vue';
         <div class="q-px-lg q-py-md">
             <SolanaNetworkSettings/>
             <SolanaCommitmentSettings class="q-mt-lg"/>
-            <VsCoinSettings class="q-mt-lg"/>
+            <VsCurrencySettings class="q-mt-lg"/>
         </div>
     </div>
 </template>

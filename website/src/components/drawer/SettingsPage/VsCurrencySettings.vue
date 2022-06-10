@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useCoingeckoStore, VS_COINS} from 'stores/coingecko';
+import {useCoingeckoStore, VS_CURRENCYS} from 'stores/coingecko';
 
 const coingeckoStore = useCoingeckoStore();
 
@@ -7,8 +7,8 @@ const coingeckoStore = useCoingeckoStore();
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
 
-function select(vsCoin: string) {
-    coingeckoStore.setVsCoin(vsCoin);
+function select(vsCurrency: string) {
+    coingeckoStore.setVsCurrency(vsCurrency);
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -21,12 +21,12 @@ function select(vsCoin: string) {
         <p>The currency used to compare the tokens' prices against it:</p>
         <div class="row flex-center q-my-md" style="gap: 20px">
             <q-btn color="primary"
-                   :unelevated="coingeckoStore.vsCoinName === vsCoin"
-                   :flat="coingeckoStore.vsCoinName !== vsCoin"
-                   @click="select(vsCoin)"
-                   v-for="vsCoin in VS_COINS"
-                   :key="vsCoin">
-                {{ vsCoin }}
+                   :unelevated="coingeckoStore.vsCurrencyName === vsCurrency"
+                   :flat="coingeckoStore.vsCurrencyName !== vsCurrency"
+                   @click="select(vsCurrency)"
+                   v-for="vsCurrency in VS_CURRENCYS"
+                   :key="vsCurrency">
+                {{ vsCurrency }}
             </q-btn>
         </div>
     </div>

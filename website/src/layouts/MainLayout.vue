@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRightDrawerStore} from 'stores/rightDrawer';
 import RightDrawer from 'components/MainLayout/RightDrawer.vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 import {computed} from 'vue';
@@ -23,11 +23,6 @@ const paddingRight = computed(() => {
 });
 
 // METHODS --------------------------------------------------------------------
-
-function openPrograms() {
-    rightDrawerStore.open(RightDrawerState.Programs);
-}
-
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -46,7 +41,6 @@ function openPrograms() {
                 </q-toolbar-title>
 
                 <NetworkButton class="q-mr-md"/>
-                <a @click="openPrograms">Open Programs</a>
             </q-toolbar>
         </q-header>
 
