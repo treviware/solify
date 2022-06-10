@@ -5,6 +5,7 @@ import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 import {computed} from 'vue';
 import {useGlobalStore} from 'stores/global';
 import NetworkButton from 'components/MainLayout/NetworkButton.vue';
+import WalletButton from 'components/MainLayout/WalletButton.vue';
 
 const rightDrawerStore = useRightDrawerStore();
 const globalStore = useGlobalStore();
@@ -32,7 +33,7 @@ const paddingRight = computed(() => {
         <q-header class="global-toolbar">
             <q-toolbar class="full-height">
                 <q-toolbar-title style="overflow: visible">
-                    <div class="text-bold relative-position" style="overflow: visible">
+                    <div class="text-bold relative-position q-ml-md" style="overflow: visible">
                         Solify
                         <div class="absolute-bottom-left text-caption text-bold" style="bottom: -10px">by
                             <a class="text-secondary" href="https://treviware.com" target="_blank">Treviware</a>
@@ -41,6 +42,7 @@ const paddingRight = computed(() => {
                 </q-toolbar-title>
 
                 <NetworkButton class="q-mr-md"/>
+                <WalletButton class="q-mr-md"/>
             </q-toolbar>
         </q-header>
 

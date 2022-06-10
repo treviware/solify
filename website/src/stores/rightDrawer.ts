@@ -52,4 +52,5 @@ export enum RightDrawerState {
     Closed = 'closed',
     Programs = 'programs',
     Settings = 'settings',
+    Wallets = 'wallets',
 }

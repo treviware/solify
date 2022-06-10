@@ -12,25 +12,28 @@
     "build": "yarn quasar build"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "pinia": "^2.0.11",
     "@quasar/extras": "^1.0.0",
+    "@solana/spl-token": "^0.2.0",
+    "@solana/wallet-adapter-wallets": "^0.15.5",
+    "@solana/web3.js": "^1.43.6",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "pinia": "^2.0.11",
     "quasar": "^2.6.0",
+    "solana-wallets-vue": "^0.3.2",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0",
-    "@solana/web3.js": "^1.43.6"
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
+    "@quasar/app-webpack": "^3.0.0",
+    "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^8.10.0",
-    "eslint-plugin-vue": "^8.5.0",
     "eslint-config-prettier": "^8.1.0",
-    "prettier": "^2.5.1",
-    "@types/node": "^12.20.21",
-    "@quasar/app-webpack": "^3.0.0",
-    "node-polyfill-webpack-plugin": "^1.1.4"
+    "eslint-plugin-vue": "^8.5.0",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "prettier": "^2.5.1"
   },
   "browserslist": [
     "last 10 Chrome versions",

@@ -4,6 +4,7 @@ import RightDrawerMenuButton from 'components/MainLayout/RightDrawerMenuButton.v
 import {computed} from 'vue';
 import SettingsPage from 'pages/drawer/SettingsPage.vue';
 import SolanaProgramsPage from 'pages/drawer/SolanaProgramsPage.vue';
+import WalletsPage from 'pages/drawer/WalletsPage.vue';
 
 const rightDrawerStore = useRightDrawerStore();
 
@@ -12,6 +13,11 @@ const menuButtons = [{
     icon: 'fa-solid fa-code',
     name: 'Solana Programs',
     pageComponent: SolanaProgramsPage,
+}, {
+    option: RightDrawerState.Wallets,
+    icon: 'fa-solid fa-wallet',
+    name: 'Wallets',
+    pageComponent: WalletsPage,
 }, {
     option: RightDrawerState.Settings,
     icon: 'fa-solid fa-gear',
