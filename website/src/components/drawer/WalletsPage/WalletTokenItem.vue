@@ -2,9 +2,10 @@
 
 import {WalletData} from 'stores/wallets';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import {useBlockchainStore} from 'stores/blockchain';
 import {PublicKey} from '@solana/web3.js';
+import WalletNftInfo from 'components/drawer/WalletsPage/WalletNftInfo.vue';
 
 const props = defineProps<{
     walletData: WalletData, address: PublicKey;
@@ -13,6 +14,8 @@ const props = defineProps<{
 const blockchainStore = useBlockchainStore();
 
 // REFS -----------------------------------------------------------------------
+const showNftDialog = ref(false);
+
 // COMPUTED -------------------------------------------------------------------
 const token = computed(() => props.walletData.tokens.find(v => v.account.address.equals(props.address)));
 const tokenInfo = computed(() => blockchainStore.getTokenMetadata(token.value.account.mint) ?? null);
@@ -60,7 +63,13 @@ const name = computed(() => {
                     <PubkeyBadge :pubkey="token.account.mint" show-copy class="badge-color" show-menu/>
                 </div>
                 <div v-if="!metadata">Decimals: {{ decimals }}</div>
+                <div v-else class="text-bold text-primary cursor-pointer" @click="showNftDialog = true">More info...
+                </div>
             </q-item-label>
         </q-item-section>
+
+        <q-dialog v-model="showNftDialog" v-if="metadata">
+            <WalletNftInfo :token="token"/>
+        </q-dialog>
     </q-item>
 </template>

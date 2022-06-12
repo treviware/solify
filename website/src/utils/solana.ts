@@ -48,6 +48,7 @@ export async function loadMetadataAccounts(connection: Connection,
             const data = Metadata.fromAccountInfo(account);
             const pretty = data[0].pretty();
             pretty.data.name = pretty.data.name.replace(/\x00/g, '');
+            pretty.data.symbol = pretty.data.symbol.replace(/\x00/g, '');
             pretty.data.uri = pretty.data.uri.replace(/\x00/g, '');
 
             return {

@@ -12,7 +12,6 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 ### Features
 
-* general: Show NFT info in wallet list.
 * utilities: Add `SPL Utility` view to create/mint/burn SPL tokens.
 * utilities: Add `NFT Utility` view to create/mint/burn NFTs.
 
@@ -26,6 +25,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * general: Add menu to address tag to copy the address or see it in Solscan or Solana Explorer.
 * general: Add SOL to SPL picker.
 * general: Add last selected tokens to SPL selector.
+* general: Show NFT info in wallet list.
 * config: Add support for different vs currencies.
 * config: Add support for different RPC endpoint.
 * config: Add support for different commitment levels.
