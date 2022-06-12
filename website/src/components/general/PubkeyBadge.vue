@@ -1,22 +1,23 @@
 <script lang="ts" setup>
 import {PublicKey} from '@solana/web3.js';
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import {copyToClipboard} from 'src/utils/clipboard';
+import {abbreviatePubkey} from 'src/utils/wallets';
 
 const props = defineProps<{
     pubkey: PublicKey, showCopy?: boolean, long?: boolean
 }>();
 
 // REFS -----------------------------------------------------------------------
+const copied = ref(false);
+
 // COMPUTED -------------------------------------------------------------------
 
 const publickKey = computed(() => {
-    const str = props.pubkey.toBase58();
-
     if (props.long) {
-        return str;
+        return props.pubkey.toBase58();
     } else {
-        return str.slice(0, 4) + '..' + str.slice(-4);
+        return abbreviatePubkey(props.pubkey);
     }
 });
 
@@ -32,6 +33,11 @@ function copy() {
     }
 
     copyToClipboard(props.pubkey.toBase58());
+    copied.value = true;
+
+    setTimeout(() => {
+        copied.value = false;
+    }, 2000);
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -39,14 +45,18 @@ function copy() {
 </script>
 
 <template>
-    <q-badge class="text-bold text-dark" @click="copy">
+    <q-badge class="text-bold text-white" @click="copy" :class="{'cursor-pointer': finalShowCopy}">
         <code>{{ publickKey }}</code>
-        <q-icon v-if="finalShowCopy" name="fa-solid fa-clipboard" class="q-ml-xs"/>
+        <q-icon v-if="finalShowCopy && !copied" name="fa-solid fa-clipboard" class="q-ml-xs"/>
+        <q-icon v-if="finalShowCopy && copied" name="fa-solid fa-circle-check" class="q-ml-xs"/>
+        <q-tooltip class="text-no-wrap text-white text-bold shadow-2" v-if="!long">
+            {{ props.pubkey.toBase58() }}
+        </q-tooltip>
     </q-badge>
 </template>
 
 <style lang="scss" scoped>
 .q-badge {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: transparentize(#fff, 0.8);
 }
 </style>

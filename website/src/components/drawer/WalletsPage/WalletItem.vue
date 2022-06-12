@@ -1,0 +1,248 @@
+<script lang="ts" setup>
+
+import {useWalletStore, WalletTokenData} from 'stores/wallets';
+import PubkeyBadge from 'components/general/PubkeyBadge.vue';
+import {useWallet} from 'solana-wallets-vue';
+import {PublicKey} from '@solana/web3.js';
+import {computed, ref} from 'vue';
+import {useQuasar} from 'quasar';
+import {useSolanaStore} from 'stores/solana';
+import {deriveMetadataAccountKey, loadMetadataAccounts, loadWalletTokens} from 'src/utils/solana';
+import WalletTokenItem from 'components/drawer/WalletsPage/WalletTokenItem.vue';
+import {useBlockchainStore} from 'stores/blockchain';
+import axios, {AxiosResponse} from 'axios';
+
+const props = defineProps<{
+    address: PublicKey;
+}>();
+
+const quasar = useQuasar();
+const wallet = useWallet();
+const walletStore = useWalletStore();
+const solanaStore = useSolanaStore();
+const blockchainStore = useBlockchainStore();
+
+// REFS -----------------------------------------------------------------------
+const loading = ref(false);
+
+// COMPUTED -------------------------------------------------------------------
+const walletData = computed(() => walletStore.wallets.find(v => v.address.equals(props.address)));
+const isConnected = computed(() => walletData.value.address.equals(wallet.publicKey.value ?? PublicKey.default));
+const index = computed(() => walletStore.wallets.findIndex(v => v.address.equals(walletData.value.address)));
+const isStart = computed(() => index.value === 0);
+const isEnd = computed(() => index.value === walletStore.wallets.length - 1);
+const isEmpty = computed(() => walletData.value.tokens.length === 0);
+const solAmount = computed(() => walletData.value.amount / Math.pow(10, 9));
+const tokens = computed(
+    () => walletData.value.tokens.filter(v => blockchainStore.getTokenMetadata(v.account.mint)?.name).sort((a, b) => {
+        const nameA = blockchainStore.getTokenMetadata(a.account.mint).name;
+        const nameB = blockchainStore.getTokenMetadata(b.account.mint).name;
+
+        const result = nameA.localeCompare(nameB);
+
+        if (result !== 0) {
+            return result;
+        }
+
+        return a.account.mint.toString().localeCompare(b.account.mint.toString());
+    }));
+const nfts = computed(
+    () => walletData.value.tokens.filter(v => !blockchainStore.getTokenMetadata(v.account.mint)?.name).sort((a, b) => {
+        const nameA = a.metadata?.data?.name ?? 'Unknown token';
+        const nameB = b.metadata?.data?.name ?? 'Unknown token';
+
+        const result = nameA.localeCompare(nameB);
+
+        if (result !== 0) {
+            return result;
+        }
+
+        return a.account.mint.toString().localeCompare(b.account.mint.toString());
+    }));
+
+// METHODS --------------------------------------------------------------------
+
+function remove() {
+    walletStore.wallets.splice(index.value, 1);
+}
+
+function moveUp() {
+    const i = index.value;
+    walletStore.wallets.splice(i, 1);
+    walletStore.wallets.splice(i - 1, 0, walletData.value);
+}
+
+function moveDown() {
+    const i = index.value;
+    walletStore.wallets.splice(i, 1);
+    walletStore.wallets.splice(i + 1, 0, walletData.value);
+}
+
+async function loadData() {
+    loading.value = true;
+
+    try {
+        // Load tokens to filter those that are normal tokens.
+        try {
+            await blockchainStore.loadTokenList();
+        } catch (e) {
+            console.error('Error loading SPL tokens', e);
+            quasar.notify({
+                message: 'Cannot load SPL tokens',
+                color: 'negative',
+            });
+            return;
+        }
+
+        try {
+            walletData.value.amount = await solanaStore.connection.getBalance(walletData.value.address);
+        } catch (e) {
+            console.error('Error loading wallet balance', e);
+            quasar.notify({
+                message: 'Cannot load wallet balance',
+                color: 'negative',
+            });
+            return;
+        }
+
+        try {
+            let accounts = await loadWalletTokens(solanaStore.connection, walletData.value.address);
+            let mappedAccounts: WalletTokenData[] = accounts.map(v => ({
+                account: v,
+            }));
+
+            const filteredMappedAccounts = mappedAccounts.filter(
+                v => blockchainStore.getTokenMetadata(v.account.mint) === null);
+            const metaAccountKeys = await Promise.all(
+                filteredMappedAccounts.map(v => deriveMetadataAccountKey(v.account.mint)));
+            const metaAccounts = await loadMetadataAccounts(solanaStore.connection, metaAccountKeys);
+
+            const loadedDataPromises: Promise<AxiosResponse | null>[] = [];
+            for (let i = 0; i < filteredMappedAccounts.length; i++) {
+                const metaAccount = metaAccounts[i];
+
+                if (metaAccount != null) {
+                    const account = filteredMappedAccounts[i];
+                    account.metadata = metaAccount;
+                    loadedDataPromises.push((async () => {
+                        try {
+                            return await axios.get(metaAccount.data.uri);
+                        } catch (_) {
+                            return null;
+                        }
+                    })());
+                }
+            }
+
+            const loadedData = await Promise.all(loadedDataPromises);
+            for (let i = 0; i < filteredMappedAccounts.length; i++) {
+                const account = filteredMappedAccounts[i];
+                const data = loadedData[i];
+
+                if (account.metadata && data) {
+                    account.metadata.external = data.data;
+                }
+            }
+
+            walletData.value.tokens.splice(0, walletData.value.tokens.length, ...mappedAccounts);
+        } catch (e) {
+            console.error('Error loading wallet data', e);
+            quasar.notify({
+                message: 'Cannot load wallet data',
+                color: 'negative',
+            });
+            return;
+        }
+
+        walletData.value.listOpen = true;
+    } finally {
+        loading.value = false;
+    }
+}
+
+// WATCHES --------------------------------------------------------------------
+// HOOKS ----------------------------------------------------------------------
+</script>
+
+<template>
+    <q-expansion-item expand-icon-toggle expand-separator expand-icon="fa-solid fa-caret-down">
+        <template v-slot:header>
+            <q-item-section>
+                <q-item-label class="text-bold">
+                    <span class="text-secondary q-mr-xs" v-if="isConnected">Connected Wallet</span>
+                    <span class="q-mr-xs" v-else>Wallet</span>
+                    <PubkeyBadge :pubkey="walletData.address" show-copy class="badge-color"/>
+                </q-item-label>
+            </q-item-section>
+            <q-item-section side>
+                <div>
+                    <q-btn color="white" flat dense @click="loadData" round class="rounded-borders" :loading="loading">
+                        <q-icon name="fa-solid fa-cloud-arrow-down" size="20px"/>
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Load data
+                        </q-tooltip>
+                    </q-btn>
+                    <q-btn color="white" flat dense @click="moveUp" round class="rounded-borders" :disable="isStart">
+                        <q-icon name="fa-solid fa-angles-up" size="20px"/>
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Move up
+                        </q-tooltip>
+                    </q-btn>
+                    <q-btn color="white" flat dense @click="moveDown" round class="rounded-borders" :disable="isEnd">
+                        <q-icon name="fa-solid fa-angles-down" size="20px"/>
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Move down
+                        </q-tooltip>
+                    </q-btn>
+                    <q-btn color="negative"
+                           flat
+                           dense
+                           @click="remove"
+                           round
+                           class="rounded-borders"
+                           :disable="isConnected">
+                        <q-icon name="fa-solid fa-trash" size="20px"/>
+                        <q-tooltip class="text-no-wrap bg-negative text-white text-bold shadow-2">Remove
+                        </q-tooltip>
+                    </q-btn>
+                </div>
+            </q-item-section>
+        </template>
+        <q-card>
+            <q-card-section v-if="isEmpty">
+                Empty
+            </q-card-section>
+            <q-card-section v-else>
+                <q-list separator>
+                    <q-item>
+                        <q-item-section avatar>
+                            <q-avatar square>
+                                <img src="https://cdn.jsdelivr.net/gh/trustwallet/assets@master/blockchains/solana/info/logo.png">
+                            </q-avatar>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label class="row justify-between">
+                                <div>Solana</div>
+                                <div class="text-caption">
+                                    {{ solAmount }} SOL
+                                </div>
+                            </q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <WalletTokenItem v-for="token in tokens"
+                                     :key="token.account.address"
+                                     :address="token.account.address"
+                                     :wallet-data="walletData"/>
+                    <WalletTokenItem v-for="token in nfts"
+                                     :key="token.account.address"
+                                     :address="token.account.address"
+                                     :wallet-data="walletData"/>
+                </q-list>
+            </q-card-section>
+        </q-card>
+    </q-expansion-item>
+</template>
+
+<style lang="scss" scoped>
+.badge-color {
+    background-color: transparentize(#fff, 0.8);
+    color: #ffffff !important;
+}
+</style>

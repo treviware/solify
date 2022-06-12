@@ -4,16 +4,14 @@ import {useWallet, Wallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';
 import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
 import {sleep} from 'src/utils/time';
+import {abbreviatePubkey} from 'src/utils/wallets';
 
 const rightDrawerStore = useRightDrawerStore();
 const walletStore = useWallet();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
-const pubkeyAbbreviation = computed(() => {
-    const pubkey = walletStore.publicKey.value?.toBase58() ?? PublicKey.default.toBase58();
-    return pubkey.slice(0, 4) + '..' + pubkey.slice(-4);
-});
+const pubkeyAbbreviation = computed(() => abbreviatePubkey(walletStore.publicKey.value ?? PublicKey.default));
 
 // METHODS --------------------------------------------------------------------
 

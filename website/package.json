@@ -12,6 +12,7 @@
     "build": "yarn quasar build"
   },
   "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.1.2",
     "@quasar/extras": "^1.0.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-wallets": "^0.15.5",

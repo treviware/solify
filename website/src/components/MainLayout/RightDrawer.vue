@@ -42,7 +42,12 @@ const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.
         </div>
         <div class="menu column" style="gap: 6px">
             <div class="close-container flex flex-center">
-                <q-btn dense flat icon="fa-solid fa-times" round @click="rightDrawerStore.close"/>
+                <q-btn dense
+                       flat
+                       icon="fa-solid fa-times"
+                       round
+                       class="rounded-borders"
+                       @click="rightDrawerStore.close"/>
             </div>
             <q-space/>
             <div class="flex flex-center" v-for="button in menuButtons" :key="button.name">
