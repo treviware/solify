@@ -88,7 +88,7 @@ onBeforeMount(() => {
                             <q-item-section>
                                 <div><b>{{ token.symbol ?? "???" }}</b> - {{ token.name ?? "Unknown" }}</div>
                                 <div>
-                                    <PubkeyBadge :pubkey="token.address" :long="globalStore.windowWidth > 500" wrap/>
+                                    <PubkeyBadge :pubkey="token.address" :long="globalStore.windowWidth > 500"/>
                                 </div>
                             </q-item-section>
                         </q-item>

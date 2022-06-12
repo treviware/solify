@@ -171,7 +171,7 @@ async function loadData() {
                 <q-item-label class="text-bold">
                     <span class="text-secondary q-mr-xs" v-if="isConnected">Connected Wallet</span>
                     <span class="q-mr-xs" v-else>Wallet</span>
-                    <PubkeyBadge :pubkey="walletData.address" show-copy class="badge-color"/>
+                    <PubkeyBadge :pubkey="walletData.address" show-copy class="badge-color" show-menu/>
                 </q-item-label>
             </q-item-section>
             <q-item-section side>

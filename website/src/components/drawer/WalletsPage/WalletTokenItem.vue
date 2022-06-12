@@ -53,11 +53,11 @@ const name = computed(() => {
             <q-item-label caption class="row" style="gap: 20px">
                 <div>
                     Account:
-                    <PubkeyBadge :pubkey="token.account.address" show-copy class="badge-color"/>
+                    <PubkeyBadge :pubkey="token.account.address" show-copy class="badge-color" show-menu/>
                 </div>
                 <div>
                     SPL token:
-                    <PubkeyBadge :pubkey="token.account.mint" show-copy class="badge-color"/>
+                    <PubkeyBadge :pubkey="token.account.mint" show-copy class="badge-color" show-menu/>
                 </div>
                 <div v-if="!metadata">Decimals: {{ decimals }}</div>
             </q-item-label>
