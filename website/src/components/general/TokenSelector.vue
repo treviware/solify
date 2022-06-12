@@ -25,6 +25,7 @@ const maxPage = ref(0);
 
 // COMPUTED -------------------------------------------------------------------
 
+const lastSelectedTokens = computed(() => blockchainStore.lastSelectedTokens);
 const filteredSplTokens = computed<TokenMeta[]>(() => {
     if (search.value === '') {
         return blockchainStore.tokenList.slice(0);
@@ -43,6 +44,7 @@ const splTokens = computed<TokenMeta[]>(() => {
 // METHODS --------------------------------------------------------------------
 
 function selectToken(token: TokenMeta) {
+    blockchainStore.addLastSelectedTokens(token);
     emits('select', token);
 }
 
@@ -69,6 +71,30 @@ onBeforeMount(() => {
         <q-card-section class="full-height column">
             <h6 class="text-center q-mb-sm">SPL token selector</h6>
             <SearchBar v-model="search" placeholder="Search SPL token" :debounce="300"/>
+            <div class="q-py-md row items-center justify-start gap-md">
+                <q-btn v-for="token in lastSelectedTokens"
+                       :key="'l' + token.address.toString()"
+                       unelevated
+                       dense
+                       color="grey-9"
+                       text-color="white"
+                       no-caps
+                       @click="selectToken(token)">
+                    <div class="row no-wrap items-center">
+                        <div class="q-mr-xs">
+                            <ImageWithPlaceholder :src="token.logoURI ?? '/placeholder.jpg'"
+                                                  placeholder-src="/placeholder.jpg"
+                                                  no-spinner
+                                                  :ratio="1"
+                                                  style="width: 30px"/>
+                        </div>
+                        <div class="q-pr-xs">
+                            {{ token.symbol }}
+                        </div>
+                    </div>
+                </q-btn>
+            </div>
+            <q-separator/>
             <div class="overflow-auto col q-mt-md" v-if="blockchainStore.tokenList.length > 0">
                 <q-infinite-scroll @load="onLoad" :offset="250" ref="infiniteScroll" class="full-width">
                     <q-list dense>

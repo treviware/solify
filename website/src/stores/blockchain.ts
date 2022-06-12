@@ -1,12 +1,26 @@
 import {defineStore} from 'pinia';
 import {PublicKey} from '@solana/web3.js';
 import axios from 'axios';
+import {ref} from 'vue';
+import {MAX_LAST_SPL_TOKENS} from 'src/constants';
 
 export const useBlockchainStore = defineStore('blockchain', {
-    state: () => ({
-        loading: false,
-        tokenMap: null as Record<string, TokenMeta> | null,
-    }),
+    state: () => {
+        const solToken = ref<TokenMeta>({
+            address: PublicKey.default,
+            name: 'Solana',
+            symbol: 'SOL',
+            decimals: 9,
+            logoURI: 'https://cdn.jsdelivr.net/gh/trustwallet/assets@master/blockchains/solana/info/logo.png',
+        });
+
+        return {
+            solToken,
+            loading: false,
+            tokenMap: null as Record<string, TokenMeta> | null,
+            lastSelectedTokens: [solToken.value] as TokenMeta[],
+        };
+    },
     getters: {
         tokenList: state => state.tokenMap ?
             Object.values(state.tokenMap).sort((a, b) => (a.name ?? 'Unknown').localeCompare(b.name ?? 'Unknown')) : [],
@@ -42,6 +56,20 @@ export const useBlockchainStore = defineStore('blockchain', {
                 this.tokenMap = tokenMap;
             } finally {
                 this.loading = false;
+            }
+        },
+        addLastSelectedTokens(token: TokenMeta): void {
+            const index = this.lastSelectedTokens.findIndex(t => t.address.equals(token.address));
+            if (index !== 0) {
+                if (index !== -1) {
+                    this.lastSelectedTokens.splice(index, 1);
+                }
+
+                this.lastSelectedTokens.splice(1, 0, token);
+
+                if (this.lastSelectedTokens.length > MAX_LAST_SPL_TOKENS) {
+                    this.lastSelectedTokens.splice(this.lastSelectedTokens.length - 1, 1);
+                }
             }
         },
     },

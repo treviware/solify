@@ -50,7 +50,7 @@ const name = computed(() => {
                     {{ amount }} {{ metadata ? '' : symbol }}
                 </div>
             </q-item-label>
-            <q-item-label caption class="row" style="gap: 20px">
+            <q-item-label caption class="row gap-md">
                 <div>
                     Account:
                     <PubkeyBadge :pubkey="token.account.address" show-copy class="badge-color" show-menu/>

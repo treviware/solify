@@ -30,7 +30,7 @@ function select(commitment: string) {
     <div>
         <h6>Solana Commitment</h6>
         <p>The commitment defines in which state of approval the data of the blockchain must be queried:</p>
-        <div class="row flex-center q-my-md" style="gap: 20px">
+        <div class="row flex-center q-my-md gap-md">
             <q-btn color="primary"
                    :unelevated="solanaStore.commitment === button.commitment"
                    :flat="solanaStore.commitment !== button.commitment"

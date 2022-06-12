@@ -19,7 +19,7 @@ function select(vsCurrency: string) {
     <div>
         <h6>Comparison Currency</h6>
         <p>The currency used to compare the tokens' prices against it:</p>
-        <div class="row flex-center q-my-md" style="gap: 20px">
+        <div class="row flex-center q-my-md gap-md">
             <q-btn color="primary"
                    :unelevated="coingeckoStore.vsCurrencyName === vsCurrency"
                    :flat="coingeckoStore.vsCurrencyName !== vsCurrency"

@@ -47,7 +47,7 @@ function select(url: string) {
     <div>
         <h6>Solana RPC Endpoint</h6>
         <p>The RPC endpoint used to communicate with the network:</p>
-        <div class="row flex-center q-my-md" style="gap: 20px">
+        <div class="row flex-center q-my-md gap-md">
             <q-btn color="primary"
                    :unelevated="customRpc === button.url"
                    :flat="customRpc !== button.url"
