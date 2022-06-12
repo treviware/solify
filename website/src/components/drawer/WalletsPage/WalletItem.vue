@@ -31,8 +31,8 @@ const isConnected = computed(() => walletData.value.address.equals(wallet.public
 const index = computed(() => walletStore.wallets.findIndex(v => v.address.equals(walletData.value.address)));
 const isStart = computed(() => index.value === 0);
 const isEnd = computed(() => index.value === walletStore.wallets.length - 1);
-const isEmpty = computed(() => walletData.value.tokens.length === 0);
-const solAmount = computed(() => walletData.value.amount / Math.pow(10, 9));
+const isEmpty = computed(() => walletData.value.tokens.length === 0 && !walletData.value.isLoaded);
+const solAmount = computed(() => walletData.value.amount / Math.pow(10, blockchainStore.solToken.decimals));
 const tokens = computed(
     () => walletData.value.tokens.filter(v => blockchainStore.getTokenMetadata(v.account.mint)?.name).sort((a, b) => {
         const nameA = blockchainStore.getTokenMetadata(a.account.mint).name;
@@ -68,14 +68,14 @@ function remove() {
 
 function moveUp() {
     const i = index.value;
-    walletStore.wallets.splice(i, 1);
     walletStore.wallets.splice(i - 1, 0, walletData.value);
+    walletStore.wallets.splice(i + 1, 1);
 }
 
 function moveDown() {
     const i = index.value;
+    walletStore.wallets.splice(i + 2, 0, walletData.value);
     walletStore.wallets.splice(i, 1);
-    walletStore.wallets.splice(i + 1, 0, walletData.value);
 }
 
 async function loadData() {
@@ -107,6 +107,12 @@ async function loadData() {
 
         try {
             let accounts = await loadWalletTokens(solanaStore.connection, walletData.value.address);
+
+            if (accounts.length === 0) {
+                walletData.value.isLoaded = true;
+                return;
+            }
+
             let mappedAccounts: WalletTokenData[] = accounts.map(v => ({
                 account: v,
             }));
@@ -144,6 +150,7 @@ async function loadData() {
                 }
             }
 
+            walletData.value.isLoaded = true;
             walletData.value.tokens.splice(0, walletData.value.tokens.length, ...mappedAccounts);
         } catch (e) {
             console.error('Error loading wallet data', e);
@@ -178,18 +185,14 @@ async function loadData() {
                 <div>
                     <q-btn color="white" flat dense @click="loadData" round class="rounded-borders" :loading="loading">
                         <q-icon name="fa-solid fa-cloud-arrow-down" size="20px"/>
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Load data
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Load wallet info
                         </q-tooltip>
                     </q-btn>
                     <q-btn color="white" flat dense @click="moveUp" round class="rounded-borders" :disable="isStart">
                         <q-icon name="fa-solid fa-angles-up" size="20px"/>
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Move up
-                        </q-tooltip>
                     </q-btn>
                     <q-btn color="white" flat dense @click="moveDown" round class="rounded-borders" :disable="isEnd">
                         <q-icon name="fa-solid fa-angles-down" size="20px"/>
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Move down
-                        </q-tooltip>
                     </q-btn>
                     <q-btn color="negative"
                            flat
@@ -206,22 +209,23 @@ async function loadData() {
             </q-item-section>
         </template>
         <q-card>
-            <q-card-section v-if="isEmpty">
-                Empty
+            <q-card-section v-if="isEmpty" class="flex flex-center">
+                <q-btn color="primary" unelevated @click="loadData" no-caps :loading="loading">Load wallet info
+                </q-btn>
             </q-card-section>
             <q-card-section v-else>
                 <q-list separator>
                     <q-item>
                         <q-item-section avatar>
                             <q-avatar square>
-                                <img src="https://cdn.jsdelivr.net/gh/trustwallet/assets@master/blockchains/solana/info/logo.png">
+                                <img :src="blockchainStore.solToken.logoURI">
                             </q-avatar>
                         </q-item-section>
                         <q-item-section>
                             <q-item-label class="row justify-between">
                                 <div>Solana</div>
                                 <div class="text-caption">
-                                    {{ solAmount }} SOL
+                                    {{ solAmount }} {{ blockchainStore.solToken.symbol }}
                                 </div>
                             </q-item-label>
                         </q-item-section>
