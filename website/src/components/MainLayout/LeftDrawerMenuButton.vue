@@ -71,8 +71,10 @@ function pin() {
         </q-item-section>
         <q-item-section side v-if="index != null && canPin">
             <q-btn dense round class="rounded-borders" size="10px" flat @click.stop="pin">
-                <q-icon name="fa-solid fa-thumbtack" class="pinned-icon" size="12px" v-if="isPinned"/>
+                <q-icon name="fa-solid fa-thumbtack" class="pinned-icon" size="12px" color="secondary" v-if="isPinned"/>
                 <q-icon name="fa-solid fa-thumbtack" size="12px" color="grey-8" v-else/>
+                <q-tooltip class="text-no-wrap text-white text-bold shadow-2">{{ isPinned ? 'Unpin' : 'Pin' }}
+                </q-tooltip>
             </q-btn>
         </q-item-section>
     </q-item>
