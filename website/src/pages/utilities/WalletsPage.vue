@@ -31,9 +31,8 @@ function minimize() {
 </script>
 
 <template>
-    <div class="header row items-center justify-between q-px-lg">
-        <h5>Wallets</h5>
-        <div>
+    <div class="q-px-lg q-py-md">
+        <Teleport to="#right-drawer-buttons">
             <q-btn color="white" flat dense @click="maximize" round class="rounded-borders">
                 <q-icon name="fa-solid fa-maximize" size="20px"/>
                 <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Open all
@@ -44,18 +43,11 @@ function minimize() {
                 <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Close all
                 </q-tooltip>
             </q-btn>
-        </div>
-    </div>
-    <div class="q-px-lg q-py-md">
+        </Teleport>
         <q-list>
             <WalletItem :address="w.address" v-for="w in wallets" :key="w.address" v-model="w.listOpen"/>
         </q-list>
     </div>
 </template>
 
-<style lang="scss" scoped>
-.header {
-    height: 80px;
-    border-bottom: 2px solid $dark;
-}
-</style>
+<style lang="scss" scoped></style>

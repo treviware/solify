@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRightDrawerStore} from 'stores/rightDrawer';
 import {watch} from 'vue';
 import {useRoute} from 'vue-router';
 import {reverseEnum} from 'src/utils/objects';
 import {useSolanaStore} from 'stores/solana';
 import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY, VS_CURRENCY_SETTINGS_KEY} from 'src/constants';
 import {useCoingeckoStore} from 'stores/coingecko';
+import {RightDrawerState} from 'src/types/drawer';
 
 const route = useRoute();
 const rightDrawerStore = useRightDrawerStore();
@@ -23,9 +24,9 @@ watch(route, async (route) => {
     const drawer = route.query.drawer as string;
 
     if (reversedStates[drawer]) {
-        rightDrawerStore.open(drawer as RightDrawerState);
+        await rightDrawerStore.open(drawer as RightDrawerState);
     } else {
-        rightDrawerStore.close();
+        await rightDrawerStore.close();
     }
 
     const network = route.query.network as string ?? localStorage.getItem(NETWORK_SETTINGS_KEY);

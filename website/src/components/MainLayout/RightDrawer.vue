@@ -1,34 +1,20 @@
 <script lang="ts" setup>
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRightDrawerStore} from 'stores/rightDrawer';
 import RightDrawerMenuButton from 'components/MainLayout/RightDrawerMenuButton.vue';
 import {computed} from 'vue';
-import SettingsPage from 'pages/drawer/SettingsPage.vue';
-import SolanaProgramsPage from 'pages/drawer/SolanaProgramsPage.vue';
-import WalletsPage from 'pages/drawer/WalletsPage.vue';
+import {RIGHT_MENU_WIDTH} from 'src/constants';
+import {UTILITY_BUTTONS} from 'src/constants/utilites';
 
 const rightDrawerStore = useRightDrawerStore();
 
-const menuButtons = [{
-    option: RightDrawerState.Programs,
-    icon: 'fa-solid fa-code',
-    name: 'Solana Programs',
-    pageComponent: SolanaProgramsPage,
-}, {
-    option: RightDrawerState.Wallets,
-    icon: 'fa-solid fa-wallet',
-    name: 'Wallets',
-    pageComponent: WalletsPage,
-}, {
-    option: RightDrawerState.Settings,
-    icon: 'fa-solid fa-gear',
-    name: 'Settings',
-    pageComponent: SettingsPage,
-}];
+// const fixedButtons = FIXED_UTILITY_BUTTONS;
+const utilityButtons = UTILITY_BUTTONS;
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 
-const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.drawerState === button.option) ?? null);
+const activeOption = computed(
+    () => utilityButtons.find(button => rightDrawerStore.drawerState === button.rightDrawerOption) ?? null);
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
@@ -37,10 +23,21 @@ const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.
 
 <template>
     <div class="full-width full-height row no-wrap right-drawer">
-        <div class="content">
-            <component v-if="activeOption" :is="activeOption.pageComponent"></component>
+        <div class="content" v-if="activeOption">
+            <div class="header row items-center justify-between q-px-lg">
+                <div>
+                    <div class="text-bold">
+                        {{ activeOption.headerName ?? activeOption.name }}
+                    </div>
+                    <div class="text-caption text-bold">
+                        {{ activeOption.headerDescription ?? activeOption.description }}
+                    </div>
+                </div>
+                <div id="right-drawer-buttons"></div>
+            </div>
+            <component :is="activeOption.component"></component>
         </div>
-        <div class="menu column" style="gap: 6px">
+        <div class="menu column" style="gap: 6px" :style="{'--right-menu-width': RIGHT_MENU_WIDTH + 'px'}">
             <div class="close-container flex flex-center">
                 <q-btn dense
                        flat
@@ -50,7 +47,7 @@ const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.
                        @click="rightDrawerStore.close"/>
             </div>
             <q-space/>
-            <div class="flex flex-center" v-for="button in menuButtons" :key="button.name">
+            <div class="flex flex-center" v-for="button in utilityButtons" :key="button.name">
                 <RightDrawerMenuButton v-bind="button"></RightDrawerMenuButton>
             </div>
             <q-space/>
@@ -59,8 +56,15 @@ const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.
 </template>
 
 <style lang="scss" scoped>
+
 .right-drawer {
     & > .content {
+        & > .header {
+            height: 80px;
+            font-size: 21px;
+            border-bottom: 2px solid $dark;
+        }
+
         background-color: $dark2;
         flex-grow: 1;
         flex-shrink: 1;
@@ -70,10 +74,10 @@ const activeOption = computed(() => menuButtons.find(button => rightDrawerStore.
         background-color: $dark;
         flex-grow: 0;
         flex-shrink: 0;
-        width: 80px;
+        width: var(--right-menu-width);
 
         .close-container {
-            height: 80px;
+            height: var(--right-menu-width);
         }
     }
 }

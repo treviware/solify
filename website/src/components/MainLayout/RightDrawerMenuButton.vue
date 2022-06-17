@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRightDrawerStore} from 'stores/rightDrawer';
+import {RightDrawerState} from 'src/types/drawer';
 
 const props = defineProps<{
-    option: RightDrawerState, icon: string, name?: string
+    rightDrawerOption: RightDrawerState; icon: string; name: string;
 }>();
 
 const rightDrawerStore = useRightDrawerStore();
@@ -11,16 +12,16 @@ const rightDrawerStore = useRightDrawerStore();
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 
-const isActive = computed(() => rightDrawerStore.drawerState === props.option);
+const isActive = computed(() => rightDrawerStore.drawerState === props.rightDrawerOption);
 
 // METHODS --------------------------------------------------------------------
 
-function open() {
+async function open() {
     if (isActive.value) {
         return;
     }
 
-    rightDrawerStore.open(props.option);
+    await rightDrawerStore.open(props.rightDrawerOption!);
 }
 
 // WATCHES --------------------------------------------------------------------

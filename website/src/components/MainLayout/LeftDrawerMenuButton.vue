@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import {computed, onBeforeMount} from 'vue';
+import {computed} from 'vue';
 import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
+import {RightDrawerState} from 'src/types/drawer';
 
 const props = defineProps<{
-    icon: string, name?: string, pathName: string, drawerOverlay: boolean, minContentSize?: number, iconAsText?: boolean
+    icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
 }>();
 
 const router = useRouter();
@@ -13,63 +14,73 @@ const rightDrawerStore = useRightDrawerStore();
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 
-const isActive = computed(() => props.pathName === router.currentRoute.value.name);
+const isActive = computed(() => {
+    if (props.pathName) {
+        return props.pathName === router.currentRoute.value.name;
+    } else {
+        return rightDrawerStore.drawerState === props.rightDrawerOption;
+    }
+});
 
 // METHODS --------------------------------------------------------------------
 
-function open() {
+async function open() {
     if (isActive.value) {
         return;
     }
 
-    router.push({
-        name: props.pathName,
-        query: router.currentRoute.value.query,
-    });
-    rightDrawerStore.setOverlay(props.drawerOverlay, props.minContentSize ?? 0);
+    if (props.pathName) {
+        await router.push({
+            name: props.pathName,
+            query: router.currentRoute.value.query,
+        });
+    } else {
+        await rightDrawerStore.open(props.rightDrawerOption!);
+    }
 }
 
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
-
-onBeforeMount(() => {
-    if (isActive.value) {
-        rightDrawerStore.setOverlay(props.drawerOverlay, props.minContentSize ?? 0);
-    }
-});
 </script>
 
 <template>
-    <q-btn class="rounded-borders"
-           :color="isActive ? 'primary' : 'grey-8'"
-           dense
-           :flat="!isActive"
-           round
-           size="20px"
-           :unelevated="isActive"
-           no-caps
-           @click="open">
-        <div class="relative-position">
-            <div>
-                <q-icon :name="icon" size="18px" v-if="!iconAsText"/>
-                <span v-else class="text">{{ icon }}</span>
-            </div>
-        </div>
-        <q-tooltip anchor="center end"
-                   self="center start"
-                   transition-hide="jump-left"
-                   transition-show="jump-right"
-                   v-if="name"
-                   class="text-no-wrap bg-secondary text-black text-bold shadow-2">{{
-                name
-            }}
-        </q-tooltip>
-    </q-btn>
+    <q-item clickable @click="open" :class="{isActive}">
+        <q-item-section avatar>
+            <q-icon :name="icon" size="18px"/>
+        </q-item-section>
+        <q-item-section>
+            <q-item-label class="text-caption text-bold">{{ name }}</q-item-label>
+        </q-item-section>
+    </q-item>
 </template>
 
 <style lang="scss" scoped>
-.text {
-    font-size: 16px;
-    font-style: italic;
+.q-item {
+    &:deep(.q-item__section--avatar) {
+        min-width: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin-right: 10px;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        right: 0;
+        bottom: 5px;
+        width: 4px;
+        background-color: transparent;
+    }
+
+    &.isActive {
+        color: $secondary;
+
+        &::after {
+            background-color: $secondary;
+        }
+    }
 }
 </style>

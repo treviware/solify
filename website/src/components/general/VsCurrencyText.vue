@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
 import {useCoingeckoStore} from 'stores/coingecko';
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRouter} from 'vue-router';
 
 const props = defineProps<{
     amount: number, token: string, decimals?: number, showEqual?: boolean,
 }>();
 
 const coingeckoStore = useCoingeckoStore();
-const rightDrawerStore = useRightDrawerStore();
+const router = useRouter();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -38,8 +38,11 @@ const equal = computed(() => {
 
 // METHODS --------------------------------------------------------------------
 
-function openSettings() {
-    rightDrawerStore.open(RightDrawerState.Settings);
+async function openSettings() {
+    await router.push({
+        name: 'Settings',
+        query: router.currentRoute.value.query,
+    });
 }
 
 // WATCHES --------------------------------------------------------------------

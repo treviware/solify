@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {useSolanaStore} from 'stores/solana';
 import {computed} from 'vue';
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
 import {clusterApiUrl} from '@solana/web3.js';
+import {useRouter} from 'vue-router';
 
 const solanaStore = useSolanaStore();
-const rightDrawerStore = useRightDrawerStore();
+const router = useRouter();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -25,8 +25,11 @@ const text = computed(() => {
 
 // METHODS --------------------------------------------------------------------
 
-function open() {
-    rightDrawerStore.open(RightDrawerState.Settings);
+async function open() {
+    await router.push({
+        name: 'Settings',
+        query: router.currentRoute.value.query,
+    });
 }
 
 // WATCHES --------------------------------------------------------------------

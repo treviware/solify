@@ -3,9 +3,10 @@ import {useRightDrawerStore} from 'stores/rightDrawer';
 import RightDrawer from 'components/MainLayout/RightDrawer.vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
 import {computed} from 'vue';
-import {useGlobalStore} from 'stores/global';
 import NetworkButton from 'components/MainLayout/NetworkButton.vue';
 import WalletButton from 'components/MainLayout/WalletButton.vue';
+import {LEFT_MENU_WIDTH} from 'src/constants';
+import {useGlobalStore} from 'stores/global';
 
 const rightDrawerStore = useRightDrawerStore();
 const globalStore = useGlobalStore();
@@ -15,8 +16,7 @@ const globalStore = useGlobalStore();
 
 const isRightDrawerOpen = computed(() => !rightDrawerStore.isClosed);
 const paddingRight = computed(() => {
-    if (rightDrawerStore.isClosed || rightDrawerStore.overlay || globalStore.windowWidth <=
-        rightDrawerStore.minWindowSize) {
+    if (rightDrawerStore.isClosed || rightDrawerStore.overlay) {
         return '0px';
     }
 
@@ -32,12 +32,12 @@ const paddingRight = computed(() => {
     <q-layout view="lHr LpR fFf">
         <q-header class="global-toolbar">
             <q-toolbar class="full-height">
-                <q-toolbar-title style="overflow: visible">
-                    <div class="text-bold relative-position q-ml-md" style="overflow: visible">
-                        Solify
-                        <div class="absolute-bottom-left text-caption text-bold" style="bottom: -10px">by
-                            <a class="text-secondary" href="https://treviware.com" target="_blank">Treviware</a>
-                        </div>
+                <q-toolbar-title>
+                    <div class="text-bold">
+                        {{ globalStore.currentAppButton.headerName ?? globalStore.currentAppButton.name }}
+                    </div>
+                    <div class="text-caption text-bold">
+                        {{ globalStore.currentAppButton.headerDescription ?? globalStore.currentAppButton.description }}
                     </div>
                 </q-toolbar-title>
 
@@ -47,7 +47,7 @@ const paddingRight = computed(() => {
         </q-header>
 
         <q-drawer :model-value="true"
-                  :width="80"
+                  :width="LEFT_MENU_WIDTH"
                   behavior="desktop"
                   no-swipe-backdrop
                   no-swipe-close

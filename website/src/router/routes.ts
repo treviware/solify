@@ -11,15 +11,15 @@ const routes: RouteRecordRaw[] = [{
     }, {
         name: 'TxBuilder',
         path: '/builder',
-        component: () => import('pages/TxBuilderPage.vue'),
+        component: () => import('pages/apps/TxBuilderPage.vue'),
     }, {
-        name: 'BPSUtility',
-        path: '/utility/bps',
-        component: () => import('pages/utilities/BasisPointsPage.vue'),
+        name: 'SolanaPrograms',
+        path: '/programs',
+        component: () => import('pages/apps/SolanaProgramsPage.vue'),
     }, {
-        name: 'RentExemptionUtility',
-        path: '/utility/rent-exemption',
-        component: () => import('pages/utilities/RentExemptionPage.vue'),
+        name: 'Settings',
+        path: '/settings',
+        component: () => import('pages/apps/SettingsPage.vue'),
     }],
 },
 

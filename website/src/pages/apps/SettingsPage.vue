@@ -11,10 +11,7 @@ import VsCurrencySettings from 'components/drawer/SettingsPage/VsCurrencySetting
 </script>
 
 <template>
-    <div class="header flex items-center q-px-lg">
-        <h5>Settings</h5>
-    </div>
-    <div class="q-px-lg q-py-md">
+    <div class="q-px-lg q-py-md viewport-width">
         <SolanaNetworkSettings/>
         <SolanaCommitmentSettings class="q-mt-lg"/>
         <VsCurrencySettings class="q-mt-lg"/>

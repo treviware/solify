@@ -60,7 +60,7 @@ export const useSolanaStore = defineStore('solana', {
             switch (commitment) {
                 case 'confirmed':
                     this.commitment = commitment;
-                    localStorage.setItem(COMMITMENT_SETTINGS_KEY, commitment);
+                    localStorage.removeItem(COMMITMENT_SETTINGS_KEY);
 
                     await Router.replace({
                         query: {

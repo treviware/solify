@@ -2,9 +2,10 @@
 import {computed} from 'vue';
 import {useWallet, Wallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';
-import {RightDrawerState, useRightDrawerStore} from 'stores/rightDrawer';
+import {useRightDrawerStore} from 'stores/rightDrawer';
 import {sleep} from 'src/utils/time';
 import {abbreviatePubkey} from 'src/utils/wallets';
+import {RightDrawerState} from 'src/types/drawer';
 
 const rightDrawerStore = useRightDrawerStore();
 const walletStore = useWallet();
@@ -37,8 +38,8 @@ async function disconnect() {
     }
 }
 
-function openWallets() {
-    rightDrawerStore.open(RightDrawerState.Wallets);
+async function openWallets() {
+    await rightDrawerStore.open(RightDrawerState.Wallets);
 }
 
 // WATCHES --------------------------------------------------------------------

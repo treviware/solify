@@ -1,44 +1,43 @@
 import {defineStore} from 'pinia';
 import {useGlobalStore} from 'stores/global';
 import {Router} from 'src/router';
+import {LEFT_MENU_WIDTH, MIN_CONTENT_SIZE, RIGHT_DRAWER_WIDTH} from 'src/constants';
+import {RightDrawerState} from 'src/types/drawer';
 
 export const useRightDrawerStore = defineStore('rightDrawer', {
     state: () => ({
         drawerState: RightDrawerState.Closed,
-        size: 740,
-        overlay: true,
-        minWindowSize: 0,
     }),
     getters: {
         isClosed: (state) => state.drawerState === RightDrawerState.Closed,
-        maxSize: (state) => {
+        overlay: () => {
+            const globalStore = useGlobalStore();
+            return globalStore.windowWidth <= RIGHT_DRAWER_WIDTH + MIN_CONTENT_SIZE + LEFT_MENU_WIDTH;
+        },
+        maxSize: () => {
             const store = useGlobalStore();
-            return Math.min(store.windowWidth, state.size);
+            return Math.min(store.windowWidth, RIGHT_DRAWER_WIDTH);
         },
     },
     actions: {
-        setOverlay(overlay: boolean, minContentSize: number) {
-            this.overlay = overlay;
-            this.minWindowSize = overlay ? 0 : minContentSize + 80 + this.size;
-        },
-        open(newState: RightDrawerState) {
+        async open(newState: RightDrawerState) {
             if (newState === RightDrawerState.Closed) {
-                this.close();
+                await this.close();
                 return;
             }
 
             this.drawerState = newState;
-            Router.replace({
+            await Router.replace({
                 query: {
                     ...Router.currentRoute.value.query,
                     drawer: newState,
                 },
             });
         },
-        close() {
+        async close() {
             this.drawerState = RightDrawerState.Closed;
 
-            Router.replace({
+            await Router.replace({
                 query: {
                     ...Router.currentRoute.value.query,
                     drawer: undefined,
@@ -47,10 +46,3 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
         },
     },
 });
-
-export enum RightDrawerState {
-    Closed = 'closed',
-    Programs = 'programs',
-    Settings = 'settings',
-    Wallets = 'wallets',
-}
