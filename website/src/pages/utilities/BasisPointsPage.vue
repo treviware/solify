@@ -3,6 +3,8 @@ import {MAX_SPL_DECIMALS} from 'src/constants';
 import SplDecimalsInput from 'components/general/input/SplDecimalsInput.vue';
 import {useBpsUtilityStore} from 'stores/pages/utilities/basisPoints';
 import {storeToRefs} from 'pinia';
+import BignumInput from 'components/general/BignumInput.vue';
+import BN from 'bn.js';
 
 const bpsUtilityStore = useBpsUtilityStore();
 
@@ -19,18 +21,18 @@ const {
 
 function onDecimalsUpdate() {
     decimals.value = Math.floor(Math.min(MAX_SPL_DECIMALS, Math.max(0, decimals.value)));
-    realAmount.value = bps.value / Math.pow(10, decimals.value);
+    realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
 }
 
 function onBasisPointsUpdate() {
-    bps.value = Math.floor(Math.max(0, bps.value));
-    realAmount.value = bps.value / Math.pow(10, decimals.value);
+    bps.value = BN.max(new BN(0), bps.value);
+    realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
 }
 
 function onRealAmountUpdate() {
     realAmount.value = Math.max(0, realAmount.value);
-    bps.value = Math.floor(realAmount.value * Math.pow(10, decimals.value));
-    realAmount.value = bps.value / Math.pow(10, decimals.value);
+    bps.value = new BN(Math.floor(realAmount.value * Math.pow(10, decimals.value)));
+    realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -53,12 +55,7 @@ function onRealAmountUpdate() {
             <q-separator/>
             <q-card-section>
                 <div class="text-secondary text-caption text-bold">Basis points (BPS)</div>
-                <q-input v-model.number="bps"
-                         outlined
-                         dense
-                         min="0"
-                         step="1"
-                         @update:model-value="onBasisPointsUpdate"/>
+                <BignumInput v-model="bps" outlined dense min="0" step="1" @update:model-value="onBasisPointsUpdate"/>
                 <div class="text-secondary text-caption text-bold q-mt-md">Real Amount</div>
                 <q-input v-model.number="realAmount" outlined dense @update:model-value="onRealAmountUpdate"/>
             </q-card-section>
