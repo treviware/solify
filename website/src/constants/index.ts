@@ -6,6 +6,8 @@ export const COMMITMENT_SETTINGS_KEY = 'commitment';
 export const VS_CURRENCY_SETTINGS_KEY = 'vsCurrency';
 
 export const LEFT_MENU_WIDTH = 200;
-export const RIGHT_MENU_WIDTH = 80;
-export const RIGHT_DRAWER_WIDTH = 740;
+export const RIGHT_DRAWER_WIDTH = 660;
 export const MIN_CONTENT_SIZE = 800;
+
+export const MAX_RECENT_UTILITIES = 4;
+export const MAX_PINNED_UTILITIES = MAX_RECENT_UTILITIES - 1;

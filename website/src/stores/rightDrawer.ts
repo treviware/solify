@@ -3,6 +3,7 @@ import {useGlobalStore} from 'stores/global';
 import {Router} from 'src/router';
 import {LEFT_MENU_WIDTH, MIN_CONTENT_SIZE, RIGHT_DRAWER_WIDTH} from 'src/constants';
 import {RightDrawerState} from 'src/types/drawer';
+import {useMenuStore} from 'stores/menu';
 
 export const useRightDrawerStore = defineStore('rightDrawer', {
     state: () => ({
@@ -26,6 +27,9 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
                 await this.close();
                 return;
             }
+
+            const menuStore = useMenuStore();
+            menuStore.addRecentUtility(newState);
 
             this.drawerState = newState;
             await Router.replace({

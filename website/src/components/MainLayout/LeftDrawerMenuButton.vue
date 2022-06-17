@@ -3,13 +3,15 @@ import {computed} from 'vue';
 import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {RightDrawerState} from 'src/types/drawer';
+import {useMenuStore} from 'stores/menu';
 
 const props = defineProps<{
-    icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
+    index?: number, icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
 }>();
 
 const router = useRouter();
 const rightDrawerStore = useRightDrawerStore();
+const menuStore = useMenuStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -22,10 +24,16 @@ const isActive = computed(() => {
     }
 });
 
+const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedUtilities.length);
+
 // METHODS --------------------------------------------------------------------
 
 async function open() {
     if (isActive.value) {
+        if (props.rightDrawerOption) {
+            await rightDrawerStore.close();
+        }
+
         return;
     }
 
@@ -36,6 +44,14 @@ async function open() {
         });
     } else {
         await rightDrawerStore.open(props.rightDrawerOption!);
+    }
+}
+
+function pin() {
+    if (isPinned.value) {
+        menuStore.unpin(props.rightDrawerOption!);
+    } else {
+        menuStore.pin(props.rightDrawerOption!);
     }
 }
 
@@ -50,6 +66,12 @@ async function open() {
         </q-item-section>
         <q-item-section>
             <q-item-label class="text-caption text-bold">{{ name }}</q-item-label>
+        </q-item-section>
+        <q-item-section side v-if="index != null">
+            <q-btn dense round class="rounded-borders" size="10px" flat @click.stop="pin">
+                <q-icon name="fa-solid fa-thumbtack" class="pinned-icon" size="12px" v-if="isPinned"/>
+                <q-icon name="fa-solid fa-thumbtack" size="12px" color="grey-8" v-else/>
+            </q-btn>
         </q-item-section>
     </q-item>
 </template>
@@ -71,8 +93,9 @@ async function open() {
         top: 0;
         right: 0;
         bottom: 0;
-        width: 4px;
-        background-color: transparent;
+        width: 0;
+        background-color: $secondary;
+        transition: width 0.3s;
     }
 
     &.isActive {
@@ -80,8 +103,12 @@ async function open() {
         background-color: transparentize($secondary, 0.9);
 
         &::after {
-            background-color: $secondary;
+            width: 4px;
         }
     }
+}
+
+.pinned-icon {
+    transform: rotateZ(45deg);
 }
 </style>

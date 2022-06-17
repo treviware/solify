@@ -66,6 +66,7 @@ function addWallet() {
         tokens: [],
         amount: 0,
     });
+    newWallet.value = '';
 }
 
 // WATCHES --------------------------------------------------------------------

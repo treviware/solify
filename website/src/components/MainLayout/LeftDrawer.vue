@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import LeftDrawerMenuButton from 'components/MainLayout/LeftDrawerMenuButton.vue';
 import {APP_BUTTONS} from 'src/constants/apps';
-import {UTILITY_BUTTONS} from 'src/constants/utilites';
+import {useMenuStore} from 'stores/menu';
 
+const menuStore = useMenuStore();
 const appButtons = APP_BUTTONS;
-const utilityButtons = UTILITY_BUTTONS;
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -36,7 +36,8 @@ const utilityButtons = UTILITY_BUTTONS;
             <q-separator/>
             <q-list>
                 <LeftDrawerMenuButton v-bind="button"
-                                      v-for="button in utilityButtons"
+                                      v-for="(button, i) in menuStore.recentMenuUtilities"
+                                      :index="i"
                                       :key="button.name"></LeftDrawerMenuButton>
             </q-list>
         </div>
