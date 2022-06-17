@@ -42,7 +42,7 @@ function emitUpdate(newValue: number) {
              :hint="'Max = ' + MAX_SPL_DECIMALS"
              @update:model-value="emitUpdate">
         <template v-slot:append>
-            <q-btn round class="rounded-borders" @click="showSplDialog = true">SPL</q-btn>
+            <q-btn round class="rounded-borders" @click="showSplDialog = true" flat>SPL</q-btn>
             <q-dialog v-model="showSplDialog">
                 <TokenSelector @select="onSelect"/>
             </q-dialog>

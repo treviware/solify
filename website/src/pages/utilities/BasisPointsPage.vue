@@ -5,6 +5,8 @@ import {useBpsUtilityStore} from 'stores/pages/utilities/basisPoints';
 import {storeToRefs} from 'pinia';
 import BignumInput from 'components/general/BignumInput.vue';
 import BN from 'bn.js';
+import {computed} from 'vue';
+import {formatBasisPoints} from 'src/utils/tokens';
 
 const bpsUtilityStore = useBpsUtilityStore();
 
@@ -17,6 +19,9 @@ const {
 } = storeToRefs(bpsUtilityStore);
 
 // COMPUTED -------------------------------------------------------------------
+
+const realAmountStr = computed(() => formatBasisPoints(bps.value, decimals.value));
+
 // METHODS --------------------------------------------------------------------
 
 function onDecimalsUpdate() {
@@ -29,10 +34,18 @@ function onBasisPointsUpdate() {
     realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
 }
 
-function onRealAmountUpdate() {
-    realAmount.value = Math.max(0, realAmount.value);
-    bps.value = new BN(Math.floor(realAmount.value * Math.pow(10, decimals.value)));
-    realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+function onRealAmountUpdate(newRealAmount: string) {
+    try {
+        const value = parseFloat(newRealAmount);
+        if (isNaN(value)) {
+            return;
+        }
+
+        realAmount.value = Math.max(0, value);
+        bps.value = new BN(Math.floor(realAmount.value * Math.pow(10, decimals.value)));
+        realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+    } catch (e) {
+    }
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -45,7 +58,7 @@ function onRealAmountUpdate() {
             <q-card-section>
                 <h6 class="text-center q-mb-sm">Basis Points Utility</h6>
                 <p>Pick a SPL token or directly introduce the number of decimals to convert from the token's basis
-                    points to the real amount or viceversa.</p>
+                    points to the real amount or vice versa.</p>
             </q-card-section>
             <q-separator/>
             <q-card-section>
@@ -57,7 +70,7 @@ function onRealAmountUpdate() {
                 <div class="text-secondary text-caption text-bold">Basis points (BPS)</div>
                 <BignumInput v-model="bps" outlined dense min="0" step="1" @update:model-value="onBasisPointsUpdate"/>
                 <div class="text-secondary text-caption text-bold q-mt-md">Real Amount</div>
-                <q-input v-model.number="realAmount" outlined dense @update:model-value="onRealAmountUpdate"/>
+                <q-input :model-value="realAmountStr" outlined dense @update:model-value="onRealAmountUpdate"/>
             </q-card-section>
         </q-card>
     </q-page>
