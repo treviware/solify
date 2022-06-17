@@ -4,6 +4,7 @@ import RightDrawerMenuButton from 'components/MainLayout/RightDrawerMenuButton.v
 import {computed} from 'vue';
 import {RIGHT_MENU_WIDTH} from 'src/constants';
 import {UTILITY_BUTTONS} from 'src/constants/utilites';
+import {storeToRefs} from 'pinia';
 
 const rightDrawerStore = useRightDrawerStore();
 
@@ -11,6 +12,9 @@ const rightDrawerStore = useRightDrawerStore();
 const utilityButtons = UTILITY_BUTTONS;
 
 // REFS -----------------------------------------------------------------------
+
+const {drawerTopButtons} = storeToRefs(rightDrawerStore);
+
 // COMPUTED -------------------------------------------------------------------
 
 const activeOption = computed(
@@ -33,7 +37,7 @@ const activeOption = computed(
                         {{ activeOption.headerDescription ?? activeOption.description }}
                     </div>
                 </div>
-                <div id="right-drawer-buttons"></div>
+                <div id="right-drawer-buttons" ref="drawerTopButtons"></div>
             </div>
             <component :is="activeOption.component"></component>
         </div>
@@ -47,9 +51,11 @@ const activeOption = computed(
                        @click="rightDrawerStore.close"/>
             </div>
             <q-space/>
-            <div class="flex flex-center" v-for="button in utilityButtons" :key="button.name">
-                <RightDrawerMenuButton v-bind="button"></RightDrawerMenuButton>
-            </div>
+            <q-list style="width: 100%;">
+                <RightDrawerMenuButton v-bind="button"
+                                       v-for="button in utilityButtons"
+                                       :key="button.name"></RightDrawerMenuButton>
+            </q-list>
             <q-space/>
         </div>
     </div>

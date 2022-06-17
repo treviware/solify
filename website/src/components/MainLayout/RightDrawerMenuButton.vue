@@ -29,25 +29,52 @@ async function open() {
 </script>
 
 <template>
-    <q-btn class="rounded-borders"
-           :color="isActive ? 'primary' : 'grey-8'"
-           dense
-           :flat="!isActive"
-           round
-           size="20px"
-           :unelevated="isActive"
-           @click="open">
-        <q-icon :name="icon" size="18px"/>
-        <q-tooltip anchor="center start"
-                   self="center end"
-                   transition-hide="jump-right"
-                   transition-show="jump-left"
-                   v-if="name"
-                   class="text-no-wrap bg-secondary text-black text-bold shadow-2">{{
-                name
-            }}
-        </q-tooltip>
-    </q-btn>
+    <q-item clickable @click="open" :class="{isActive}">
+        <q-item-section avatar>
+            <q-icon :name="icon" size="18px"/>
+            <q-item-label class="text-caption text-bold text-center q-pt-xs">{{ name }}</q-item-label>
+        </q-item-section>
+    </q-item>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.q-item {
+    width: 100%;
+    height: 70px;
+    padding-left: 6px;
+    padding-right: 6px;
+
+    &:deep(.q-item__section--avatar) {
+        min-width: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        width: 100%;
+    }
+
+    &:deep(.q-item__label) {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 0;
+        bottom: 6px;
+        width: 4px;
+        background-color: transparent;
+    }
+
+    &.isActive {
+        color: $secondary;
+
+        &::after {
+            background-color: $secondary;
+        }
+    }
+}
+</style>

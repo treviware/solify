@@ -7,6 +7,7 @@ import {RightDrawerState} from 'src/types/drawer';
 export const useRightDrawerStore = defineStore('rightDrawer', {
     state: () => ({
         drawerState: RightDrawerState.Closed,
+        drawerTopButtons: null as HTMLElement | null,
     }),
     getters: {
         isClosed: (state) => state.drawerState === RightDrawerState.Closed,

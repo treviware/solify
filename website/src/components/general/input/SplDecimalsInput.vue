@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {MAX_SPL_DECIMALS} from 'src/constants';
-import TokenSelector from 'components/general/TokenSelector.vue';
+import TokenSelector from 'components/general/selectors/TokenSelector.vue';
 import {ref} from 'vue';
 import {TokenMeta} from 'stores/blockchain';
 

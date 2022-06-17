@@ -202,8 +202,6 @@ async function loadData() {
                            class="rounded-borders"
                            :disable="isConnected">
                         <q-icon name="fa-solid fa-trash" size="20px"/>
-                        <q-tooltip class="text-no-wrap bg-negative text-white text-bold shadow-2">Remove
-                        </q-tooltip>
                     </q-btn>
                 </div>
             </q-item-section>
