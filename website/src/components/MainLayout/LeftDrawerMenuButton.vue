@@ -68,15 +68,16 @@ async function open() {
     &::after {
         content: "";
         position: absolute;
-        top: 5px;
+        top: 0;
         right: 0;
-        bottom: 5px;
+        bottom: 0;
         width: 4px;
         background-color: transparent;
     }
 
     &.isActive {
         color: $secondary;
+        background-color: transparentize($secondary, 0.9);
 
         &::after {
             background-color: $secondary;

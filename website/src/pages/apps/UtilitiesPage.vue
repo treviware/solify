@@ -8,6 +8,6 @@
 
 <template>
     <q-page class="row items-center justify-evenly">
-        Solana Programs
+        Utilities
     </q-page>
 </template>

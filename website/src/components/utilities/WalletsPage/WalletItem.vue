@@ -8,7 +8,7 @@ import {computed, ref} from 'vue';
 import {useQuasar} from 'quasar';
 import {useSolanaStore} from 'stores/solana';
 import {deriveMetadataAccountKey, loadMetadataAccounts, loadWalletTokens} from 'src/utils/solana';
-import WalletTokenItem from 'components/drawer/WalletsPage/WalletTokenItem.vue';
+import WalletTokenItem from 'components/utilities/WalletsPage/WalletTokenItem.vue';
 import {useBlockchainStore} from 'stores/blockchain';
 import axios, {AxiosResponse} from 'axios';
 

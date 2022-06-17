@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-
 import {WalletData} from 'stores/wallets';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import {computed, ref} from 'vue';
 import {useBlockchainStore} from 'stores/blockchain';
 import {PublicKey} from '@solana/web3.js';
-import WalletNftInfo from 'components/drawer/WalletsPage/WalletNftInfo.vue';
+import WalletNftInfo from 'components/utilities/WalletsPage/WalletNftInfo.vue';
 
 const props = defineProps<{
     walletData: WalletData, address: PublicKey;

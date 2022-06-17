@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import SolanaNetworkSettings from 'components/drawer/SettingsPage/SolanaNetworkSettings.vue';
-import SolanaCommitmentSettings from 'components/drawer/SettingsPage/SolanaCommitmentSettings.vue';
-import VsCurrencySettings from 'components/drawer/SettingsPage/VsCurrencySettings.vue';
+import SolanaNetworkSettings from 'components/apps/SettingsPage/SolanaNetworkSettings.vue';
+import SolanaCommitmentSettings from 'components/apps/SettingsPage/SolanaCommitmentSettings.vue';
+import VsCurrencySettings from 'components/apps/SettingsPage/VsCurrencySettings.vue';
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
