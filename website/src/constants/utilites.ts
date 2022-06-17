@@ -3,15 +3,13 @@ import WalletsPage from 'pages/utilities/WalletsPage.vue';
 import BasisPointsPage from 'pages/utilities/BasisPointsPage.vue';
 import RentExemptionPage from 'pages/utilities/RentExemptionPage.vue';
 
-export const FIXED_UTILITY_BUTTONS: DrawerUtilityButton[] = [{
+export const UTILITY_BUTTONS: DrawerUtilityButton[] = [{
     icon: 'fa-solid fa-wallet',
     name: 'Wallet List',
     description: 'The list of all connected wallets',
     rightDrawerOption: RightDrawerState.Wallets,
     component: WalletsPage,
-}];
-
-export const UTILITY_BUTTONS: DrawerUtilityButton[] = [...FIXED_UTILITY_BUTTONS, {
+}, {
     icon: 'fa-solid fa-right-left',
     name: 'Basis Points',
     description: 'Change between basis points and real value',

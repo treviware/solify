@@ -4,6 +4,7 @@ import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {RightDrawerState} from 'src/types/drawer';
 import {useMenuStore} from 'stores/menu';
+import {MAX_PINNED_UTILITIES} from 'src/constants';
 
 const props = defineProps<{
     index?: number, icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
@@ -25,6 +26,7 @@ const isActive = computed(() => {
 });
 
 const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedUtilities.length);
+const canPin = computed(() => isPinned.value || menuStore.pinnedUtilities.length < MAX_PINNED_UTILITIES);
 
 // METHODS --------------------------------------------------------------------
 
@@ -67,7 +69,7 @@ function pin() {
         <q-item-section>
             <q-item-label class="text-caption text-bold">{{ name }}</q-item-label>
         </q-item-section>
-        <q-item-section side v-if="index != null">
+        <q-item-section side v-if="index != null && canPin">
             <q-btn dense round class="rounded-borders" size="10px" flat @click.stop="pin">
                 <q-icon name="fa-solid fa-thumbtack" class="pinned-icon" size="12px" v-if="isPinned"/>
                 <q-icon name="fa-solid fa-thumbtack" size="12px" color="grey-8" v-else/>
