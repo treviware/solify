@@ -3,10 +3,11 @@ import {Router} from 'src/router';
 import {VS_CURRENCY_SETTINGS_KEY} from 'src/constants';
 import axios from 'axios';
 import {PublicKey} from '@solana/web3.js';
+import {useBlockchainStore} from 'stores/blockchain';
 
 const CACHE_RELOAD_INTERVAL = 60 * 1000; // 1 minute
 const API_URL = 'https://api.coingecko.com/api/v3';
-export const VS_CURRENCYS = ['USD', 'EUR', 'SOL'];
+export const VS_CURRENCYS = ['USD', 'EUR'];
 
 export const useCoingeckoStore = defineStore('coingecko', {
     state: () => ({
@@ -14,10 +15,10 @@ export const useCoingeckoStore = defineStore('coingecko', {
         cache: {
             USD: {
                 price: 1,
-                timestamp: new Date(Date.now() + 1000 * 60 * 60 * 24), /* 1 day */
+                expiration: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), /* 1 year */
             },
         } as Record<string, {
-            price: number, timestamp: Date,
+            price: number, expiration: Date,
         }>,
     }),
     actions: {
@@ -45,7 +46,7 @@ export const useCoingeckoStore = defineStore('coingecko', {
         getVsCurrencyPrice(): number {
             const cachedData = this.cache[this.vsCurrencyName];
             if (cachedData) {
-                if (cachedData.timestamp.getTime() + CACHE_RELOAD_INTERVAL <= Date.now()) {
+                if (Date.now() >= cachedData.expiration.getTime()) {
                     this.loadVsCurrencyPrice();
                 }
 
@@ -53,7 +54,7 @@ export const useCoingeckoStore = defineStore('coingecko', {
             } else {
                 this.cache[this.vsCurrencyName] = {
                     price: 0,
-                    timestamp: new Date(),
+                    expiration: new Date(Date.now() + CACHE_RELOAD_INTERVAL),
                 };
 
                 this.loadVsCurrencyPrice();
@@ -62,45 +63,52 @@ export const useCoingeckoStore = defineStore('coingecko', {
             return 0;
         },
 
-        getSolPrice(): number {
-            const cachedData = this.cache['SOL'];
+        getOnlyTokenPrice(token: PublicKey): number {
+            const pubkey = token.toBase58();
+            const cachedData = this.cache[pubkey];
             if (cachedData) {
-                if (cachedData.timestamp.getTime() + CACHE_RELOAD_INTERVAL <= Date.now()) {
-                    this.loadSolPrice();
-                }
-
                 return cachedData.price;
             } else {
-                this.cache['SOL'] = {
+                this.cache[pubkey] = {
                     price: 0,
-                    timestamp: new Date(),
+                    expiration: new Date(),
                 };
-
-                this.loadSolPrice();
             }
 
             return 0;
         },
 
-        getTokenPrice(token: PublicKey): number {
-            const pubkey = token.toBase58();
-            const cachedData = this.cache[pubkey];
-            if (cachedData) {
-                if (cachedData.timestamp.getTime() + CACHE_RELOAD_INTERVAL <= Date.now()) {
-                    this.loadTokenPrice(token);
+        getTokenPrices(tokens: PublicKey[]): number[] {
+            const results: number[] = [];
+            const toLoad: PublicKey[] = [];
+
+            for (const token of tokens) {
+                const pubkey = token.toBase58();
+                const cachedData = this.cache[pubkey];
+                if (cachedData) {
+                    if (Date.now() >= cachedData.expiration.getTime()) {
+                        toLoad.push(token);
+                    }
+
+                    results.push(cachedData.price);
+                    continue;
+                } else {
+                    this.cache[pubkey] = {
+                        price: 0,
+                        expiration: new Date(Date.now() + CACHE_RELOAD_INTERVAL),
+                    };
+
+                    toLoad.push(token);
                 }
 
-                return cachedData.price;
-            } else {
-                this.cache[pubkey] = {
-                    price: 0,
-                    timestamp: new Date(),
-                };
-
-                this.loadTokenPrice(token);
+                results.push(0);
             }
 
-            return 0;
+            if (toLoad.length > 0) {
+                this.loadTokenPrices(toLoad);
+            }
+
+            return results;
         },
 
         async loadVsCurrencyPrice(): Promise<number> {
@@ -113,42 +121,85 @@ export const useCoingeckoStore = defineStore('coingecko', {
 
                     this.cache['EUR'] = {
                         price,
-                        timestamp: new Date(),
+                        expiration: new Date(Date.now() + CACHE_RELOAD_INTERVAL),
                     };
 
                     return price;
                 }
-                case 'SOL':
-                    return await this.loadSolPrice();
             }
 
             return 0;
         },
 
-        async loadSolPrice(): Promise<number> {
-            const response = await axios.get(`${API_URL}/simple/price?ids=solana&vs_currencies=usd`);
-            const price = response.data.solana.usd;
+        async loadTokenPrices(tokens: PublicKey[]): Promise<number[]> {
+            const blockchainStore = useBlockchainStore();
+            await blockchainStore.loadTokenList();
 
-            this.cache['SOL'] = {
-                price,
-                timestamp: new Date(),
-            };
+            const byTokens: PublicKey[] = [];
+            const byGeckoIds: string[] = [];
+            const finalTokens = tokens.map(token => {
+                const meta = blockchainStore.getTokenMetadata(token);
+                if (meta) {
+                    if (meta.coingeckoId) {
+                        byGeckoIds.push(meta.coingeckoId);
+                        return {
+                            byGeckoId: true,
+                            token,
+                        };
+                    }
+                }
 
-            return price;
-        },
+                byTokens.push(token);
+                return {
+                    byGeckoId: false,
+                    token,
+                };
+            });
 
-        async loadTokenPrice(token: PublicKey): Promise<number> {
-            const pubkey = token.toBase58();
-            const response = await axios.get(
-                `${API_URL}/simple/token_price/solana?contract_addresses=${pubkey}&vs_currencies=usd`);
-            const price = response.data[pubkey].usd;
+            const promiseByTokens = loadTokenPricesByAddress(byTokens);
+            const promiseByGeckoIds = loadTokenPricesByGeckoId(byGeckoIds);
 
-            this.cache[pubkey] = {
-                price,
-                timestamp: new Date(),
-            };
+            const resultsByTokens = await promiseByTokens;
+            const resultsByGeckoIds = await promiseByGeckoIds;
 
-            return price;
+            return finalTokens.map(v => {
+                let result: number;
+
+                if (v.byGeckoId) {
+                    result = resultsByGeckoIds.shift()!;
+                } else {
+                    result = resultsByTokens.shift()!;
+                }
+
+                this.cache[v.token.toString()] = {
+                    price: result,
+                    expiration: new Date(Date.now() + CACHE_RELOAD_INTERVAL),
+                };
+
+                return result;
+            });
         },
     },
 });
+
+async function loadTokenPricesByGeckoId(tokenIds: string[]): Promise<number[]> {
+    if (tokenIds.length === 0) {
+        return [];
+    }
+
+    const response = await axios.get(`${API_URL}/simple/price?ids=${tokenIds.join(',')}&vs_currencies=usd`);
+
+    return tokenIds.map(address => response.data[address]?.usd ?? 0);
+}
+
+async function loadTokenPricesByAddress(tokens: PublicKey[]): Promise<number[]> {
+    if (tokens.length === 0) {
+        return [];
+    }
+
+    const contractAddresses = tokens.map(v => v.toBase58());
+    const response = await axios.get(
+        `${API_URL}/simple/token_price/solana?contract_addresses=${contractAddresses.join(',')}&vs_currencies=usd`);
+
+    return contractAddresses.map(address => response.data[address]?.usd ?? 0);
+}

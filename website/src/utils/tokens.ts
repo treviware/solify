@@ -1,5 +1,11 @@
 import BN from 'bn.js';
 
+export function formatRealValue(realValue: number, decimals: number): string {
+    const bps = Math.floor(realValue * Math.pow(10, decimals));
+
+    return formatBasisPoints(new BN(bps), decimals);
+}
+
 export function formatBasisPoints(basisPoints: BN, decimals: number): string {
     try {
         let amount = basisPoints.toString();

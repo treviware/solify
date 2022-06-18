@@ -11,6 +11,7 @@ export const useBlockchainStore = defineStore('blockchain', {
             name: 'Solana',
             symbol: 'SOL',
             decimals: 9,
+            coingeckoId: 'solana',
             logoURI: 'https://cdn.jsdelivr.net/gh/trustwallet/assets@master/blockchains/solana/info/logo.png',
         });
 
@@ -29,7 +30,9 @@ export const useBlockchainStore = defineStore('blockchain', {
         getTokenMetadata(address: PublicKey): TokenMeta | null {
             this.loadTokenList();
 
-            if (this.tokenMap != null) {
+            if (address.equals(this.solToken.address)) {
+                return this.solToken;
+            } else if (this.tokenMap != null) {
                 return this.tokenMap[address.toBase58()] || null;
             } else {
                 return null;
@@ -50,6 +53,7 @@ export const useBlockchainStore = defineStore('blockchain', {
 
                 for (const i of response.data.tokens) {
                     i.address = new PublicKey(i.address);
+                    i.coingeckoId = i?.extensions?.coingeckoId;
                     tokenMap[i.address] = i;
                 }
 
@@ -81,4 +85,5 @@ export interface TokenMeta {
     symbol?: string,
     decimals?: number,
     logoURI?: string
+    coingeckoId?: string;
 }

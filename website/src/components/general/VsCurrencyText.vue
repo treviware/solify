@@ -2,9 +2,10 @@
 import {computed} from 'vue';
 import {useCoingeckoStore} from 'stores/coingecko';
 import {useRouter} from 'vue-router';
+import {PublicKey} from '@solana/web3.js';
 
 const props = defineProps<{
-    amount: number, token: string, decimals?: number, showEqual?: boolean,
+    amount: number, decimals?: number, showEqual?: boolean, token: PublicKey,
 }>();
 
 const coingeckoStore = useCoingeckoStore();
@@ -13,9 +14,10 @@ const router = useRouter();
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 const vsCurrencyPrice = computed(() => coingeckoStore.getVsCurrencyPrice());
-const tokenPrice = computed(() => coingeckoStore.getSolPrice() / vsCurrencyPrice.value);
+const tokenPrice = computed(() => coingeckoStore.getTokenPrices([props.token])[0]);
+const tokenDivisor = computed(() => tokenPrice.value / vsCurrencyPrice.value);
 const price = computed(() => {
-    const value = tokenPrice.value * props.amount;
+    const value = tokenDivisor.value * props.amount;
 
     if (props.decimals !== undefined) {
         return `${value.toFixed(props.decimals)}`;
@@ -38,7 +40,7 @@ async function openSettings() {
 </script>
 
 <template>
-    <span>≈ {{ price }} <q-btn dense flat color="secondary" @click="openSettings">{{
+    <span>{{ showEqual ? '≈ ' : '' }}{{ price }} <q-btn dense flat color="secondary" @click="openSettings">{{
             coingeckoStore.vsCurrencyName
         }}</q-btn></span>
 </template>

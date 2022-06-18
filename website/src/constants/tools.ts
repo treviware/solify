@@ -3,6 +3,7 @@ import WalletsPage from 'pages/tools/WalletsPage.vue';
 import BasisPointsPage from 'pages/tools/BasisPointsPage.vue';
 import RentExemptionPage from 'pages/tools/RentExemptionPage.vue';
 import AirdropPage from 'pages/tools/AirdropPage.vue';
+import TokenPricePage from 'pages/tools/TokenPricePage.vue';
 import {ToolCategory} from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -36,6 +37,16 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
         description: 'Change between basis points and real value',
         rightDrawerOption: RightDrawerState.Bps,
         component: BasisPointsPage,
+    }],
+}, {
+    name: 'Currencies',
+    description: 'Tools to get and compare token values in different currencies.',
+    buttons: [{
+        icon: 'fa-solid fa-right-left',
+        name: 'Token Price',
+        description: 'Get the current price of a token in a supported currency or any other token.',
+        rightDrawerOption: RightDrawerState.TokenPrice,
+        component: TokenPricePage,
     }],
 }];
 

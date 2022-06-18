@@ -44,7 +44,7 @@ function emitUpdate(newValue: number) {
         <template v-slot:append>
             <q-btn round class="rounded-borders" @click="showSplDialog = true" flat>SPL</q-btn>
             <q-dialog v-model="showSplDialog">
-                <TokenSelector @select="onSelect"/>
+                <TokenSelector @select="onSelect" show-sol/>
             </q-dialog>
         </template>
     </q-input>

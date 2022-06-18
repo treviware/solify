@@ -6,9 +6,11 @@ import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';
 import VsCurrencyText from 'components/general/VsCurrencyText.vue';
 import BytesInput from 'components/general/input/BytesInput.vue';
+import {useBlockchainStore} from 'stores/blockchain';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
+const blockchainStore = useBlockchainStore();
 const rentExemptionStore = useRentExemptionStore();
 
 // REFS -----------------------------------------------------------------------
@@ -66,7 +68,10 @@ async function loadRentExempt() {
         <q-input :model-value="rentInSol" :hint="'LAMPORTS = ' + rent" readonly outlined dense>
             <template v-slot:after>
                 <span class="text-bold text-body1 q-pl-sm">
-                    <VsCurrencyText :amount="rentInSol" token="SOL" :decimals="2" show-equal/>
+                    <VsCurrencyText :amount="rentInSol"
+                                    :decimals="2"
+                                    show-equal
+                                    :token="blockchainStore.solToken.address"/>
                 </span>
             </template>
         </q-input>

@@ -10,7 +10,7 @@ import {useGlobalStore} from 'stores/global';
 const tokensPerPage = 20;
 
 const props = defineProps<{
-    initialSearch?: string,
+    initialSearch?: string, showSol?: boolean, filter?: (a: TokenMeta) => boolean, showCoingeckoId?: boolean,
 }>();
 const emits = defineEmits<{
     (e: 'select', token: TokenMeta): void,
@@ -19,20 +19,25 @@ const blockchainStore = useBlockchainStore();
 const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
-
 const search = ref(props.initialSearch ?? '');
 const maxPage = ref(0);
 
 // COMPUTED -------------------------------------------------------------------
-
-const lastSelectedTokens = computed(() => blockchainStore.lastSelectedTokens);
+const finalFilter = computed(() => props.filter ?? (() => true));
+const lastSelectedTokens = computed(() => {
+    if (props.showSol) {
+        return blockchainStore.lastSelectedTokens.filter(finalFilter.value);
+    } else {
+        return blockchainStore.lastSelectedTokens.slice(1).filter(finalFilter.value);
+    }
+});
 const filteredSplTokens = computed<TokenMeta[]>(() => {
     if (search.value === '') {
-        return blockchainStore.tokenList.slice(0);
+        return blockchainStore.tokenList.filter(finalFilter.value);
     }
 
     const searchLower = search.value.toLowerCase();
-    return blockchainStore.tokenList
+    return blockchainStore.tokenList.filter(finalFilter.value)
         .filter(token => (token.name ?? '').toLowerCase().indexOf(searchLower) !== -1 ||
             (token.symbol ?? '').toLowerCase().indexOf(searchLower) !== -1);
 });
@@ -115,6 +120,9 @@ onBeforeMount(() => {
                                 <div><b>{{ token.symbol ?? "???" }}</b> - {{ token.name ?? "Unknown" }}</div>
                                 <div>
                                     <PubkeyBadge :pubkey="token.address" :long="globalStore.windowWidth > 500"/>
+                                </div>
+                                <div v-if="showCoingeckoId">
+                                    {{ token.coingeckoId ?? "No CoinGecko id" }}
                                 </div>
                             </q-item-section>
                         </q-item>

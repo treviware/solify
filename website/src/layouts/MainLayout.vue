@@ -77,7 +77,7 @@ const paddingRight = computed(() => {
 
 <style lang="scss" scoped>
 .global-toolbar {
-    background-color: transparent;
+    background-color: $dark;
     border-bottom: 2px solid $dark2 !important;
     height: 80px;
 }

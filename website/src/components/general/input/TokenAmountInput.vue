@@ -1,24 +1,28 @@
 <script lang="ts" setup>
 import BN from 'bn.js';
-import {TokenMeta} from 'stores/blockchain';
+import {useBlockchainStore} from 'stores/blockchain';
 import {computed, ref} from 'vue';
 import {formatBasisPoints} from 'src/utils/tokens';
+import {PublicKey} from '@solana/web3.js';
 
 const props = defineProps<{
-    modelValue: BN; inBps?: boolean; token: TokenMeta; bpsLabel?: string;
+    modelValue: BN; inBps?: boolean; token: PublicKey; bpsLabel?: string;
 }>();
 const emits = defineEmits<{
     (e: 'update:model-value', value: BN): void,
 }>();
 
+const blockchainStore = useBlockchainStore();
+
 // REFS -----------------------------------------------------------------------
 const isBPS = ref(props.inBps);
 
 // COMPUTED -------------------------------------------------------------------
-const power = computed(() => Math.pow(10, props.token.decimals ?? 0));
-const realValue = computed(() => formatBasisPoints(props.modelValue, props.token.decimals ?? 0));
+const tokenMeta = computed(() => blockchainStore.getTokenMetadata(props.token));
+const power = computed(() => Math.pow(10, tokenMeta.value?.decimals ?? 0));
+const realValue = computed(() => formatBasisPoints(props.modelValue, tokenMeta.value?.decimals ?? 0));
 const inputValue = computed(() => isBPS.value ? props.modelValue.toString() : realValue.value);
-const realValueLabel = computed(() => props.token.symbol ?? '???');
+const realValueLabel = computed(() => tokenMeta.value?.symbol ?? '???');
 const bpsValueLabel = computed(() => props.bpsLabel ?? 'BPS');
 const hint = computed(() => {
     if (isBPS.value) {
@@ -58,17 +62,22 @@ function onUpdate(value: string) {
 </script>
 
 <template>
-    <q-input :model-value="inputValue" @update:model-value="onUpdate" :hint="hint" outlined dense class="token-input">
+    <q-input :model-value="inputValue"
+             @update:model-value="onUpdate"
+             :hint="hint"
+             outlined
+             dense
+             class="token-amount-input">
         <template v-slot:append>
             <q-btn round class="rounded-borders q-px-sm" @click="isBPS = !isBPS" flat no-caps>
-                {{ isBPS ? bpsLabel : realValueLabel }}
+                {{ isBPS ? bpsValueLabel : realValueLabel }}
             </q-btn>
         </template>
     </q-input>
 </template>
 
 <style lang="scss" scoped>
-.token-input:deep(.q-field__control) {
+.token-amount-input:deep(.q-field__control) {
     padding-right: 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {useBlockchainStore} from 'stores/blockchain';
-import TokenInput from 'components/general/input/TokenInput.vue';
+import TokenAmountInput from 'components/general/input/TokenAmountInput.vue';
 
 const blockchainStore = useBlockchainStore();
 
@@ -12,7 +12,7 @@ const blockchainStore = useBlockchainStore();
 </script>
 
 <template>
-    <TokenInput v-bind="$attrs" bps-label="LAMPORTS" :token="blockchainStore.solToken"/>
+    <TokenAmountInput v-bind="$attrs" bps-label="LAMPORTS" :token="blockchainStore.solToken.address"/>
 </template>
 
 <style lang="scss" scoped></style>

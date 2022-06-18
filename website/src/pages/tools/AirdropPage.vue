@@ -2,7 +2,7 @@
 import {storeToRefs} from 'pinia';
 import {computed, ref} from 'vue';
 import {useAirdropToolStore} from 'stores/pages/tools/airdrop';
-import SolTokenInput from 'components/general/input/SolTokenInput.vue';
+import SolTokenAmountInput from 'components/general/input/SolTokenAmountInput.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import AlertBox from 'components/general/AlertBox.vue';
 import {useSolanaStore} from 'stores/solana';
@@ -56,9 +56,9 @@ async function airdrop() {
             <div>The airdrop will not work in mainnet</div>
         </AlertBox>
         <div class="text-secondary text-caption text-bold q-mt-md">Account</div>
-        <PubkeyInput v-model="account"></PubkeyInput>
+        <PubkeyInput v-model="account"/>
         <div class="text-secondary text-caption text-bold q-mt-md">Amount</div>
-        <SolTokenInput v-model="amount"></SolTokenInput>
+        <SolTokenAmountInput v-model="amount"/>
         <AlertBox type="warning" class="q-my-md" v-if="isGreaterThan2">
             <div>Trying to airdrop more than 2 SOL at the same time can lead in an error</div>
         </AlertBox>

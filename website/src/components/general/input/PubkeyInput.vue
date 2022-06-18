@@ -26,7 +26,11 @@ function onUpdate(value: string) {
 </script>
 
 <template>
-    <q-input v-bind="$attrs" :model-value="modelValue.toString()" @update:model-value="onUpdate" outlined dense/>
+    <q-input v-bind="$attrs" :model-value="modelValue.toString()" @update:model-value="onUpdate" outlined dense>
+        <template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
+            <slot :name="slot" v-bind="scope ?? {}"/>
+        </template>
+    </q-input>
 </template>
 
 <style lang="scss" scoped></style>
