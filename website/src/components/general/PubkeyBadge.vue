@@ -62,23 +62,33 @@ function openSolanaExplorer() {
                 <q-card-section class="text-center text-caption text-secondary" v-if="!long">
                     {{ props.pubkey.toBase58() }}
                 </q-card-section>
-                <q-card-actions class="row no-wrap justify-between">
-                    <q-btn @click="copy" flat color="white" class="rounded-borders" v-close-popup round>
-                        <q-icon name="fa-solid fa-clipboard" size="20px"/>
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy to clipboard</q-tooltip>
-                    </q-btn>
-                    <q-btn @click="openSolscan" flat color="white" class="rounded-borders" v-close-popup>
-                        <img class="solscan-icon"
-                             src="https://solscan.io/static/media/solana-solana-scan-blue.5ffb9996.svg"/>
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">View in Solscan</q-tooltip>
-                    </q-btn>
-                    <q-btn @click="openSolanaExplorer" flat color="white" class="rounded-borders" v-close-popup>
-                        <img class="solana-explorer-icon"
-                             src="https://explorer.solana.com/static/media/dark-explorer-logo.2d910a55.svg">
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">View in Solana Explorer
-                        </q-tooltip>
-                    </q-btn>
-                </q-card-actions>
+                <q-separator/>
+                <q-list dense separator>
+                    <q-item clickable @click="copy" v-close-popup>
+                        <q-item-section avatar>
+                            <q-icon name="fa-solid fa-clipboard" size="14px"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Copy to clipboard</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable @click="openSolscan" v-close-popup>
+                        <q-item-section avatar>
+                            <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>View in Solscan</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                    <q-item clickable @click="openSolanaExplorer" v-close-popup>
+                        <q-item-section avatar>
+                            <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>View in Solana Explorer</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </q-list>
             </q-card>
         </q-menu>
     </q-badge>
@@ -91,16 +101,9 @@ function openSolanaExplorer() {
 
 .menu-card {
     background-color: $grey-9;
-}
 
-.solscan-icon {
-    height: 12px;
-}
-
-.solana-explorer-icon {
-    height: 18px;
-    width: 170px;
-    object-fit: cover;
-    object-position: left top;
+    &:deep(.q-item__section--avatar) {
+        min-width: 30px;
+    }
 }
 </style>

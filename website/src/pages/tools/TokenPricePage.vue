@@ -137,36 +137,47 @@ onMounted(() => {
                        show-coingecko-id/>
         <q-separator class="q-my-lg"/>
         <q-list dense>
-            <q-item class="flex items-center">
-                <q-item-label><b>Token price</b>:
-                    <VsCurrencyText :amount="1" :decimals="2" :show-equal="false" :token="token"/>
-                </q-item-label>
+            <q-item>
+                <q-item-section>
+                    <q-item-label><b>Token price</b>:
+                        <VsCurrencyText :amount="1" :decimals="2" :show-equal="false" :token="token"/>
+                    </q-item-label>
+                </q-item-section>
             </q-item>
-            <q-item class="flex items-center" v-if="isComparing">
-                <q-item-label><b>Comparing token price</b>:
-                    <VsCurrencyText :amount="1" :decimals="2" :show-equal="false" :token="comparingToken"/>
-                </q-item-label>
+            <q-item v-if="isComparing">
+                <q-item-section>
+                    <q-item-label><b>Comparing token price</b>:
+                        <VsCurrencyText :amount="1" :decimals="2" :show-equal="false" :token="comparingToken"/>
+                    </q-item-label>
+                </q-item-section>
             </q-item>
-            <q-item class="flex items-center">
-                <q-item-label><b>Total tokens price</b>:
-                    <VsCurrencyText :amount="realAmount" :decimals="2" :show-equal="false" :token="token"/>
-                </q-item-label>
+            <q-item>
+                <q-item-section>
+                    <q-item-label><b>Total tokens price</b>:
+                        <VsCurrencyText :amount="realAmount" :decimals="2" :show-equal="false" :token="token"/>
+                    </q-item-label>
+                </q-item-section>
             </q-item>
             <template v-if="isComparing">
-                <q-item class="flex items-center">
-                    <q-item-label><b>Single token swap</b>: 1 {{ tokenMeta?.symbol ?? '???' }} = {{
-                            singleTokenSwapTokens
-                        }}
-                        {{ comparingTokenMeta?.symbol ?? '???' }}
-                    </q-item-label>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label><b>Single token swap</b>: 1 {{ tokenMeta?.symbol ?? '???' }} = {{
+                                singleTokenSwapTokens
+                            }}
+                            {{ comparingTokenMeta?.symbol ?? '???' }}
+                        </q-item-label>
+                    </q-item-section>
                 </q-item>
-                <q-item class="flex items-center">
-                    <q-item-label><b>All tokens swap</b>:
-                        {{ formatBasisPoints(amount, tokenMeta?.decimals ?? 0) }} {{ tokenMeta?.symbol ?? '???' }} = {{
-                            swapTokens
-                        }}
-                        {{ comparingTokenMeta?.symbol ?? '???' }}
-                    </q-item-label>
+                <q-item>
+                    <q-item-section>
+                        <q-item-label><b>All tokens swap</b>:
+                            {{ formatBasisPoints(amount, tokenMeta?.decimals ?? 0) }} {{ tokenMeta?.symbol ?? '???' }} =
+                            {{
+                                swapTokens
+                            }}
+                            {{ comparingTokenMeta?.symbol ?? '???' }}
+                        </q-item-label>
+                    </q-item-section>
                 </q-item>
             </template>
         </q-list>

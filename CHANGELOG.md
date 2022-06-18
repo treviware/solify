@@ -23,10 +23,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
 * tools: Add `NFT Tool` view to create/mint/burn NFTs.
 * tools: Add `PDA Tool` view to generate PDAs.
-* tools: Add `Token Price Tool` view to get the token price.
 * tools: Add `Keypair Tool` view to generate new keypairs and change between keypair's representation.
-* tools: Add `Token Price Tool` view to get the price of a token in one of the comparing currencies or in another
-  token.
 
 ### Fixes
 
@@ -52,3 +49,5 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Rent Excemption Tool` view to get the amount to pay to be rent exempt for an account with the
   specified number of bytes.
 * tools: Add `Airdrop Tool` view to airdrop some SOL in the networks that allow this action.
+* tools: Add `Token Price Tool` view to get the price of a token in one of the comparing currencies or in another
+  token.
