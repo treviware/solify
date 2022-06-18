@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import BN from 'bn.js';
 
-export const useBpsUtilityStore = defineStore('bpsUtility', {
+export const useBpsToolStore = defineStore('bpsTool', {
     state: () => ({
         decimals: 0,
         bps: new BN(100),

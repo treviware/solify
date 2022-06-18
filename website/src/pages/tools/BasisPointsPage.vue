@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import {MAX_SPL_DECIMALS} from 'src/constants';
 import SplDecimalsInput from 'components/general/input/SplDecimalsInput.vue';
-import {useBpsUtilityStore} from 'stores/pages/utilities/basisPoints';
+import {useBpsToolStore} from 'stores/pages/tools/basisPoints';
 import {storeToRefs} from 'pinia';
 import BignumInput from 'components/general/input/BignumInput.vue';
 import BN from 'bn.js';
 import {computed} from 'vue';
 import {formatBasisPoints} from 'src/utils/tokens';
 
-const bpsUtilityStore = useBpsUtilityStore();
+const bpsToolStore = useBpsToolStore();
 
 // REFS -----------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ const {
     decimals,
     bps,
     realAmount,
-} = storeToRefs(bpsUtilityStore);
+} = storeToRefs(bpsToolStore);
 
 // COMPUTED -------------------------------------------------------------------
 

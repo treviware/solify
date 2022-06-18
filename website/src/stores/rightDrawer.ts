@@ -29,7 +29,7 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
             }
 
             const menuStore = useMenuStore();
-            menuStore.addRecentUtility(newState);
+            menuStore.addRecentTool(newState);
 
             this.drawerState = newState;
             await Router.replace({

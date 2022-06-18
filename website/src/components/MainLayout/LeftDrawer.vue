@@ -32,11 +32,11 @@ const appButtons = APP_BUTTONS;
                                       :key="button.name"></LeftDrawerMenuButton>
             </q-list>
             <q-space/>
-            <div class="text-primary text-caption text-bold text-center q-mt-md">Recent utilities</div>
+            <div class="text-primary text-caption text-bold text-center q-mt-md">Recent tools</div>
             <q-separator/>
             <q-list>
                 <LeftDrawerMenuButton v-bind="button"
-                                      v-for="(button, i) in menuStore.recentMenuUtilities"
+                                      v-for="(button, i) in menuStore.recentMenuTools"
                                       :index="i"
                                       :key="button.name"></LeftDrawerMenuButton>
             </q-list>

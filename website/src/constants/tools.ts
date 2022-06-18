@@ -1,13 +1,13 @@
-import {DrawerUtilityButton, RightDrawerState} from 'src/types/drawer';
-import WalletsPage from 'pages/utilities/WalletsPage.vue';
-import BasisPointsPage from 'pages/utilities/BasisPointsPage.vue';
-import RentExemptionPage from 'pages/utilities/RentExemptionPage.vue';
-import AirdropPage from 'pages/utilities/AirdropPage.vue';
-import {UtilityCategory} from 'src/types/utilities';
+import {DrawerToolButton, RightDrawerState} from 'src/types/drawer';
+import WalletsPage from 'pages/tools/WalletsPage.vue';
+import BasisPointsPage from 'pages/tools/BasisPointsPage.vue';
+import RentExemptionPage from 'pages/tools/RentExemptionPage.vue';
+import AirdropPage from 'pages/tools/AirdropPage.vue';
+import {ToolCategory} from 'src/types/tools';
 
-export const UTILITY_BUTTONS_BY_CATEGORY: UtilityCategory[] = [{
-    name: 'Solana Utilities',
-    description: 'Solana\'s utility tools are designed to help you manage your account\'s assets and liabilities.',
+export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
+    name: 'Solana Tools',
+    description: 'Tools to help you manage your accounts.',
     buttons: [{
         icon: 'fa-solid fa-wallet',
         name: 'Wallet List',
@@ -23,13 +23,13 @@ export const UTILITY_BUTTONS_BY_CATEGORY: UtilityCategory[] = [{
     }, {
         icon: 'fa-solid fa-parachute-box',
         name: 'Airdrop',
-        description: 'An utility to airdrop some SOL to a given address',
+        description: 'An tool to airdrop some SOL to a given address',
         rightDrawerOption: RightDrawerState.Airdrop,
         component: AirdropPage,
     }],
 }, {
-    name: 'SPL Token Utilities',
-    description: 'Utilities to manage your SPL tokens.',
+    name: 'SPL Token Tools',
+    description: 'Tools to manage your SPL tokens.',
     buttons: [{
         icon: 'fa-solid fa-right-left',
         name: 'Basis Points',
@@ -39,5 +39,5 @@ export const UTILITY_BUTTONS_BY_CATEGORY: UtilityCategory[] = [{
     }],
 }];
 
-export const UTILITY_BUTTONS = UTILITY_BUTTONS_BY_CATEGORY.reduce((acc, category) => acc.concat(category.buttons),
-    [] as DrawerUtilityButton[]);
+export const TOOL_BUTTONS = TOOL_BUTTONS_BY_CATEGORY.reduce((acc, category) => acc.concat(category.buttons),
+    [] as DrawerToolButton[]);

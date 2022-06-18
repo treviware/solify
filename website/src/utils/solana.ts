@@ -1,7 +1,7 @@
 import {Connection, PublicKey} from '@solana/web3.js';
 import {Account, AccountLayout, AccountState, TOKEN_PROGRAM_ID} from '@solana/spl-token';
 import {Metadata, PROGRAM_ID} from '@metaplex-foundation/mpl-token-metadata';
-import {WalletTokenMetadata} from 'stores/pages/utilities/walletList';
+import {WalletTokenMetadata} from 'stores/pages/tools/walletList';
 
 export async function deriveMetadataAccountKey(account: PublicKey): Promise<PublicKey> {
     const result = await PublicKey.findProgramAddress(

@@ -20,12 +20,12 @@ The minor version will be incremented upon a breaking change and the patch versi
 * signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
 * signing: Add remote message signature to easily login into third-party apps. In this case the client app pays for n
   logins / month.
-* utilities: Add `SPL Utility` view to create/mint/burn SPL tokens.
-* utilities: Add `NFT Utility` view to create/mint/burn NFTs.
-* utilities: Add `PDA Utility` view to generate PDAs.
-* utilities: Add `Token Price Utility` view to get the token price.
-* utilities: Add `Keypair Utility` view to generate new keypairs and change between keypair's representation.
-* utilities: Add `Token Price Utility` view to get the price of a token in one of the comparing currencies or in another
+* tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
+* tools: Add `NFT Tool` view to create/mint/burn NFTs.
+* tools: Add `PDA Tool` view to generate PDAs.
+* tools: Add `Token Price Tool` view to get the token price.
+* tools: Add `Keypair Tool` view to generate new keypairs and change between keypair's representation.
+* tools: Add `Token Price Tool` view to get the price of a token in one of the comparing currencies or in another
   token.
 
 ### Fixes
@@ -43,12 +43,12 @@ The minor version will be incremented upon a breaking change and the patch versi
 * general: Add SOL to SPL picker.
 * general: Add last selected tokens to SPL selector.
 * general: Show NFT info in wallet list.
-* general: Add recent utility list to the left and right menus. Add also the ability to pin some of them.
-* general: Add view to select a utility.
+* general: Add recent tool list to the left and right menus. Add also the ability to pin some of them.
+* general: Add view to select a tool.
 * config: Add support for different vs currencies.
 * config: Add support for different RPC endpoint.
 * config: Add support for different commitment levels.
-* utilities: Add `Basis Points Utility` view to change between basis points of an SPL to its real value and viceversa.
-* utilities: Add `Rent Excemption Utility` view to get the amount to pay to be rent exempt for an account with the
+* tools: Add `Basis Points Tool` view to change between basis points of an SPL to its real value and viceversa.
+* tools: Add `Rent Excemption Tool` view to get the amount to pay to be rent exempt for an account with the
   specified number of bytes.
-* utilities: Add `Airdrop Utility` view to airdrop some SOL in the networks that allow this action.
+* tools: Add `Airdrop Tool` view to airdrop some SOL in the networks that allow this action.

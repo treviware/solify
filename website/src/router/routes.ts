@@ -17,9 +17,9 @@ const routes: RouteRecordRaw[] = [{
         path: '/programs',
         component: () => import('pages/apps/SolanaProgramsPage.vue'),
     }, {
-        name: 'Utilities',
-        path: '/utilities',
-        component: () => import('pages/apps/UtilitiesPage.vue'),
+        name: 'Tools',
+        path: '/tools',
+        component: () => import('pages/apps/ToolsPage.vue'),
     }, {
         name: 'Settings',
         path: '/settings',

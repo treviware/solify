@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import {DrawerUtilityButton} from 'src/types/drawer';
+import {DrawerToolButton} from 'src/types/drawer';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {computed} from 'vue';
 import {useMenuStore} from 'stores/menu';
-import {MAX_PINNED_UTILITIES} from 'src/constants';
+import {MAX_PINNED_TOOLS} from 'src/constants';
 
 const props = defineProps<{
-    button: DrawerUtilityButton;
+    button: DrawerToolButton;
 }>();
 
 const rightDrawerStore = useRightDrawerStore();
@@ -17,8 +17,8 @@ const menuStore = useMenuStore();
 
 const isActive = computed(() => rightDrawerStore.drawerState === props.button.rightDrawerOption);
 const isPinned = computed(
-    () => menuStore.pinnedUtilities.findIndex(v => v.rightDrawerOption === props.button.rightDrawerOption) >= 0);
-const canPin = computed(() => isPinned.value || menuStore.pinnedUtilities.length < MAX_PINNED_UTILITIES);
+    () => menuStore.pinnedTools.findIndex(v => v.rightDrawerOption === props.button.rightDrawerOption) >= 0);
+const canPin = computed(() => isPinned.value || menuStore.pinnedTools.length < MAX_PINNED_TOOLS);
 
 // METHODS --------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ function pin() {
 </script>
 
 <template>
-    <q-card class="utility-card column">
+    <q-card class="tool-card column">
         <q-card-section class="row items-center gap-md">
             <div class="q-ml-sm" :class="{'text-secondary': isActive}">
                 <q-icon :name="button.icon" size="20px"/>
@@ -68,14 +68,17 @@ function pin() {
             {{ button.description }}
         </q-card-section>
         <q-space/>
-        <q-card-actions class="flex flex-center">
-            <q-btn color="primary" unelevated @click="open" no-caps>{{ isActive ? 'Close' : 'Open' }}</q-btn>
-        </q-card-actions>
+        <q-card-section class="flex flex-center">
+            <q-btn color="primary" unelevated @click="open" no-caps class="full-width">{{
+                    isActive ? 'Close' : 'Open'
+                }}
+            </q-btn>
+        </q-card-section>
     </q-card>
 </template>
 
 <style lang="scss" scoped>
-.utility-card {
+.tool-card {
     width: 300px;
     max-width: 80vw;
 

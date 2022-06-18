@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
 import {computed, ref} from 'vue';
-import {useAirdropUtilityStore} from 'stores/pages/utilities/airdrop';
+import {useAirdropToolStore} from 'stores/pages/tools/airdrop';
 import SolTokenInput from 'components/general/input/SolTokenInput.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import AlertBox from 'components/general/AlertBox.vue';
@@ -11,13 +11,13 @@ import BN from 'bn.js';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
-const airdropUtilityStore = useAirdropUtilityStore();
+const airdropToolStore = useAirdropToolStore();
 
 // REFS -----------------------------------------------------------------------
 const {
     account,
     amount,
-} = storeToRefs(airdropUtilityStore);
+} = storeToRefs(airdropToolStore);
 const loading = ref(false);
 
 // COMPUTED -------------------------------------------------------------------

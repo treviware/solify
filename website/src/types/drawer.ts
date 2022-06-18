@@ -10,7 +10,7 @@ export enum RightDrawerState {
 
 export type DrawerButton =
     DrawerAppButton
-    | DrawerUtilityButton;
+    | DrawerToolButton;
 
 export type DrawerAppButton =
     DrawerButtonBase
@@ -18,7 +18,7 @@ export type DrawerAppButton =
     pathName: string;
 };
 
-export type DrawerUtilityButton =
+export type DrawerToolButton =
     DrawerButtonBase
     & {
     rightDrawerOption: RightDrawerState, component: DefineComponent<any, any, any, any, any, any, any, any, any, any, any, any>,
@@ -36,6 +36,6 @@ export function isDrawerAppButton(button: DrawerButton): button is DrawerAppButt
     return (button as any).pathName !== undefined;
 }
 
-export function isDrawerUtilityButton(button: DrawerButton): button is DrawerUtilityButton {
+export function isDrawerToolButton(button: DrawerButton): button is DrawerToolButton {
     return (button as any).rightDrawerOption !== undefined;
 }

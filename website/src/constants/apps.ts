@@ -12,9 +12,9 @@ export const APP_BUTTONS: DrawerAppButton[] = [{
     pathName: 'SolanaPrograms',
 }, {
     icon: 'fa-solid fa-screwdriver-wrench',
-    name: 'Utilities',
-    description: 'Select the utility you need',
-    pathName: 'Utilities',
+    name: 'Tools',
+    description: 'Select the tool you need',
+    pathName: 'Tools',
 }, {
     icon: 'fa-solid fa-gear',
     name: 'Settings',

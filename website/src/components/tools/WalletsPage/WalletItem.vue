@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {useWalletListStore, WalletTokenData} from 'stores/pages/utilities/walletList';
+import {useWalletListStore, WalletTokenData} from 'stores/pages/tools/walletList';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import {useWallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';
@@ -8,7 +8,7 @@ import {computed, ref} from 'vue';
 import {useQuasar} from 'quasar';
 import {useSolanaStore} from 'stores/solana';
 import {deriveMetadataAccountKey, loadMetadataAccounts, loadWalletTokens} from 'src/utils/solana';
-import WalletTokenItem from 'components/utilities/WalletsPage/WalletTokenItem.vue';
+import WalletTokenItem from 'components/tools/WalletsPage/WalletTokenItem.vue';
 import {useBlockchainStore} from 'stores/blockchain';
 import axios, {AxiosResponse} from 'axios';
 

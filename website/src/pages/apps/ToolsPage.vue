@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import {computed, ref} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
-import {UTILITY_BUTTONS_BY_CATEGORY} from 'src/constants/utilites';
-import {UtilityCategory} from 'src/types/utilities';
-import UtilityCard from 'components/apps/UtilitiesPage/UtilityCard.vue';
+import {TOOL_BUTTONS_BY_CATEGORY} from 'src/constants/tools';
+import {ToolCategory} from 'src/types/tools';
+import ToolCard from 'components/apps/ToolsPage/ToolCard.vue';
 
 // REFS -----------------------------------------------------------------------
 const search = ref('');
 
 // COMPUTED -------------------------------------------------------------------
-const filteredCategories = computed(() => UTILITY_BUTTONS_BY_CATEGORY.map(v => {
+const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
     if (search.value === '') {
         return {
             ...v,
@@ -28,7 +28,7 @@ const filteredCategories = computed(() => UTILITY_BUTTONS_BY_CATEGORY.map(v => {
         ...v,
         buttons,
     };
-}).filter(v => v !== null) as UtilityCategory[]);
+}).filter(v => v !== null) as ToolCategory[]);
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
@@ -39,14 +39,15 @@ const filteredCategories = computed(() => UTILITY_BUTTONS_BY_CATEGORY.map(v => {
     <q-page class="q-pa-lg">
         <div class="viewport-width">
             <div class="row justify-between items-end q-mb-xl">
-                <h3>Utilities</h3>
-                <SearchBar v-model="search" placeholder="Search utility" :debounce="300"/>
+                <h3>Tools</h3>
+                <SearchBar v-model="search" placeholder="Search tool" :debounce="300"/>
             </div>
             <div v-for="category in filteredCategories" :key="category.name">
                 <h6 class="q-mt-xl">{{ category.name }}</h6>
+                <p>{{ category.description }}</p>
                 <q-separator class="q-mt-sm q-mb-md"/>
                 <div class="row justify-start items-stretch gap-md">
-                    <UtilityCard v-for="button in category.buttons" :key="button.name" :button="button"></UtilityCard>
+                    <ToolCard v-for="button in category.buttons" :key="button.name" :button="button"></ToolCard>
                 </div>
             </div>
         </div>

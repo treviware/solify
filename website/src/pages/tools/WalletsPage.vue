@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import {useWalletListStore} from 'stores/pages/utilities/walletList';
+import {useWalletListStore} from 'stores/pages/tools/walletList';
 import {storeToRefs} from 'pinia';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {computed, ref} from 'vue';
 import {PublicKey} from '@solana/web3.js';
 import {useQuasar} from 'quasar';
-import WalletItem from 'components/utilities/WalletsPage/WalletItem.vue';
+import WalletItem from 'components/tools/WalletsPage/WalletItem.vue';
 
 const rightDrawerStore = useRightDrawerStore();
 const walletListStore = useWalletListStore();

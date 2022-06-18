@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {RightDrawerState} from 'src/types/drawer';
 import {useMenuStore} from 'stores/menu';
-import {MAX_PINNED_UTILITIES} from 'src/constants';
+import {MAX_PINNED_TOOLS} from 'src/constants';
 
 const props = defineProps<{
     index?: number, icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
@@ -25,8 +25,8 @@ const isActive = computed(() => {
     }
 });
 
-const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedUtilities.length);
-const canPin = computed(() => isPinned.value || menuStore.pinnedUtilities.length < MAX_PINNED_UTILITIES);
+const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedTools.length);
+const canPin = computed(() => isPinned.value || menuStore.pinnedTools.length < MAX_PINNED_TOOLS);
 
 // METHODS --------------------------------------------------------------------
 

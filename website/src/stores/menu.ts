@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
-import {UTILITY_BUTTONS} from 'src/constants/utilites';
-import {MAX_PINNED_UTILITIES, MAX_RECENT_UTILITIES, PINNED_UTILITIES_KEY} from 'src/constants';
-import {DrawerUtilityButton, RightDrawerState} from 'src/types/drawer';
+import {TOOL_BUTTONS} from 'src/constants/tools';
+import {MAX_PINNED_TOOLS, MAX_RECENT_TOOLS, PINNED_TOOLS_KEY} from 'src/constants';
+import {DrawerToolButton, RightDrawerState} from 'src/types/drawer';
 
 export const useMenuStore = defineStore('menu', {
     state: () => {
@@ -11,78 +11,78 @@ export const useMenuStore = defineStore('menu', {
         };
     },
     getters: {
-        recentMenuUtilities: (state) => {
-            const numUtilities = Math.max(MAX_RECENT_UTILITIES - state.pinnedUtilities.length);
-            const utilities = state.recentUtilities.slice(-numUtilities).reverse();
+        recentMenuTools: (state) => {
+            const numTools = Math.max(MAX_RECENT_TOOLS - state.pinnedTools.length);
+            const tools = state.recentTools.slice(-numTools).reverse();
 
-            return [...state.pinnedUtilities, ...utilities];
+            return [...state.pinnedTools, ...tools];
         },
     },
     actions: {
-        addRecentUtility(newState: RightDrawerState) {
-            const index = this.recentUtilities.findIndex(v => v.rightDrawerOption === newState);
+        addRecentTool(newState: RightDrawerState) {
+            const index = this.recentTools.findIndex(v => v.rightDrawerOption === newState);
 
             if (index < 0) {
                 return;
             }
 
-            const result = this.recentUtilities.splice(index, 1);
-            this.recentUtilities.push(...result);
+            const result = this.recentTools.splice(index, 1);
+            this.recentTools.push(...result);
         },
         pin(newState: RightDrawerState) {
-            if (this.pinnedUtilities.length >= MAX_PINNED_UTILITIES) {
+            if (this.pinnedTools.length >= MAX_PINNED_TOOLS) {
                 return;
             }
 
-            const index = this.recentUtilities.findIndex(v => v.rightDrawerOption === newState);
-            const result = this.recentUtilities.splice(index, 1);
-            this.pinnedUtilities.push(...result);
+            const index = this.recentTools.findIndex(v => v.rightDrawerOption === newState);
+            const result = this.recentTools.splice(index, 1);
+            this.pinnedTools.push(...result);
 
-            savePins(this.pinnedUtilities);
+            savePins(this.pinnedTools);
         },
         unpin(newState: RightDrawerState) {
-            const index = this.pinnedUtilities.findIndex(v => v.rightDrawerOption === newState);
+            const index = this.pinnedTools.findIndex(v => v.rightDrawerOption === newState);
             if (index < 0) {
                 return;
             }
 
-            const result = this.pinnedUtilities.splice(index, 1);
-            this.recentUtilities.push(...result);
+            const result = this.pinnedTools.splice(index, 1);
+            this.recentTools.push(...result);
 
-            savePins(this.pinnedUtilities);
+            savePins(this.pinnedTools);
         },
     },
 });
 
 function loadPins() {
-    const pinnedUtilities = localStorage.getItem(PINNED_UTILITIES_KEY);
-    if (pinnedUtilities) {
-        const pinIndexes: number[] = JSON.parse(pinnedUtilities);
+    const pinnedTools = localStorage.getItem(PINNED_TOOLS_KEY);
+    if (pinnedTools) {
+        const pinIndexes: number[] = JSON.parse(pinnedTools);
 
         if (validatePinList(pinIndexes)) {
-            const recentUtilities = UTILITY_BUTTONS.slice(0);
-            const pinnedUtilities: DrawerUtilityButton[] = [];
-            pinIndexes.splice(MAX_PINNED_UTILITIES, pinIndexes.length);
+            const recentTools = TOOL_BUTTONS.slice(0);
+            const pinnedTools: DrawerToolButton[] = [];
+            pinIndexes.splice(MAX_PINNED_TOOLS, pinIndexes.length);
 
             for (const pin of pinIndexes) {
-                pinnedUtilities.push(recentUtilities[pin]);
+                pinnedTools.push(recentTools[pin]);
             }
 
             const sortedPinIndexes = pinIndexes.sort((a, b) => b - a);
             for (const pin of sortedPinIndexes) {
-                recentUtilities.splice(pin, 1);
+                recentTools.splice(pin, 1);
             }
 
             return {
-                recentUtilities,
-                pinnedUtilities,
+                recentTools,
+                pinnedTools,
             };
         }
     }
 
     return {
-        recentUtilities: UTILITY_BUTTONS.slice(1),
-        pinnedUtilities: [UTILITY_BUTTONS[0]],
+        recentTools: TOOL_BUTTONS.slice(1),
+        pinnedTools: [TOOL_BUTTONS[0]],
     };
 }
 
@@ -97,7 +97,7 @@ function validatePinList(pinList: any): boolean {
             return false;
         }
 
-        if (pin < 0 || pin >= UTILITY_BUTTONS.length) {
+        if (pin < 0 || pin >= TOOL_BUTTONS.length) {
             return false;
         }
     }
@@ -105,14 +105,14 @@ function validatePinList(pinList: any): boolean {
     return true;
 }
 
-function savePins(pinnedUtilities: DrawerUtilityButton[]) {
-    if (pinnedUtilities.length === 0) {
-        localStorage.removeItem(PINNED_UTILITIES_KEY);
+function savePins(pinnedTools: DrawerToolButton[]) {
+    if (pinnedTools.length === 0) {
+        localStorage.removeItem(PINNED_TOOLS_KEY);
         return;
     }
 
     const pins = JSON.stringify(
-        pinnedUtilities.map(v => UTILITY_BUTTONS.findIndex(v2 => v.rightDrawerOption === v2.rightDrawerOption)));
+        pinnedTools.map(v => TOOL_BUTTONS.findIndex(v2 => v.rightDrawerOption === v2.rightDrawerOption)));
 
-    localStorage.setItem(PINNED_UTILITIES_KEY, pins);
+    localStorage.setItem(PINNED_TOOLS_KEY, pins);
 }

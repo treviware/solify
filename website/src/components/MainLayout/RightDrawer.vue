@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {computed} from 'vue';
-import {UTILITY_BUTTONS} from 'src/constants/utilites';
+import {TOOL_BUTTONS} from 'src/constants/tools';
 import {storeToRefs} from 'pinia';
 
 const rightDrawerStore = useRightDrawerStore();
 
-// const fixedButtons = FIXED_UTILITY_BUTTONS;
-const utilityButtons = UTILITY_BUTTONS;
+const toolButtons = TOOL_BUTTONS;
 
 // REFS -----------------------------------------------------------------------
 
@@ -16,7 +15,7 @@ const {drawerTopButtons} = storeToRefs(rightDrawerStore);
 // COMPUTED -------------------------------------------------------------------
 
 const activeOption = computed(
-    () => utilityButtons.find(button => rightDrawerStore.drawerState === button.rightDrawerOption) ?? null);
+    () => toolButtons.find(button => rightDrawerStore.drawerState === button.rightDrawerOption) ?? null);
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
