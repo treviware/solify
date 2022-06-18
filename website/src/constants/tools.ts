@@ -4,6 +4,7 @@ import BasisPointsPage from 'pages/tools/BasisPointsPage.vue';
 import RentExemptionPage from 'pages/tools/RentExemptionPage.vue';
 import AirdropPage from 'pages/tools/AirdropPage.vue';
 import TokenPricePage from 'pages/tools/TokenPricePage.vue';
+import KeypairGeneratorPage from 'pages/tools/KeypairGeneratorPage.vue';
 import {ToolCategory} from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -24,9 +25,15 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
     }, {
         icon: 'fa-solid fa-parachute-box',
         name: 'Airdrop',
-        description: 'An tool to airdrop some SOL to a given address',
+        description: 'A tool to airdrop some SOL to a given address',
         rightDrawerOption: RightDrawerState.Airdrop,
         component: AirdropPage,
+    }, {
+        icon: 'fa-solid fa-key',
+        name: 'Keypair Generator',
+        description: 'Generate new keypairs and change them between different encodings',
+        rightDrawerOption: RightDrawerState.KeypairGenerator,
+        component: KeypairGeneratorPage,
     }],
 }, {
     name: 'SPL Token Tools',

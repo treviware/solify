@@ -23,7 +23,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
 * tools: Add `NFT Tool` view to create/mint/burn NFTs.
 * tools: Add `PDA Tool` view to generate PDAs.
-* tools: Add `Keypair Tool` view to generate new keypairs and change between keypair's representation.
+* tools: Add `Keypair Grind Tool` view to generate keypairs whose base58 encoding follows some rules.
 
 ### Fixes
 
@@ -51,3 +51,4 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Airdrop Tool` view to airdrop some SOL in the networks that allow this action.
 * tools: Add `Token Price Tool` view to get the price of a token in one of the comparing currencies or in another
   token.
+* tools: Add `Keypair Generator Tool` view to generate new keypairs and change them between different encodings.
