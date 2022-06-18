@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {WalletTokenData} from 'stores/wallets';
+import {WalletTokenData} from 'stores/pages/utilities/walletList';
 import {computed, ref} from 'vue';
 import JsonInspector from 'components/general/JsonInspector.vue';
 

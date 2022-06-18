@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import BN from 'bn.js';
+import {PublicKey} from '@solana/web3.js';
 
 defineProps<{
-    modelValue: BN;
+    modelValue: PublicKey;
 }>();
 const emits = defineEmits<{
-    (e: 'update:model-value', value: BN): void,
+    (e: 'update:model-value', value: PublicKey): void,
 }>();
 
 // REFS -----------------------------------------------------------------------
@@ -14,8 +14,8 @@ const emits = defineEmits<{
 
 function onUpdate(value: string) {
     try {
-        const bn = new BN(value);
-        emits('update:model-value', bn);
+        const pubkey = new PublicKey(value);
+        emits('update:model-value', pubkey);
     } catch (e) {
         // ignore
     }

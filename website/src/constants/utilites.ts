@@ -2,6 +2,7 @@ import {DrawerUtilityButton, RightDrawerState} from 'src/types/drawer';
 import WalletsPage from 'pages/utilities/WalletsPage.vue';
 import BasisPointsPage from 'pages/utilities/BasisPointsPage.vue';
 import RentExemptionPage from 'pages/utilities/RentExemptionPage.vue';
+import AirdropPage from 'pages/utilities/AirdropPage.vue';
 import {UtilityCategory} from 'src/types/utilities';
 
 export const UTILITY_BUTTONS_BY_CATEGORY: UtilityCategory[] = [{
@@ -19,6 +20,12 @@ export const UTILITY_BUTTONS_BY_CATEGORY: UtilityCategory[] = [{
         description: 'Get the rent you must pay for an account with a given size to be rent exempt',
         rightDrawerOption: RightDrawerState.Rent,
         component: RentExemptionPage,
+    }, {
+        icon: 'fa-solid fa-parachute-box',
+        name: 'Airdrop',
+        description: 'An utility to airdrop some SOL to a given address',
+        rightDrawerOption: RightDrawerState.Airdrop,
+        component: AirdropPage,
     }],
 }, {
     name: 'SPL Token Utilities',

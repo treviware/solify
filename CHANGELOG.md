@@ -25,7 +25,8 @@ The minor version will be incremented upon a breaking change and the patch versi
 * utilities: Add `PDA Utility` view to generate PDAs.
 * utilities: Add `Token Price Utility` view to get the token price.
 * utilities: Add `Keypair Utility` view to generate new keypairs and change between keypair's representation.
-* utilities: Add `Airdrop Utility` view to airdrop some SOL in the networks that allow this action.
+* utilities: Add `Token Price Utility` view to get the price of a token in one of the comparing currencies or in another
+  token.
 
 ### Fixes
 
@@ -50,3 +51,4 @@ The minor version will be incremented upon a breaking change and the patch versi
 * utilities: Add `Basis Points Utility` view to change between basis points of an SPL to its real value and viceversa.
 * utilities: Add `Rent Excemption Utility` view to get the amount to pay to be rent exempt for an account with the
   specified number of bytes.
+* utilities: Add `Airdrop Utility` view to airdrop some SOL in the networks that allow this action.

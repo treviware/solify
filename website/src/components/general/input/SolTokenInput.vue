@@ -1,32 +1,18 @@
 <script lang="ts" setup>
-import BN from 'bn.js';
+import {useBlockchainStore} from 'stores/blockchain';
+import TokenInput from 'components/general/input/TokenInput.vue';
 
-defineProps<{
-    modelValue: BN;
-}>();
-const emits = defineEmits<{
-    (e: 'update:model-value', value: BN): void,
-}>();
+const blockchainStore = useBlockchainStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
-
-function onUpdate(value: string) {
-    try {
-        const bn = new BN(value);
-        emits('update:model-value', bn);
-    } catch (e) {
-        // ignore
-    }
-}
-
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
 
 <template>
-    <q-input v-bind="$attrs" :model-value="modelValue.toString()" @update:model-value="onUpdate" outlined dense/>
+    <TokenInput v-bind="$attrs" bps-label="LAMPORTS" :token="blockchainStore.solToken"/>
 </template>
 
 <style lang="scss" scoped></style>

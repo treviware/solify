@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {useWalletStore, WalletTokenData} from 'stores/wallets';
+import {useWalletListStore, WalletTokenData} from 'stores/pages/utilities/walletList';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import {useWallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';
@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const quasar = useQuasar();
 const wallet = useWallet();
-const walletStore = useWalletStore();
+const walletListStore = useWalletListStore();
 const solanaStore = useSolanaStore();
 const blockchainStore = useBlockchainStore();
 
@@ -26,11 +26,11 @@ const blockchainStore = useBlockchainStore();
 const loading = ref(false);
 
 // COMPUTED -------------------------------------------------------------------
-const walletData = computed(() => walletStore.wallets.find(v => v.address.equals(props.address)));
+const walletData = computed(() => walletListStore.wallets.find(v => v.address.equals(props.address)));
 const isConnected = computed(() => walletData.value.address.equals(wallet.publicKey.value ?? PublicKey.default));
-const index = computed(() => walletStore.wallets.findIndex(v => v.address.equals(walletData.value.address)));
+const index = computed(() => walletListStore.wallets.findIndex(v => v.address.equals(walletData.value.address)));
 const isStart = computed(() => index.value === 0);
-const isEnd = computed(() => index.value === walletStore.wallets.length - 1);
+const isEnd = computed(() => index.value === walletListStore.wallets.length - 1);
 const isEmpty = computed(() => walletData.value.tokens.length === 0 && !walletData.value.isLoaded);
 const solAmount = computed(() => walletData.value.amount / Math.pow(10, blockchainStore.solToken.decimals));
 const tokens = computed(
@@ -63,19 +63,19 @@ const nfts = computed(
 // METHODS --------------------------------------------------------------------
 
 function remove() {
-    walletStore.wallets.splice(index.value, 1);
+    walletListStore.wallets.splice(index.value, 1);
 }
 
 function moveUp() {
     const i = index.value;
-    walletStore.wallets.splice(i - 1, 0, walletData.value);
-    walletStore.wallets.splice(i + 1, 1);
+    walletListStore.wallets.splice(i - 1, 0, walletData.value);
+    walletListStore.wallets.splice(i + 1, 1);
 }
 
 function moveDown() {
     const i = index.value;
-    walletStore.wallets.splice(i + 2, 0, walletData.value);
-    walletStore.wallets.splice(i, 1);
+    walletListStore.wallets.splice(i + 2, 0, walletData.value);
+    walletListStore.wallets.splice(i, 1);
 }
 
 async function loadData() {

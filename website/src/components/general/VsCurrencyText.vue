@@ -12,7 +12,6 @@ const router = useRouter();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
-
 const vsCurrencyPrice = computed(() => coingeckoStore.getVsCurrencyPrice());
 const tokenPrice = computed(() => coingeckoStore.getSolPrice() / vsCurrencyPrice.value);
 const price = computed(() => {
@@ -22,17 +21,6 @@ const price = computed(() => {
         return `${value.toFixed(props.decimals)}`;
     } else {
         return `${value}`;
-    }
-});
-const equal = computed(() => {
-    if (props.showEqual) {
-        if (coingeckoStore.vsCurrencyName === props.token) {
-            return '=';
-        } else {
-            return '≈';
-        }
-    } else {
-        return '';
     }
 });
 
@@ -50,7 +38,7 @@ async function openSettings() {
 </script>
 
 <template>
-    <span>{{ equal }} {{ price }} <q-btn dense flat color="secondary" @click="openSettings">{{
+    <span>≈ {{ price }} <q-btn dense flat color="secondary" @click="openSettings">{{
             coingeckoStore.vsCurrencyName
         }}</q-btn></span>
 </template>

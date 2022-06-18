@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useWalletStore} from 'stores/wallets';
+import {useWalletListStore} from 'stores/pages/utilities/walletList';
 import {storeToRefs} from 'pinia';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {computed, ref} from 'vue';
@@ -8,14 +8,14 @@ import {useQuasar} from 'quasar';
 import WalletItem from 'components/utilities/WalletsPage/WalletItem.vue';
 
 const rightDrawerStore = useRightDrawerStore();
-const walletStore = useWalletStore();
+const walletListStore = useWalletListStore();
 const quasar = useQuasar();
 
 // REFS -----------------------------------------------------------------------
 const newWallet = ref('');
 const {
     wallets,
-} = storeToRefs(walletStore);
+} = storeToRefs(walletListStore);
 const {
     drawerTopButtons,
 } = storeToRefs(rightDrawerStore);

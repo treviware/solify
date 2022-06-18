@@ -9,7 +9,7 @@ import {Collection} from '@metaplex-foundation/mpl-token-metadata/dist/src/gener
 import {Uses} from '@metaplex-foundation/mpl-token-metadata/dist/src/generated/types/Uses';
 import {Key} from '@metaplex-foundation/mpl-token-metadata/dist/src/generated/types/Key';
 
-export const useWalletStore = defineStore('wallets', {
+export const useWalletListStore = defineStore('walletListUtility', {
     state: () => {
         const wallet = useWallet();
         const wallets = ref<WalletData[]>([]);
