@@ -6,25 +6,26 @@ const routes: RouteRecordRaw[] = [{
     children: [{
         path: '',
         redirect: {
-            name: 'TxBuilder',
+            name: 'Tools',
         },
-    }, {
-        name: 'TxBuilder',
-        path: '/builder',
-        component: () => import('pages/apps/TxBuilderPage.vue'),
-    }, {
-        name: 'SolanaPrograms',
-        path: '/programs',
-        component: () => import('pages/apps/SolanaProgramsPage.vue'),
-    }, {
-        name: 'Tools',
-        path: '/tools',
-        component: () => import('pages/apps/ToolsPage.vue'),
-    }, {
-        name: 'Settings',
-        path: '/settings',
-        component: () => import('pages/apps/SettingsPage.vue'),
-    }],
+    }, //     {
+        //     name: 'TxBuilder',
+        //     path: '/builder',
+        //     component: () => import('pages/apps/TxBuilderPage.vue'),
+        // }, {
+        //     name: 'SolanaPrograms',
+        //     path: '/programs',
+        //     component: () => import('pages/apps/SolanaProgramsPage.vue'),
+        // },
+        {
+            name: 'Tools',
+            path: '/tools',
+            component: () => import('pages/apps/ToolsPage.vue'),
+        }, {
+            name: 'Settings',
+            path: '/settings',
+            component: () => import('pages/apps/SettingsPage.vue'),
+        }],
 },
 
     // Always leave this as last one,

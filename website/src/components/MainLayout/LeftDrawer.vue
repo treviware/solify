@@ -20,7 +20,7 @@ const appButtons = APP_BUTTONS;
             <div class="text-bold q-ml-md text-h6">
                 <div class="relative-position" style="top:5px">Solify</div>
                 <div class="text-caption text-bold relative-position" style="bottom:5px">by
-                    <a class="text-secondary" href="https://treviware.com" target="_blank">Treviware</a>
+                    <a class="text-secondary" target="_blank">Treviware</a>
                 </div>
             </div>
         </div>
