@@ -23,7 +23,6 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
 * tools: Add `NFT Tool` view to create/mint/burn NFTs.
 * tools: Add `PDA Tool` view to generate PDAs.
-* tools: Add `Keypair Grind Tool` view to generate keypairs whose base58 encoding follows some rules.
 
 ### Fixes
 
@@ -52,3 +51,6 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Token Price Tool` view to get the price of a token in one of the comparing currencies or in another
   token.
 * tools: Add `Keypair Generator Tool` view to generate new keypairs and change them between different encodings.
+* tools: Add `Vanity Address Tool` view to generate keypairs whose base58 encoding follows some rules. Start
+  with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
+* settings: Add autoload setting for wallets.

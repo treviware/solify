@@ -2,10 +2,10 @@
 import {useSolanaStore} from 'stores/solana';
 import {computed} from 'vue';
 import {clusterApiUrl} from '@solana/web3.js';
-import {useRouter} from 'vue-router';
+import {useRouterStore} from 'stores/router';
 
 const solanaStore = useSolanaStore();
-const router = useRouter();
+const routerStore = useRouterStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -26,9 +26,8 @@ const text = computed(() => {
 // METHODS --------------------------------------------------------------------
 
 async function open() {
-    await router.push({
+    await routerStore.push({
         name: 'Settings',
-        query: router.currentRoute.value.query,
     });
 }
 

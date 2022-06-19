@@ -2,6 +2,7 @@
 import SolanaNetworkSettings from 'components/apps/SettingsPage/SolanaNetworkSettings.vue';
 import SolanaCommitmentSettings from 'components/apps/SettingsPage/SolanaCommitmentSettings.vue';
 import VsCurrencySettings from 'components/apps/SettingsPage/VsCurrencySettings.vue';
+import WalletSettings from 'components/apps/SettingsPage/WalletSettings.vue';
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -15,6 +16,7 @@ import VsCurrencySettings from 'components/apps/SettingsPage/VsCurrencySettings.
         <SolanaNetworkSettings/>
         <SolanaCommitmentSettings class="q-mt-lg"/>
         <VsCurrencySettings class="q-mt-lg"/>
+        <WalletSettings class="q-mt-lg"/>
     </div>
 </template>
 

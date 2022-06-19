@@ -5,12 +5,14 @@ import {useRightDrawerStore} from 'stores/rightDrawer';
 import {RightDrawerState} from 'src/types/drawer';
 import {useMenuStore} from 'stores/menu';
 import {MAX_PINNED_TOOLS} from 'src/constants';
+import {useRouterStore} from 'stores/router';
 
 const props = defineProps<{
     index?: number, icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
 }>();
 
 const router = useRouter();
+const routerStore = useRouterStore();
 const rightDrawerStore = useRightDrawerStore();
 const menuStore = useMenuStore();
 
@@ -40,9 +42,8 @@ async function open() {
     }
 
     if (props.pathName) {
-        await router.push({
+        await routerStore.push({
             name: props.pathName,
-            query: router.currentRoute.value.query,
         });
     } else {
         await rightDrawerStore.open(props.rightDrawerOption!);

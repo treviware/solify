@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
 import {useCoingeckoStore} from 'stores/coingecko';
-import {useRouter} from 'vue-router';
 import {PublicKey} from '@solana/web3.js';
+import {useRouterStore} from 'stores/router';
 
 const props = defineProps<{
     amount: number, decimals?: number, showEqual?: boolean, token: PublicKey,
 }>();
 
 const coingeckoStore = useCoingeckoStore();
-const router = useRouter();
+const routerStore = useRouterStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -29,9 +29,8 @@ const price = computed(() => {
 // METHODS --------------------------------------------------------------------
 
 async function openSettings() {
-    await router.push({
+    await routerStore.push({
         name: 'Settings',
-        query: router.currentRoute.value.query,
     });
 }
 

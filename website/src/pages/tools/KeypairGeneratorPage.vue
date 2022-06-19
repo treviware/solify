@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import AlertBox from 'components/general/AlertBox.vue';
-import {computed, ref} from 'vue';
+import {computed} from 'vue';
 import {Keypair} from '@solana/web3.js';
 import base58 from 'bs58';
+import {useKeypairGeneratorToolStore} from 'stores/pages/tools/keypairGenerator';
+import {storeToRefs} from 'pinia';
+
+const keypairGeneratorToolStore = useKeypairGeneratorToolStore();
 
 // REFS -----------------------------------------------------------------------
-const keypair = ref<Keypair | null>(Keypair.generate());
+const {keypair} = storeToRefs(keypairGeneratorToolStore);
 
 // COMPUTED -------------------------------------------------------------------
 const pubkey = computed(() => keypair.value ? keypair.value.publicKey.toBase58() : '');

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
 import {useRentExemptionStore} from 'stores/pages/tools/rentExemption';
-import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';
 import VsCurrencyText from 'components/general/VsCurrencyText.vue';
 import BytesInput from 'components/general/input/BytesInput.vue';
 import {useBlockchainStore} from 'stores/blockchain';
+import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeToolParamsIntoUri} from 'src/utils/tools';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
@@ -40,8 +41,31 @@ async function loadRentExempt() {
     }
 }
 
+function writeToUri() {
+    return writeToolParamsIntoUri({
+        bytes: bytes.value ?? 0,
+    });
+}
+
 // WATCHES --------------------------------------------------------------------
+watch(bytes, () => {
+    writeToUri();
+});
+
 // HOOKS ----------------------------------------------------------------------
+processUriStoreDataOnMounted((query) => {
+    const queryBytes = query.bytes;
+    if (queryBytes) {
+        const bytesNum = parseInt(queryBytes);
+        if (!isNaN(bytesNum)) {
+            bytes.value = Math.floor(Math.max(0, bytesNum));
+        }
+    }
+
+    writeToUri();
+});
+removeStoreDataFromUriOnUnmounted();
+
 </script>
 
 <template>
