@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {clusterApiUrl, Commitment, Connection} from '@solana/web3.js';
 import {validateUrl} from 'src/utils/urls';
-import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY} from 'src/constants';
+import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY, WALLET_AUTO_CONNECT} from 'src/constants';
 import {useRouterStore} from 'stores/router';
 
 const networks: Record<string, string> = {
@@ -15,6 +15,7 @@ export const useSolanaStore = defineStore('solana', {
     state: () => ({
         network: clusterApiUrl('mainnet-beta'),
         commitment: 'confirmed' as Commitment,
+        walletAutoConnect: localStorage.getItem(WALLET_AUTO_CONNECT) === 'true',
     }),
     getters: {
         connection: state => new Connection(state.network, state.commitment),
@@ -64,6 +65,15 @@ export const useSolanaStore = defineStore('solana', {
 
                     await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, commitment);
                     break;
+            }
+        },
+        async setWalletAutoConnect(autoConnect: boolean) {
+            this.walletAutoConnect = autoConnect;
+
+            if (autoConnect) {
+                localStorage.setItem(WALLET_AUTO_CONNECT, autoConnect.toString());
+            } else {
+                localStorage.removeItem(WALLET_AUTO_CONNECT);
             }
         },
     },
