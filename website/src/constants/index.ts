@@ -16,3 +16,5 @@ export const MAX_RECENT_TOOLS = 4;
 export const MAX_PINNED_TOOLS = MAX_RECENT_TOOLS - 1;
 
 export const TOOL_DATA_URI_PREFIX = 't:';
+
+export const MAX_VANITY_ADDRESS_RESULTS = 100;

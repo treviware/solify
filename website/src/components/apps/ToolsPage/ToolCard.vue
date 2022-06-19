@@ -44,7 +44,7 @@ function pin() {
 
 <template>
     <q-card class="tool-card column">
-        <q-card-section class="row items-center gap-md">
+        <q-card-section class="row items-center no-wrap gap-md">
             <div class="q-ml-sm" :class="{'text-secondary': isActive}">
                 <q-icon :name="button.icon" size="20px"/>
             </div>

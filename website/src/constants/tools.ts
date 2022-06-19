@@ -5,6 +5,7 @@ import RentExemptionPage from 'pages/tools/RentExemptionPage.vue';
 import AirdropPage from 'pages/tools/AirdropPage.vue';
 import TokenPricePage from 'pages/tools/TokenPricePage.vue';
 import KeypairGeneratorPage from 'pages/tools/KeypairGeneratorPage.vue';
+import VanityAddressPage from 'pages/tools/VanityAddressPage.vue';
 import {ToolCategory} from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -34,6 +35,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
         description: 'Generate new keypairs and change them between different encodings',
         rightDrawerOption: RightDrawerState.KeypairGenerator,
         component: KeypairGeneratorPage,
+    }, {
+        icon: 'fa-solid fa-shield-heart',
+        name: 'Vanity Address',
+        description: 'Find a Solana address that match some rules',
+        rightDrawerOption: RightDrawerState.VanityAddress,
+        component: VanityAddressPage,
     }],
 }, {
     name: 'SPL Token Tools',
@@ -49,7 +56,7 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
     name: 'Currencies',
     description: 'Tools to get and compare token values in different currencies.',
     buttons: [{
-        icon: 'fa-solid fa-right-left',
+        icon: 'fa-solid fa-magnifying-glass-dollar',
         name: 'Token Price',
         description: 'Get the current price of a token in a supported currency or any other token.',
         rightDrawerOption: RightDrawerState.TokenPrice,

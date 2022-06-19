@@ -8,6 +8,7 @@ export enum RightDrawerState {
     Airdrop = 'airdrop',
     TokenPrice = 'token-price',
     KeypairGenerator = 'keypair-generator',
+    VanityAddress = 'vanity-address',
 }
 
 export type DrawerButton =

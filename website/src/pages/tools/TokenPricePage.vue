@@ -59,14 +59,6 @@ const swapTokens = computed(() => {
         comparingTokenMeta.value?.decimals ?? 0);
 });
 
-function writeToUri() {
-    return writeToolParamsIntoUri({
-        token: token.value ?? PublicKey.default,
-        amount: amount.value ?? new BN(0),
-        comparingToken: comparingToken.value ?? undefined,
-    });
-}
-
 // METHODS --------------------------------------------------------------------
 
 function showComparing() {
@@ -93,6 +85,14 @@ function exchangeTokens() {
     const tokenAux = token.value;
     token.value = comparingToken.value!;
     comparingToken.value = tokenAux;
+}
+
+function writeToUri() {
+    return writeToolParamsIntoUri({
+        token: token.value ?? PublicKey.default,
+        amount: amount.value ?? new BN(0),
+        comparingToken: comparingToken.value ?? undefined,
+    });
 }
 
 // WATCHES --------------------------------------------------------------------

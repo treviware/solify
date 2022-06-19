@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {PublicKey} from '@solana/web3.js';
 import {computed, ref} from 'vue';
-import {copyToClipboard} from 'src/utils/clipboard';
 import {abbreviatePubkey} from 'src/utils/wallets';
+import {copyToClipboard} from 'quasar';
 
 const props = defineProps<{
     pubkey: PublicKey, showCopy?: boolean, long?: boolean, showMenu?: boolean;

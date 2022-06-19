@@ -24,7 +24,7 @@ const activeOption = computed(
 
 <template>
     <div class="full-width full-height row no-wrap right-drawer">
-        <div class="content">
+        <div class="content column">
             <div class="header row items-center justify-between q-px-lg">
                 <div v-if="activeOption">
                     <div class="text-bold">
@@ -44,7 +44,11 @@ const activeOption = computed(
                            @click="rightDrawerStore.close"/>
                 </div>
             </div>
-            <component v-if="activeOption" :is="activeOption.component"></component>
+            <div class="col">
+                <q-scroll-area class="full-width full-height">
+                    <component v-if="activeOption" :is="activeOption.component"></component>
+                </q-scroll-area>
+            </div>
         </div>
     </div>
 </template>
