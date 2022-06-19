@@ -1,9 +1,9 @@
 import {defineStore} from 'pinia';
 import {useGlobalStore} from 'stores/global';
-import {Router} from 'src/router';
-import {LEFT_MENU_WIDTH, MIN_CONTENT_SIZE, RIGHT_DRAWER_WIDTH} from 'src/constants';
+import {DRAWER_SETTINGS_KEY, LEFT_MENU_WIDTH, MIN_CONTENT_SIZE, RIGHT_DRAWER_WIDTH} from 'src/constants';
 import {RightDrawerState} from 'src/types/drawer';
 import {useMenuStore} from 'stores/menu';
+import {useRouterStore} from 'stores/router';
 
 export const useRightDrawerStore = defineStore('rightDrawer', {
     state: () => ({
@@ -28,26 +28,19 @@ export const useRightDrawerStore = defineStore('rightDrawer', {
                 return;
             }
 
+            const routerStore = useRouterStore();
             const menuStore = useMenuStore();
             menuStore.addRecentTool(newState);
 
             this.drawerState = newState;
-            await Router.replace({
-                query: {
-                    ...Router.currentRoute.value.query,
-                    drawer: newState,
-                },
-            });
+            await routerStore.setQueryEntry(DRAWER_SETTINGS_KEY, newState);
         },
         async close() {
+            const routerStore = useRouterStore();
+
             this.drawerState = RightDrawerState.Closed;
 
-            await Router.replace({
-                query: {
-                    ...Router.currentRoute.value.query,
-                    drawer: undefined,
-                },
-            });
+            await routerStore.setQueryEntry(DRAWER_SETTINGS_KEY, undefined);
         },
     },
 });

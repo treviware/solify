@@ -5,7 +5,7 @@ import {Keypair} from '@solana/web3.js';
 import base58 from 'bs58';
 
 // REFS -----------------------------------------------------------------------
-const keypair = ref<Keypair | null>(Keypair.generate());
+const keypair = ref<Keypair | null>(null);
 
 // COMPUTED -------------------------------------------------------------------
 const pubkey = computed(() => keypair.value ? keypair.value.publicKey.toBase58() : '');

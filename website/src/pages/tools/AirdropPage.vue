@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
-import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import {useAirdropToolStore} from 'stores/pages/tools/airdrop';
 import SolTokenAmountInput from 'components/general/input/SolTokenAmountInput.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
@@ -8,6 +8,8 @@ import AlertBox from 'components/general/AlertBox.vue';
 import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';
 import BN from 'bn.js';
+import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeToolParamsIntoUri} from 'src/utils/tools';
+import {PublicKey} from '@solana/web3.js';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
@@ -45,8 +47,40 @@ async function airdrop() {
     }
 }
 
+function writeToUri() {
+    return writeToolParamsIntoUri({
+        account: account.value ?? PublicKey.default,
+        amount: amount.value ?? new BN(0),
+    });
+}
+
 // WATCHES --------------------------------------------------------------------
+watch([account, amount], () => {
+    writeToUri();
+});
+
 // HOOKS ----------------------------------------------------------------------
+processUriStoreDataOnMounted((query) => {
+    const queryAccount = query.account;
+    if (queryAccount) {
+        try {
+            account.value = new PublicKey(queryAccount);
+        } catch (e) {
+        }
+    }
+
+    const queryAmount = query.amount;
+    if (queryAmount) {
+        try {
+            amount.value = BN.max(new BN(0), new BN(queryAmount));
+        } catch (e) {
+        }
+    }
+
+    writeToUri();
+});
+removeStoreDataFromUriOnUnmounted();
+
 </script>
 
 <template>

@@ -1,8 +1,8 @@
 import {defineStore} from 'pinia';
 import {clusterApiUrl, Commitment, Connection} from '@solana/web3.js';
-import {Router} from 'src/router';
 import {validateUrl} from 'src/utils/urls';
 import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY} from 'src/constants';
+import {useRouterStore} from 'stores/router';
 
 const networks: Record<string, string> = {
     'mainnet-beta': clusterApiUrl('mainnet-beta'),
@@ -21,6 +21,8 @@ export const useSolanaStore = defineStore('solana', {
     },
     actions: {
         async setNetwork(network: string) {
+            const routerStore = useRouterStore();
+
             for (const net in networks) {
                 const url = networks[net];
 
@@ -33,13 +35,7 @@ export const useSolanaStore = defineStore('solana', {
                         localStorage.setItem(NETWORK_SETTINGS_KEY, net);
                     }
 
-                    await Router.replace({
-                        query: {
-                            ...Router.currentRoute.value.query,
-                            network: net === 'mainnet-beta' ? undefined : net,
-                        },
-                    });
-
+                    await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, net === 'mainnet-beta' ? undefined : net);
                     return;
                 }
             }
@@ -48,38 +44,25 @@ export const useSolanaStore = defineStore('solana', {
                 this.network = network;
                 localStorage.setItem(NETWORK_SETTINGS_KEY, network);
 
-                await Router.replace({
-                    query: {
-                        ...Router.currentRoute.value.query,
-                        network,
-                    },
-                });
+                await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, network);
             }
         },
         async setCommitment(commitment: string) {
+            const routerStore = useRouterStore();
+
             switch (commitment) {
                 case 'confirmed':
                     this.commitment = commitment;
                     localStorage.removeItem(COMMITMENT_SETTINGS_KEY);
 
-                    await Router.replace({
-                        query: {
-                            ...Router.currentRoute.value.query,
-                            commitment: undefined,
-                        },
-                    });
+                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, undefined);
                     break;
                 case 'processed':
                 case 'finalized':
                     this.commitment = commitment;
                     localStorage.setItem(COMMITMENT_SETTINGS_KEY, commitment);
 
-                    await Router.replace({
-                        query: {
-                            ...Router.currentRoute.value.query,
-                            commitment,
-                        },
-                    });
+                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, commitment);
                     break;
             }
         },

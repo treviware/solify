@@ -3,13 +3,15 @@ import {storeToRefs} from 'pinia';
 import {useTokenPriceToolStore} from 'stores/pages/tools/tokenPrice';
 import AlertBox from 'components/general/AlertBox.vue';
 import SplTokenInput from 'components/general/input/SplTokenInput.vue';
-import {computed, onMounted} from 'vue';
+import {computed, watch} from 'vue';
 import {TokenMeta, useBlockchainStore} from 'stores/blockchain';
 import {useCoingeckoStore} from 'stores/coingecko';
 import VsCurrencyText from 'components/general/VsCurrencyText.vue';
 import {PublicKey} from '@solana/web3.js';
 import {formatBasisPoints, formatRealValue} from 'src/utils/tokens';
 import TokenAmountInput from 'components/general/input/TokenAmountInput.vue';
+import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeToolParamsIntoUri} from 'src/utils/tools';
+import BN from 'bn.js';
 
 const tokenPriceToolStore = useTokenPriceToolStore();
 const blockchainStore = useBlockchainStore();
@@ -57,6 +59,14 @@ const swapTokens = computed(() => {
         comparingTokenMeta.value?.decimals ?? 0);
 });
 
+function writeToUri() {
+    return writeToolParamsIntoUri({
+        token: token.value ?? PublicKey.default,
+        amount: amount.value ?? new BN(0),
+        comparingToken: comparingToken.value ?? undefined,
+    });
+}
+
 // METHODS --------------------------------------------------------------------
 
 function showComparing() {
@@ -86,11 +96,41 @@ function exchangeTokens() {
 }
 
 // WATCHES --------------------------------------------------------------------
-// HOOKS ----------------------------------------------------------------------
-
-onMounted(() => {
-    loadTokenValues();
+watch([amount, token, comparingToken], () => {
+    writeToUri();
 });
+
+// HOOKS ----------------------------------------------------------------------
+processUriStoreDataOnMounted(async (query) => {
+    await loadTokenValues();
+
+    const queryToken = query.token;
+    if (queryToken) {
+        try {
+            token.value = new PublicKey(queryToken);
+        } catch (e) {
+        }
+    }
+
+    const queryAmount = query.amount;
+    if (queryAmount) {
+        try {
+            amount.value = BN.max(new BN(0), new BN(queryAmount));
+        } catch (e) {
+        }
+    }
+
+    const queryComparingToken = query.comparingToken;
+    if (queryComparingToken) {
+        try {
+            comparingToken.value = new PublicKey(queryComparingToken);
+        } catch (e) {
+        }
+    }
+
+    writeToUri();
+});
+removeStoreDataFromUriOnUnmounted();
 </script>
 
 <template>
@@ -107,7 +147,7 @@ onMounted(() => {
                        :filter="filterTokensByCoingeckoId"
                        show-coingecko-id/>
         <div class="text-secondary text-caption text-bold q-mt-md">Num tokens</div>
-        <TokenAmountInput v-model="amount" :in-bps="true" :token="token"/>
+        <TokenAmountInput v-model="amount" :token="token"/>
         <div class="relative-position" v-if="isComparing">
             <q-separator class="q-my-lg"/>
             <q-btn dense

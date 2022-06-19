@@ -25,6 +25,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `PDA Tool` view to generate PDAs.
 * tools: Add `Vanity Address Finder Tool` view to generate keypairs whose base58 encoding follows some rules. Start
   with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
+* settings: Add autoload setting for wallets.
 
 ### Fixes
 

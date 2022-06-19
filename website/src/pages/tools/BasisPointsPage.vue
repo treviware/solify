@@ -7,6 +7,7 @@ import BignumInput from 'components/general/input/BignumInput.vue';
 import BN from 'bn.js';
 import {computed} from 'vue';
 import {formatBasisPoints} from 'src/utils/tokens';
+import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeToolParamsIntoUri} from 'src/utils/tools';
 
 const bpsToolStore = useBpsToolStore();
 
@@ -25,13 +26,21 @@ const realAmountStr = computed(() => formatBasisPoints(bps.value, decimals.value
 // METHODS --------------------------------------------------------------------
 
 function onDecimalsUpdate() {
+    if (isNaN(decimals.value)) {
+        decimals.value = 0;
+    }
+
     decimals.value = Math.floor(Math.min(MAX_SPL_DECIMALS, Math.max(0, decimals.value)));
     realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+
+    writeToUri();
 }
 
 function onBasisPointsUpdate() {
     bps.value = BN.max(new BN(0), bps.value);
     realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+
+    writeToUri();
 }
 
 function onRealAmountUpdate(newRealAmount: string) {
@@ -44,12 +53,43 @@ function onRealAmountUpdate(newRealAmount: string) {
         realAmount.value = Math.max(0, value);
         bps.value = new BN(Math.floor(realAmount.value * Math.pow(10, decimals.value)));
         realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+
+        writeToUri();
     } catch (e) {
     }
 }
 
+function writeToUri() {
+    return writeToolParamsIntoUri({
+        decimals: decimals.value ?? 0,
+        bps: bps.value ?? new BN(0),
+    });
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
+processUriStoreDataOnMounted((query) => {
+    const queryDecimals = query.decimals;
+    if (queryDecimals) {
+        const decimalsNum = parseInt(queryDecimals);
+        if (!isNaN(decimalsNum)) {
+            decimals.value = Math.floor(Math.min(MAX_SPL_DECIMALS, Math.max(0, decimalsNum)));
+        }
+    }
+
+    const queryBps = query.bps;
+    if (queryBps) {
+        try {
+            bps.value = BN.max(new BN(0), new BN(queryBps));
+            realAmount.value = Number(bps.value) / Math.pow(10, decimals.value);
+        } catch (e) {
+        }
+    }
+
+    onBasisPointsUpdate();
+});
+removeStoreDataFromUriOnUnmounted();
+
 </script>
 
 <template>

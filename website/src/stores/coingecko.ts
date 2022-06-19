@@ -1,9 +1,9 @@
 import {defineStore} from 'pinia';
-import {Router} from 'src/router';
 import {VS_CURRENCY_SETTINGS_KEY} from 'src/constants';
 import axios from 'axios';
 import {PublicKey} from '@solana/web3.js';
 import {useBlockchainStore} from 'stores/blockchain';
+import {useRouterStore} from 'stores/router';
 
 const CACHE_RELOAD_INTERVAL = 60 * 1000; // 1 minute
 const API_URL = 'https://api.coingecko.com/api/v3';
@@ -23,6 +23,8 @@ export const useCoingeckoStore = defineStore('coingecko', {
     }),
     actions: {
         async setVsCurrency(vsCurrencyName: string) {
+            const routerStore = useRouterStore();
+
             if (VS_CURRENCYS.indexOf(vsCurrencyName) === -1) {
                 return;
             }
@@ -35,12 +37,8 @@ export const useCoingeckoStore = defineStore('coingecko', {
                 localStorage.setItem(VS_CURRENCY_SETTINGS_KEY, vsCurrencyName);
             }
 
-            await Router.replace({
-                query: {
-                    ...Router.currentRoute.value.query,
-                    vs_currency: vsCurrencyName === 'USD' ? undefined : vsCurrencyName,
-                },
-            });
+            await routerStore.setQueryEntry(VS_CURRENCY_SETTINGS_KEY,
+                vsCurrencyName === 'USD' ? undefined : vsCurrencyName);
         },
 
         getVsCurrencyPrice(): number {
