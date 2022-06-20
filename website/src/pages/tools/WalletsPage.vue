@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useWalletListStore} from 'stores/pages/tools/walletList';
+import {useWalletListStore} from 'stores/tools/walletList';
 import {storeToRefs} from 'pinia';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {computed, ref} from 'vue';

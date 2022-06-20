@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {WalletData} from 'stores/pages/tools/walletList';
+import {WalletData} from 'stores/tools/walletList';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import {computed, ref} from 'vue';
 import {useBlockchainStore} from 'stores/blockchain';

@@ -3,7 +3,7 @@ import AlertBox from 'components/general/AlertBox.vue';
 import {computed} from 'vue';
 import {Keypair} from '@solana/web3.js';
 import base58 from 'bs58';
-import {useKeypairGeneratorToolStore} from 'stores/pages/tools/keypairGenerator';
+import {useKeypairGeneratorToolStore} from 'stores/tools/keypairGenerator';
 import {storeToRefs} from 'pinia';
 import {copyToClipboard} from 'quasar';
 

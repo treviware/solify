@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
 import {computed, ref, watch} from 'vue';
-import {useAirdropToolStore} from 'stores/pages/tools/airdrop';
+import {useAirdropToolStore} from 'stores/tools/airdrop';
 import SolTokenAmountInput from 'components/general/input/SolTokenAmountInput.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import AlertBox from 'components/general/AlertBox.vue';
