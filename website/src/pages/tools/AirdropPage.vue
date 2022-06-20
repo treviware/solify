@@ -96,7 +96,7 @@ removeStoreDataFromUriOnUnmounted();
         <AlertBox type="warning" class="q-my-md" v-if="isGreaterThan2">
             <div>Trying to airdrop more than 2 SOL at the same time can lead in an error</div>
         </AlertBox>
-        <div class="flex flex-center">
+        <div class="flex flex-center q-mt-md">
             <q-btn color="secondary" text-color="black" unelevated no-caps :loading="loading" @click="airdrop">
                 Airdrop
             </q-btn>

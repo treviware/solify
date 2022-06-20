@@ -2,7 +2,7 @@
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import RightDrawer from 'components/MainLayout/RightDrawer.vue';
 import LeftDrawer from 'components/MainLayout/LeftDrawer.vue';
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import NetworkButton from 'components/MainLayout/NetworkButton.vue';
 import WalletButton from 'components/MainLayout/WalletButton.vue';
 import {LEFT_MENU_WIDTH} from 'src/constants';
@@ -12,8 +12,9 @@ const rightDrawerStore = useRightDrawerStore();
 const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
-// COMPUTED -------------------------------------------------------------------
+const isLeftDrawerOpen = ref(!globalStore.isMobile);
 
+// COMPUTED -------------------------------------------------------------------
 const isRightDrawerOpen = computed(() => !rightDrawerStore.isClosed);
 const paddingRight = computed(() => {
     if (rightDrawerStore.isClosed || rightDrawerStore.overlay) {
@@ -32,23 +33,30 @@ const paddingRight = computed(() => {
     <q-layout view="lHr LpR fFf">
         <q-header class="global-toolbar">
             <q-toolbar class="full-height">
+                <q-btn dense
+                       flat
+                       icon="fa-solid fa-bars"
+                       round
+                       class="rounded-borders"
+                       @click="isLeftDrawerOpen = !isLeftDrawerOpen"
+                       v-if="globalStore.isMobile"/>
                 <q-toolbar-title>
                     <div class="text-bold">
                         {{ globalStore.currentAppButton.headerName ?? globalStore.currentAppButton.name }}
                     </div>
-                    <div class="text-caption text-bold">
+                    <div class="text-caption text-bold ellipsis">
                         {{ globalStore.currentAppButton.headerDescription ?? globalStore.currentAppButton.description }}
                     </div>
                 </q-toolbar-title>
 
-                <NetworkButton class="q-mr-md"/>
+                <NetworkButton class="q-mr-md" v-if="!globalStore.isMobile"/>
                 <WalletButton class="q-mr-md"/>
             </q-toolbar>
         </q-header>
 
-        <q-drawer :model-value="true"
+        <q-drawer v-model="isLeftDrawerOpen"
                   :width="LEFT_MENU_WIDTH"
-                  behavior="desktop"
+                  :behavior="globalStore.isMobile ? 'mobile' : 'desktop'"
                   no-swipe-backdrop
                   no-swipe-close
                   no-swipe-open

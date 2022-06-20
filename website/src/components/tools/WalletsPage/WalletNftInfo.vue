@@ -33,6 +33,12 @@ const data = computed<any>(() => {
 
 <template>
     <q-card class="nft-info-card column no-wrap">
+        <q-card-section class="row justify-between items-center">
+            <h6>Metadata</h6>
+            <div>
+                <q-btn dense flat icon="fa-solid fa-times" round class="rounded-borders" v-close-popup/>
+            </div>
+        </q-card-section>
         <q-card-section>
             <q-tabs v-model="tab"
                     class="text-secondary"
@@ -40,8 +46,11 @@ const data = computed<any>(() => {
                     no-caps
                     left-icon="fa-solid fa-chevron-left"
                     right-icon="fa-solid fa-chevron-right">
-                <q-tab name="on-chain" icon="fa-solid fa-link" label="On-chain metadata"/>
-                <q-tab name="off-chain" icon="fa-solid fa-link-slash" label="Off-chain metadata"/>
+                <q-tab name="on-chain" icon="fa-solid fa-link" label="On-chain"/>
+                <q-tab name="off-chain"
+                       icon="fa-solid fa-link-slash"
+                       label="Off-chain"
+                       :disable="!token.metadata?.external"/>
             </q-tabs>
         </q-card-section>
         <q-card-section class="col overflow-auto">
@@ -55,5 +64,9 @@ const data = computed<any>(() => {
     min-width: 400px;
     max-width: 90vw;
     max-height: 90vh;
+
+    @media (max-width: 400px) {
+        min-width: 100vw;
+    }
 }
 </style>

@@ -5,6 +5,7 @@ import {Keypair} from '@solana/web3.js';
 import base58 from 'bs58';
 import {useKeypairGeneratorToolStore} from 'stores/pages/tools/keypairGenerator';
 import {storeToRefs} from 'pinia';
+import {copyToClipboard} from 'quasar';
 
 const keypairGeneratorToolStore = useKeypairGeneratorToolStore();
 
@@ -42,6 +43,10 @@ function update(value: string) {
     }
 }
 
+function copy(data: string) {
+    copyToClipboard(data);
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -61,11 +66,32 @@ function update(value: string) {
             <q-btn no-caps no-wrap color="primary" @click="generate">Generate</q-btn>
         </div>
         <div class="text-secondary text-caption text-bold q-mt-md">Pubkey</div>
-        <q-input :model-value="pubkey" outlined dense readonly/>
+        <q-input :model-value="pubkey" outlined dense readonly>
+            <template v-slot:append v-if="keypair">
+                <q-btn dense flat round size="sm" class="rounded-borders" @click="copy(pubkey)">
+                    <q-icon name="fa-solid fa-clipboard" size="14px"/>
+                    <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy keypair</q-tooltip>
+                </q-btn>
+            </template>
+        </q-input>
         <div class="text-secondary text-caption text-bold q-mt-md">Base58 Encoding</div>
-        <q-input :model-value="keypairStr" outlined dense type="textarea" autogrow @update:model-value="update"/>
+        <q-input :model-value="keypairStr" outlined dense type="textarea" autogrow @update:model-value="update">
+            <template v-slot:append v-if="keypair">
+                <q-btn dense flat round size="sm" class="rounded-borders" @click="copy(keypairStr)">
+                    <q-icon name="fa-solid fa-clipboard" size="14px"/>
+                    <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy keypair</q-tooltip>
+                </q-btn>
+            </template>
+        </q-input>
         <div class="text-secondary text-caption text-bold q-mt-md">Byte array Encoding</div>
-        <q-input :model-value="keypairBytes" outlined dense type="textarea" autogrow @update:model-value="update"/>
+        <q-input :model-value="keypairBytes" outlined dense type="textarea" autogrow @update:model-value="update">
+            <template v-slot:append v-if="keypair">
+                <q-btn dense flat round size="sm" class="rounded-borders" @click="copy(keypairBytes)">
+                    <q-icon name="fa-solid fa-clipboard" size="14px"/>
+                    <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy keypair</q-tooltip>
+                </q-btn>
+            </template>
+        </q-input>
     </div>
 </template>
 

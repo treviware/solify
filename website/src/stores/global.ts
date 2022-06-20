@@ -8,6 +8,7 @@ export const useGlobalStore = defineStore('global', {
         windowHeight: window.innerHeight,
     }),
     getters: {
+        isMobile: (state) => state.windowWidth <= 600,
         currentAppButton: () => {
             const route = useRoute();
             return APP_BUTTONS.find(b => route.name === b.pathName);

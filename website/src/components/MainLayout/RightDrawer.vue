@@ -24,13 +24,13 @@ const activeOption = computed(
 
 <template>
     <div class="full-width full-height row no-wrap right-drawer">
-        <div class="content column">
-            <div class="header row items-center justify-between q-px-lg">
-                <div v-if="activeOption">
+        <div class="content column full-width">
+            <div class="header row items-center justify-between no-wrap q-px-lg full-width">
+                <div v-if="activeOption" class="col">
                     <div class="text-bold">
                         {{ activeOption.headerName ?? activeOption.name }}
                     </div>
-                    <div class="text-caption text-bold">
+                    <div class="text-caption text-bold text-no-wrap full-width overflow-hidden ellipsis">
                         {{ activeOption.headerDescription ?? activeOption.description }}
                     </div>
                 </div>

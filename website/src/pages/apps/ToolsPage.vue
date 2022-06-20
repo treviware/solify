@@ -5,8 +5,10 @@ import {TOOL_BUTTONS_BY_CATEGORY} from 'src/constants/tools';
 import {ToolCategory} from 'src/types/tools';
 import ToolCard from 'components/apps/ToolsPage/ToolCard.vue';
 import {useMenuStore} from 'stores/menu';
+import {useGlobalStore} from 'stores/global';
 
 const menuStore = useMenuStore();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
 const search = ref('');
@@ -48,7 +50,7 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
             <template v-if="menuStore.pinnedTools.length > 0">
                 <h6 class="q-mt-xl">Pinned tools</h6>
                 <q-separator class="q-mt-sm q-mb-md"/>
-                <div class="row justify-start items-stretch gap-md">
+                <div class="row justify-start items-stretch gap-md" :class="{'justify-center': globalStore.isMobile}">
                     <ToolCard v-for="button in menuStore.pinnedTools" :key="button.name" :button="button"></ToolCard>
                 </div>
             </template>
@@ -56,7 +58,7 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
                 <h6 class="q-mt-xl">{{ category.name }}</h6>
                 <p>{{ category.description }}</p>
                 <q-separator class="q-mt-sm q-mb-md"/>
-                <div class="row justify-start items-stretch gap-md">
+                <div class="row justify-start items-stretch gap-md" :class="{'justify-center': globalStore.isMobile}">
                     <ToolCard v-for="button in category.buttons" :key="button.name" :button="button"></ToolCard>
                 </div>
             </div>

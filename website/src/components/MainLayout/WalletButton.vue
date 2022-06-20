@@ -6,9 +6,11 @@ import {useRightDrawerStore} from 'stores/rightDrawer';
 import {sleep} from 'src/utils/time';
 import {abbreviatePubkey} from 'src/utils/wallets';
 import {RightDrawerState} from 'src/types/drawer';
+import {useGlobalStore} from 'stores/global';
 
 const rightDrawerStore = useRightDrawerStore();
 const walletStore = useWallet();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -47,18 +49,18 @@ async function openWallets() {
 </script>
 
 <template>
-    <q-btn class="wallet-button" color="secondary" no-caps outline>
+    <q-btn class="wallet-button" color="secondary" no-caps outline :class="{mobile:globalStore.isMobile}">
         <template v-if="walletStore.connected.value">
-            <img :src="walletStore.wallet.value.icon" class="q-mr-sm icon-image">
-            {{ pubkeyAbbreviation }}
+            <img :src="walletStore.wallet.value.icon" class="icon-image">
+            <span class="q-ml-sm" v-if="!globalStore.isMobile">{{ pubkeyAbbreviation }}</span>
         </template>
         <template v-else-if="walletStore.connecting.value">
-            <q-spinner size="16px" class="q-mr-sm"/>
-            Connecting...
+            <q-spinner size="16px"/>
+            <span class="q-ml-sm" v-if="!globalStore.isMobile">Connecting...</span>
         </template>
         <template v-else>
-            <q-icon name="fa-solid fa-wallet" size="16px" class="q-mr-sm"/>
-            Connect Wallet
+            <q-icon name="fa-solid fa-wallet" size="16px"/>
+            <span class="q-ml-sm" v-if="!globalStore.isMobile">Connect Wallet</span>
         </template>
 
         <q-menu fit>
@@ -101,6 +103,10 @@ async function openWallets() {
 <style lang="scss" scoped>
 .wallet-button {
     min-width: 156px;
+
+    &.mobile {
+        min-width: unset;
+    }
 }
 
 .dialog-card {
