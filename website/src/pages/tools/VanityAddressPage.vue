@@ -5,7 +5,7 @@ import {storeToRefs} from 'pinia';
 import {computed, onUnmounted, ref, watch} from 'vue';
 import {decodeVanityAddressRules, encodeVanityAddressRules, VanityAddressMessage} from 'src/types/tools/vanityAddress';
 import VanityAddressRuleBox from 'components/tools/VanityAddressPage/VanityAddressRuleBox.vue';
-import {MAX_VANITY_ADDRESS_RESULTS} from 'src/constants';
+import {MAX_VANITY_ADDRESS_RESULTS, MAX_VANITY_ADDRESS_WORKERS} from 'src/constants';
 import {useQuasar} from 'quasar';
 import VanityAddressResultBox from 'components/tools/VanityAddressPage/VanityAddressResultBox.vue';
 import {Keypair} from '@solana/web3.js';
@@ -14,7 +14,7 @@ import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeTo
 
 const quasar = useQuasar();
 const vanityAddressToolStore = useVanityAddressToolStore();
-let worker: Worker | null = null;
+const workers: Worker[] = [];
 
 // REFS -----------------------------------------------------------------------
 const {
@@ -42,10 +42,8 @@ function removeRule(index: number) {
 }
 
 function run() {
-    if (worker) {
-        isRunning.value = false;
-        worker.terminate();
-        worker = null;
+    if (workers.length > 0) {
+        stop();
     } else {
         // Validate rules.
         if (rules.value.length === 0) {
@@ -65,36 +63,59 @@ function run() {
         }
 
         isRunning.value = true;
-        worker = new Worker(new URL('../../workers/vanityAddress.worker.ts', import.meta.url));
 
-        worker.postMessage({
-            message: 'start',
-            rules: JSON.parse(JSON.stringify(rules.value)),
-        } as VanityAddressMessage);
+        for (let i = 0; i < MAX_VANITY_ADDRESS_WORKERS; i++) {
+            const worker = new Worker(new URL('../../workers/vanityAddress.worker.ts', import.meta.url));
+            console.info(`Worker ${i} created`);
 
-        worker.onmessage = ({data}: { data: VanityAddressMessage }) => {
-            if (data.message !== 'result' || results.value.length >= MAX_VANITY_ADDRESS_RESULTS) {
-                return;
-            }
+            worker.postMessage({
+                message: 'start',
+                rules: JSON.parse(JSON.stringify(rules.value)),
+            } as VanityAddressMessage);
 
-            results.value.push({
-                ...data.value,
-                keypair: Keypair.fromSecretKey(base58.decode(data.value.keypair as any)),
-            });
+            worker.onmessage = ({data}: { data: VanityAddressMessage }) => {
+                if (data.message !== 'result' || results.value.length >= MAX_VANITY_ADDRESS_RESULTS) {
+                    return;
+                }
 
-            if (results.value.length >= MAX_VANITY_ADDRESS_RESULTS) {
-                isRunning.value = false;
+                results.value.push({
+                    ...data.value,
+                    keypair: Keypair.fromSecretKey(base58.decode(data.value.keypair as any)),
+                });
+
+                if (results.value.length >= MAX_VANITY_ADDRESS_RESULTS) {
+                    stop();
+                }
+            };
+
+            worker.onerror = (e) => {
+                console.error('Worker error: ', e);
                 worker?.terminate();
-                worker = null;
-            }
-        };
 
-        worker.onerror = (e) => {
-            console.error('Worker error: ', e);
-            worker?.terminate();
-            worker = null;
-        };
+                const index = workers.findIndex(v => v === worker);
+                workers.splice(index, 1);
+
+                console.info(`Worker ${index} destroyed`);
+
+                if (workers.length === 0) {
+                    isRunning.value = false;
+                }
+            };
+
+            workers.push(worker);
+        }
     }
+}
+
+function stop() {
+    isRunning.value = false;
+
+    for (let i = 0; i < workers.length; i++) {
+        workers[i].terminate();
+        console.info(`Worker ${i} destroyed`);
+    }
+
+    workers.splice(0, workers.length);
 }
 
 function clearResults() {
@@ -127,8 +148,11 @@ processUriStoreDataOnMounted(async (query) => {
 removeStoreDataFromUriOnUnmounted();
 
 onUnmounted(() => {
-    worker?.terminate();
-    worker = null;
+    for (const worker of workers) {
+        worker.terminate();
+    }
+
+    workers.splice(0, workers.length);
 });
 </script>
 
