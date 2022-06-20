@@ -4,10 +4,12 @@ import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import base58 from 'bs58';
 import {computed} from 'vue';
 import {copyToClipboard} from 'quasar';
+import {useGlobalStore} from 'stores/global';
 
 const props = defineProps<{
     result: VanityAddressResult; index: number
 }>();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
@@ -28,12 +30,12 @@ function copyKeypair() {
             <div class="row justify-between items-center">
                 <div>Result {{ index + 1 }}</div>
                 <div>
-                    <PubkeyBadge :pubkey="result.keypair.publicKey" show-menu show-copy long/>
+                    <PubkeyBadge :pubkey="result.keypair.publicKey" show-menu show-copy :long="!globalStore.isMobile"/>
                 </div>
             </div>
             <div>Matched rule: {{ result.rule }}</div>
             <q-input :model-value="keypairStr" outlined dense type="textarea" readonly class="keypair-input" autogrow>
-                <template v-slot:after>
+                <template v-slot:append>
                     <q-btn dense flat round size="sm" class="rounded-borders" @click="copyKeypair">
                         <q-icon name="fa-solid fa-clipboard" size="14px"/>
                         <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy keypair</q-tooltip>
