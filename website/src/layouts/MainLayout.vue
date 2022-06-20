@@ -78,7 +78,7 @@ const paddingRight = computed(() => {
         </q-drawer>
 
         <q-page-container :style="{'padding-right': paddingRight}">
-            <q-page style="height: 0">
+            <q-page style="height: 0" class="main-layout-page">
                 <q-scroll-area class="full-width full-height">
                     <router-view/>
                 </q-scroll-area>
@@ -96,5 +96,9 @@ const paddingRight = computed(() => {
 
 .q-page-container {
     transition: padding-right 0.3s;
+}
+
+.main-layout-page:deep(.q-scrollarea__content) {
+    max-width: 100vw;
 }
 </style>
