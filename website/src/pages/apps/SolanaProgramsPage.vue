@@ -7,7 +7,7 @@
 </script>
 
 <template>
-    <q-page class="row items-center justify-evenly">
+    <div class="row items-center justify-evenly">
         Solana Programs
-    </q-page>
+    </div>
 </template>

@@ -41,7 +41,7 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
 </script>
 
 <template>
-    <q-page class="q-pa-lg">
+    <div class="q-pa-lg">
         <div class="viewport-width">
             <div class="row justify-between items-end q-mb-xl">
                 <h3>Tools</h3>
@@ -63,7 +63,7 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
                 </div>
             </div>
         </div>
-    </q-page>
+    </div>
 </template>
 
 <style lang="scss" scoped>
