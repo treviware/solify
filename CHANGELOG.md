@@ -12,7 +12,6 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 ### Features
 
-* general: Make search bars get values from URI.
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
 * general: Add tabs to transaction, so we can add tabs when people select something.
@@ -44,6 +43,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * general: Show NFT info in wallet list.
 * general: Add recent tool list to the left and right menus. Add also the ability to pin some of them.
 * general: Add view to select a tool.
+* general: Make search bars get values from URI.
 * config: Add support for different vs currencies.
 * config: Add support for different RPC endpoint.
 * config: Add support for different commitment levels.

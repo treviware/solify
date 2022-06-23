@@ -1,14 +1,19 @@
 <script lang="ts" setup>
-import {computed} from 'vue';
+import {computed, onBeforeMount, watch} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
 import {useProgramExplorerAppStore} from 'stores/apps/programExplorer';
 import {storeToRefs} from 'pinia';
 import {ProgramDefinition} from 'src/types/programs/programDefinition';
 import {useGlobalStore} from 'stores/global';
 import ProgramCard from 'components/apps/ProgramExplorerPage/ProgramCard.vue';
+import {useRouterStore} from 'stores/router';
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
 
 const globalStore = useGlobalStore();
 const programExplorerAppStore = useProgramExplorerAppStore();
+const routerStore = useRouterStore();
 
 // REFS -----------------------------------------------------------------------
 const {search} = storeToRefs(programExplorerAppStore);
@@ -25,7 +30,19 @@ const filteredPrograms = computed(() => programExplorerAppStore.programs.filter(
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
+watch(search, async (search) => {
+    await routerStore.setQueryEntry('search', search === '' ? undefined : search);
+});
+
 // HOOKS ----------------------------------------------------------------------
+onBeforeMount(() => {
+    const searchUri = router.currentRoute.value.query['search'] as string;
+
+    if (searchUri) {
+        search.value = searchUri;
+    }
+});
+
 </script>
 
 <template>

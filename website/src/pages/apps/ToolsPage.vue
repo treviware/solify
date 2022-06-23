@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed} from 'vue';
+import {computed, onBeforeMount, watch} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
 import {TOOL_BUTTONS_BY_CATEGORY} from 'src/constants/tools';
 import {ToolCategory} from 'src/types/tools';
@@ -8,10 +8,15 @@ import {useMenuStore} from 'stores/menu';
 import {useGlobalStore} from 'stores/global';
 import {useToolsAppStore} from 'stores/apps/tools';
 import {storeToRefs} from 'pinia';
+import {useRouter} from 'vue-router';
+import {useRouterStore} from 'stores/router';
+
+const router = useRouter();
 
 const menuStore = useMenuStore();
 const globalStore = useGlobalStore();
 const toolsAppStore = useToolsAppStore();
+const routerStore = useRouterStore();
 
 // REFS -----------------------------------------------------------------------
 const {search} = storeToRefs(toolsAppStore);
@@ -40,7 +45,19 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
+watch(search, async (search) => {
+    await routerStore.setQueryEntry('search', search === '' ? undefined : search);
+});
+
 // HOOKS ----------------------------------------------------------------------
+onBeforeMount(() => {
+    const searchUri = router.currentRoute.value.query['search'] as string;
+
+    if (searchUri) {
+        search.value = searchUri;
+    }
+});
+
 </script>
 
 <template>
