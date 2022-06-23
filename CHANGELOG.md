@@ -12,6 +12,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 ### Features
 
+* general: Make search bars get values from URI.
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
 * general: Add tabs to transaction, so we can add tabs when people select something.
@@ -23,6 +24,8 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
 * tools: Add `NFT Tool` view to create/mint/burn NFTs.
 * tools: Add `PDA Tool` view to generate PDAs.
+* tools: Add `Token Accounts Tool` view to manage token accounts, create or remove accounts, close empty accounts, etc.
+* tools: Add `Token Burner Tool` view to burn tokens from accounts.
 
 ### Fixes
 

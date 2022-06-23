@@ -7,9 +7,10 @@ export const APP_BUTTONS: DrawerAppButton[] = [{
     pathName: 'TxBuilder',
 }, {
     icon: 'fa-solid fa-code',
-    name: 'Solana Programs',
-    description: 'Manage the list of programs available to work with',
-    pathName: 'SolanaPrograms',
+    name: 'Program Explorer',
+    description: 'Inspect and manage the list of available programs to work with',
+    pathName: 'ProgramExplorer',
+    pathAlias: ['Program'],
 }, {
     icon: 'fa-solid fa-screwdriver-wrench',
     name: 'Tools',

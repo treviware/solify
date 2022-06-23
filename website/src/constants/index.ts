@@ -1,3 +1,6 @@
+import {PublicKey} from '@solana/web3.js';
+import BN from 'bn.js';
+
 export const MAX_SPL_DECIMALS = 64;
 export const MAX_LAST_SPL_TOKENS = 9;
 
@@ -19,3 +22,8 @@ export const TOOL_DATA_URI_PREFIX = 't:';
 
 export const MAX_VANITY_ADDRESS_WORKERS = 2;
 export const MAX_VANITY_ADDRESS_RESULTS = 100;
+
+export const FEE_WALLET = new PublicKey('feeF7kVukhReWHzETYgFQPypsvUinSWw5P6zDoeKJzu');
+export const FEE_AMOUNT_PER_TRANSACTION = new BN(10_000);
+
+export const SOLIFY_PROGRAM_ADDRESS = new PublicKey('SLFYqc5myLPN9XwXcM2tbGiNdop22HDhak3tbmN1P4J');

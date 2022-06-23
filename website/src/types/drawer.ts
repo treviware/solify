@@ -18,7 +18,7 @@ export type DrawerButton =
 export type DrawerAppButton =
     DrawerButtonBase
     & {
-    pathName: string;
+    pathName: string; pathAlias?: string[];
 };
 
 export type DrawerToolButton =

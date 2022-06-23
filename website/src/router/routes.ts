@@ -13,9 +13,14 @@ const routes: RouteRecordRaw[] = [{
         path: '/builder',
         component: () => import('pages/apps/TxBuilderPage.vue'),
     }, {
-        name: 'SolanaPrograms',
+        name: 'ProgramExplorer',
         path: '/programs',
-        component: () => import('pages/apps/SolanaProgramsPage.vue'),
+        component: () => import('pages/apps/ProgramExplorerPage/ProgramExplorerPage.vue'),
+    }, {
+        name: 'Program',
+        path: '/program/:programId',
+        props: true,
+        component: () => import('pages/apps/ProgramExplorerPage/ProgramPage.vue'),
     }, {
         name: 'Tools',
         path: '/tools',

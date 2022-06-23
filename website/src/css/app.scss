@@ -15,6 +15,12 @@ h1, h2, h3, h4, h5, h6, p {
     .gap-#{$name} {
         gap: map-get($size, "x") map-get($size, "y");
     }
+    .gap-x-#{$name} {
+        column-gap: map-get($size, "y");
+    }
+    .gap-y-#{$name} {
+        row-gap: map-get($size, "x");
+    }
 }
 
 .viewport-width {
