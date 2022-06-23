@@ -15,6 +15,8 @@ The minor version will be incremented upon a breaking change and the patch versi
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
 * general: Add tabs to transaction, so we can add tabs when people select something.
+* general: Add social links.
+* general: Add support link.
 * transactions: Link to solana explorer to simulate the transaction.
 * signing: Add multi-wallet local signatures.
 * signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
@@ -25,6 +27,9 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `PDA Tool` view to generate PDAs.
 * tools: Add `Token Accounts Tool` view to manage token accounts, create or remove accounts, close empty accounts, etc.
 * tools: Add `Token Burner Tool` view to burn tokens from accounts.
+* programs: Add `System Program` definition.
+* programs: Add `Solana Token Program` definition.
+* programs: Add `Metaplex Program` definition.
 
 ### Fixes
 
@@ -57,3 +62,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Vanity Address Tool` view to generate keypairs whose base58 encoding follows some rules. Start
   with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
 * settings: Add autoload setting for wallets.
+
+### Fixes
+
+* general: fix wallet list is always pinned.

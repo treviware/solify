@@ -81,8 +81,8 @@ function loadPins() {
     }
 
     return {
-        recentTools: TOOL_BUTTONS.slice(1),
-        pinnedTools: [TOOL_BUTTONS[0]],
+        recentTools: TOOL_BUTTONS.slice(0),
+        pinnedTools: [],
     };
 }
 
