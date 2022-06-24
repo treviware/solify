@@ -58,7 +58,7 @@ function openSolanaExplorer() {
         <q-icon v-if="finalShowCopy && copied" name="fa-solid fa-circle-check" class="q-ml-xs"/>
 
         <q-menu anchor="bottom middle" self="top middle" :offset="[20, 0]" v-if="showMenu" :fit="long">
-            <q-card class="menu-card">
+            <q-card class="menu-card shadow-9">
                 <q-card-section class="text-center text-caption text-secondary" v-if="!long">
                     {{ props.pubkey.toBase58() }}
                 </q-card-section>
@@ -100,8 +100,6 @@ function openSolanaExplorer() {
 }
 
 .menu-card {
-    background-color: $grey-9;
-
     &:deep(.q-item__section--avatar) {
         min-width: 30px;
     }
