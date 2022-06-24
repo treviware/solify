@@ -1,11 +1,13 @@
-import {PublicKey} from '@solana/web3.js';
+import {Keypair, PublicKey} from '@solana/web3.js';
 import BN from 'bn.js';
 import {SOLIFY_PROGRAM} from 'src/data/programs/solify';
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
+import {SYSTEM_PROGRAM} from 'src/data/programs/systemProgram';
+import {FieldsToArray, PartialRecord} from 'src/types/general';
 
-export const SOLANA_PROGRAMS = [SOLIFY_PROGRAM];
+export const SOLANA_PROGRAMS = [SYSTEM_PROGRAM, SOLIFY_PROGRAM];
 
-export function defaultCreateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any>): any {
+export function defaultInstantiateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any>): any {
     const result: Record<string, any> = {};
 
     for (const argument of ixnDefinition.arguments) {
@@ -24,10 +26,19 @@ export function defaultCreateSolanaInstruction(ixnDefinition: ProgramIxnDefiniti
                 result[argument.id] = argument.data.defaultValue ?? '';
                 break;
             case 'address':
-                result[argument.id] = argument.data.defaultValue ?? PublicKey.default;
+                result[argument.id] =
+                    argument.data.defaultValue ?? (argument.data.autogenerate ? Keypair.generate() : PublicKey.default);
                 break;
         }
     }
 
     return result;
+}
+
+export function defaultUpdateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any>, data: any,
+                                               field: FieldsToArray<any>): PartialRecord<string, string> {
+    data[field.fieldName] = field.value as any;
+
+    // No error messages.
+    return {};
 }
