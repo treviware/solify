@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
 import ProgramIxnArgument from 'components/apps/ProgramExplorerPage/ProgramIxnArgument.vue';
+import ProgramIxnAccount from 'components/apps/ProgramExplorerPage/ProgramIxnAccount.vue';
 
 defineProps<{
-    instruction: ProgramIxnDefinition<any>; index: number;
+    instruction: ProgramIxnDefinition<any, any>; index: number;
 }>();
 
 // REFS -----------------------------------------------------------------------
@@ -22,7 +23,14 @@ defineProps<{
                 <p class="text-bold">{{ instruction.description }}</p>
             </q-card-section>
             <q-card-section>
-                <p class="text-bold">Configuration:</p>
+                <p class="text-bold">Accounts:</p>
+                <q-list separator>
+                    <ProgramIxnAccount v-for="(account, i) in instruction.accounts"
+                                       :key="account.id"
+                                       :index="i"
+                                       :argument="account"/>
+                </q-list>
+                <p class="text-bold q-mt-lg">Parameters:</p>
                 <q-list separator>
                     <ProgramIxnArgument v-for="(argument, i) in instruction.arguments"
                                         :key="argument.id"

@@ -4,7 +4,7 @@ import {Mutable} from 'src/types/general';
 import {isPubkey} from 'src/types/filters';
 import {FEE_AMOUNT_PER_TRANSACTION, FEE_WALLET} from 'src/constants';
 
-const ARGUMENTS = [{
+const ACCOUNTS = [{
     id: 'source',
     name: 'Fee payer account',
     description: 'The account that will pay the fee',
@@ -22,7 +22,9 @@ const ARGUMENTS = [{
         type: 'address',
         defaultValue: FEE_WALLET,
     },
-}, {
+}] as const;
+
+const ARGUMENTS = [{
     id: 'lamports',
     name: 'Fee amount',
     description: 'The amount of lamports to charge as fee',
@@ -33,12 +35,15 @@ const ARGUMENTS = [{
         tokenAddress: PublicKey.default,
     },
 }] as const;
+
+type AccountsType = Mutable<typeof ACCOUNTS>;
 type ArgumentsType = Mutable<typeof ARGUMENTS>;
 
-export type SolifyProgramFeeIxnArgs = ProgramIxnData<ArgumentsType>
-export const SOLIFY_PROGRAM_FEE_INSTRUCTION = defineInstruction<ArgumentsType>({
+export type SolifyProgramFeeIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
+export const SOLIFY_PROGRAM_FEE_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
     name: 'Solify Fee',
     description: 'Instruction to charge users with a fee when sending a transaction with Solify',
+    accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 
     // ------------------------------------------------------------------------

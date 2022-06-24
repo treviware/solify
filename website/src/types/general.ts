@@ -15,3 +15,7 @@ export type ArrayIndex<T extends Array<any>> = {
 export type Mutable<T> = {
     -readonly [P in keyof T]: T[P];
 }
+
+export type PartialRecordKeys<T, K extends keyof T> =
+    Partial<Pick<T, K>>
+    & Omit<T, K>;

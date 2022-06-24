@@ -21,6 +21,8 @@ const realType = computed(() => {
             return 'String';
         case 'address':
             return 'Account address';
+        case 'program':
+            return 'Solana program address';
     }
 
     return 'Unknown';

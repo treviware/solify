@@ -3,7 +3,7 @@ import {defineInstruction, ProgramIxnData} from 'src/types/programs/instructionD
 import {Mutable} from 'src/types/general';
 import {isPubkey} from 'src/types/filters';
 
-const ARGUMENTS = [{
+const ACCOUNTS = [{
     id: 'fundingAccount',
     name: 'Funding account',
     description: 'The account that will pay the lamports to fund the new account',
@@ -24,7 +24,9 @@ const ARGUMENTS = [{
         type: 'address',
         autogenerate: true,
     },
-}, {
+}] as const;
+
+const ARGUMENTS = [{
     id: 'lamports',
     name: 'Lamports',
     description: 'Number of lamports to transfer to the new account',
@@ -47,12 +49,15 @@ const ARGUMENTS = [{
         type: 'program',
     },
 }] as const;
+
+type AccountsType = Mutable<typeof ACCOUNTS>;
 type ArgumentsType = Mutable<typeof ARGUMENTS>;
 
-export type SystemProgramCreateAccountIxnArgs = ProgramIxnData<ArgumentsType>
-export const SYSTEM_PROGRAM_CREATE_ACCOUNT_INSTRUCTION = defineInstruction<ArgumentsType>({
+export type SystemProgramCreateAccountIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
+export const SYSTEM_PROGRAM_CREATE_ACCOUNT_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
     name: 'Create Account',
     description: 'Create a new account',
+    accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 
     // ------------------------------------------------------------------------
