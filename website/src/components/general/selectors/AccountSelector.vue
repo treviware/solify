@@ -2,7 +2,7 @@
 import {computed, ref, watch} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
 import {QInfiniteScroll} from 'quasar';
-import {ACCOUNTS_INFO} from 'src/constants/accounts';
+import {useProgramExplorerAppStore} from 'stores/apps/programExplorer';
 import {AccountInfoElement} from 'src/types/accounts';
 
 const tokensPerPage = 20;
@@ -14,33 +14,38 @@ const emits = defineEmits<{
     (e: 'select', account: AccountInfoElement): void,
 }>();
 
-// REFS -----------------------------------------------------------------------
+const programExplorerAppStore = useProgramExplorerAppStore();
 
+// REFS -----------------------------------------------------------------------
 const search = ref(props.initialSearch ?? '');
 const maxPage = ref(0);
 
 // COMPUTED -------------------------------------------------------------------
+const baseAccounts = computed<AccountInfoElement[]>(
+    () => programExplorerAppStore.programs.map(p => p.accounts.map(v => ({
+        program: p,
+        account: v,
+    } as AccountInfoElement))).reduce((a, b) => a.concat(b), []));
 
 const filteredAccount = computed<AccountInfoElement[]>(() => {
     if (search.value === '') {
-        return ACCOUNTS_INFO.slice(0);
+        return baseAccounts.value.slice(0);
     }
 
     const searchLower = search.value.toLowerCase();
-    return ACCOUNTS_INFO
-        .filter(account => account.programName.toLowerCase().indexOf(searchLower) !== -1 ||
-            account.name.toLowerCase().indexOf(searchLower) !== -1);
+    return baseAccounts.value
+        .filter(accountInfo => accountInfo.program.name.toLowerCase().indexOf(searchLower) !== -1 ||
+            accountInfo.account.name.toLowerCase().indexOf(searchLower) !== -1);
 });
 
 const accounts = computed<(AccountInfoElement & { sizeStr: string })[]>(() => {
     return filteredAccount.value.slice(0, tokensPerPage * (maxPage.value + 1)).map(v => ({
         ...v,
-        sizeStr: `${v.size} B`,
+        sizeStr: `${v.account.minSize} B`,
     }));
 });
 
 // METHODS --------------------------------------------------------------------
-
 function selectAccount(account: AccountInfoElement) {
     emits('select', account);
 }
@@ -64,20 +69,20 @@ watch(search, () => {
         <q-card-section class="full-height column">
             <h6 class="text-center q-mb-sm">Account selector</h6>
             <SearchBar v-model="search" placeholder="Search account" :debounce="300"/>
-            <q-separator/>
             <div class="overflow-auto col q-mt-md">
                 <q-infinite-scroll @load="onLoad" :offset="250" ref="infiniteScroll" class="full-width">
                     <q-list dense>
                         <q-item class="q-mb-xs"
-                                v-for="account in accounts"
-                                :key="account.programName + '::' + account.name"
+                                v-for="accountInfo in accounts"
+                                :key="accountInfo.program.name + '::' + accountInfo.account.name"
                                 clickable
-                                @click="selectAccount(account)">
+                                @click="selectAccount(accountInfo)">
                             <q-item-section>
-                                <q-item-label><b>{{ account.programName }}</b> :: {{ account.name }}</q-item-label>
+                                <q-item-label><b>{{ accountInfo.program.name }}</b>::{{ accountInfo.account.name }}
+                                </q-item-label>
                             </q-item-section>
                             <q-item-section side v-if="showSize">
-                                <q-item-label>{{ account.sizeStr }}</q-item-label>
+                                <q-item-label>{{ accountInfo.sizeStr }}</q-item-label>
                             </q-item-section>
                         </q-item>
                     </q-list>

@@ -1,5 +1,7 @@
+import {ProgramDefinition} from 'src/types/programs/programDefinition';
+import {ProgramAccountDefinition} from 'src/types/programs/accountDefinition';
+
 export interface AccountInfoElement {
-    programName: string;
-    name: string;
-    size: number;
+    program: ProgramDefinition<any, any>;
+    account: ProgramAccountDefinition<any, any>;
 }

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref} from 'vue';
-import AccountSizeSelector from 'components/general/selectors/AccountSizeSelector.vue';
+import AccountSizeSelector from 'components/general/selectors/AccountSelector.vue';
 import {AccountInfoElement} from 'src/types/accounts';
 
 const props = defineProps<{
@@ -42,7 +42,7 @@ function onBytesUpdate(newValue: number) {
 }
 
 function onSelect(account: AccountInfoElement) {
-    emits('update:modelValue', account.size);
+    emits('update:modelValue', account.account.minSize);
     showSplDialog.value = false;
 }
 
