@@ -53,6 +53,7 @@ function openIxnSelector(index: number) {
 
 function selectInstruction(instruction: InstructionInfoElement) {
     transaction.value.instructions.splice(ixnPosition.value, 0, instruction.instruction);
+    transaction.value.data.splice(ixnPosition.value, 0, instruction.instruction.instantiate(instruction.instruction));
     showIxnSelectorDialog.value = false;
     ixnPosition.value = 0;
 }

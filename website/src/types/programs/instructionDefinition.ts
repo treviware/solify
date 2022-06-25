@@ -125,6 +125,21 @@ export function defaultInstantiateSolanaInstruction(ixnDefinition: ProgramIxnDef
                 result[argument.id] =
                     argument.data.defaultValue ?? (argument.data.autogenerate ? Keypair.generate() : PublicKey.default);
                 break;
+            case 'program':
+                result[argument.id] = argument.data.defaultValue ?? PublicKey.default;
+                break;
+        }
+    }
+
+    for (const account of ixnDefinition.accounts) {
+        switch (account.data.type) {
+            case 'address':
+                result[account.id] =
+                    account.data.defaultValue ?? (account.data.autogenerate ? Keypair.generate() : PublicKey.default);
+                break;
+            case 'program':
+                result[account.id] = account.data.defaultValue ?? PublicKey.default;
+                break;
         }
     }
 

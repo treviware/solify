@@ -23,7 +23,7 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
 </script>
 
 <template>
-    <div>
+    <div class="full-height column">
         <div class="header">
             <q-tabs v-model="groupIndex"
                     dense
@@ -75,12 +75,18 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
                 </div>
             </q-tabs>
         </div>
-        <div class="container q-pa-lg row justify-center items-start no-wrap gap-md">
-            <div class="tx-container col">
-                <TransactionGroupView/>
+        <div class="container q-pa-lg row justify-center items-start no-wrap gap-md col">
+            <div class="tx-container col full-height">
+                <q-scroll-area class="full-width full-height">
+                    <TransactionGroupView/>
+                </q-scroll-area>
             </div>
-            <div class="summary">
-                <TransactionSummary/>
+            <div class="summary full-height">
+                <div class="full-width full-height">
+                    <q-scroll-area class="full-width full-height">
+                        <TransactionSummary/>
+                    </q-scroll-area>
+                </div>
             </div>
         </div>
     </div>

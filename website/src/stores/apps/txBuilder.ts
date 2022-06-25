@@ -22,7 +22,7 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
         web3Transactions(): Transaction[] {
             return this.currentGroup.transactions.map(tx => {
                 const finalTx = new Transaction();
-                tx.instructions =
+                finalTx.instructions =
                     tx.instructions.map((ixn: ProgramIxnDefinition<any, any>, i: number) => ixn.build(ixn, tx.data[i]));
                 finalTx.feePayer = tx.payer;
                 finalTx.recentBlockhash = PublicKey.default.toBase58();
