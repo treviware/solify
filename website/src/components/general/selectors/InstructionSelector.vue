@@ -35,7 +35,8 @@ const filteredInstruction = computed<InstructionInfoElement[]>(() => {
     const searchLower = search.value.toLowerCase();
     return baseInstructions.value
         .filter(instructionInfo => instructionInfo.program.name.toLowerCase().indexOf(searchLower) !== -1 ||
-            instructionInfo.instruction.name.toLowerCase().indexOf(searchLower) !== -1);
+            instructionInfo.instruction.name.toLowerCase().indexOf(searchLower) !== -1 ||
+            instructionInfo.instruction.description.toLowerCase().indexOf(searchLower) !== -1);
 });
 
 const instructions = computed(() => {
@@ -74,10 +75,13 @@ watch(search, () => {
                                 :key="instructionInfo.program.name + '::' + instructionInfo.instruction.name"
                                 clickable
                                 @click="selectInstruction(instructionInfo)">
-                            <q-item-section>
+                            <q-item-section class="q-py-sm">
                                 <q-item-label><b>{{
                                         instructionInfo.program.name
                                     }}</b>::{{ instructionInfo.instruction.name }}
+                                </q-item-label>
+                                <q-item-label caption v-if="instructionInfo.instruction.description">
+                                    {{ instructionInfo.instruction.description }}
                                 </q-item-label>
                             </q-item-section>
                         </q-item>

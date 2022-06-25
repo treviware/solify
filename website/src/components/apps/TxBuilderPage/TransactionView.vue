@@ -7,6 +7,7 @@ import AlertBox from 'components/general/AlertBox.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import InstructionSelector from 'components/general/selectors/InstructionSelector.vue';
 import {InstructionInfoElement} from 'src/types/instructions';
+import InstructionView from 'components/apps/TxBuilderPage/InstructionView.vue';
 
 const props = defineProps<{
     index: number;
@@ -67,7 +68,7 @@ function selectInstruction(instruction: InstructionInfoElement) {
         <div class="q-pa-sm bg-grey-9 full-width">
             <div class="row items-center">
                 <div class="cursor-pointer ellipsis">
-                    <b style="font-size: 16px">{{ transaction.name }}</b>
+                    <b style="font-size: 16px">#{{ index + 1 }} {{ transaction.name }}</b>
                     <q-popup-edit v-model="transaction.name" auto-save v-slot="scope">
                         <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
                     </q-popup-edit>
@@ -98,7 +99,7 @@ function selectInstruction(instruction: InstructionInfoElement) {
             </div>
         </AlertBox>
         <div class="column flex-center">
-            <template v-for="(ixn, i) in transaction.instructions" :key="i">
+            <template v-for="(_, i) in transaction.instructions" :key="i">
                 <div class="tx-v-bar"></div>
                 <q-btn unelevated
                        color="secondary"
@@ -108,8 +109,8 @@ function selectInstruction(instruction: InstructionInfoElement) {
                        class="text-bold"
                        @click="openIxnSelector(i)"/>
                 <div class="tx-v-bar"></div>
-                <div>
-                    {{ ixn }}
+                <div class="q-px-lg full-width">
+                    <InstructionView :transaction="transaction" :index="i" :transaction-index="index"/>
                 </div>
             </template>
             <div class="tx-v-bar"></div>

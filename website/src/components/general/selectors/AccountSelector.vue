@@ -35,7 +35,9 @@ const filteredAccount = computed<AccountInfoElement[]>(() => {
     const searchLower = search.value.toLowerCase();
     return baseAccounts.value
         .filter(accountInfo => accountInfo.program.name.toLowerCase().indexOf(searchLower) !== -1 ||
-            accountInfo.account.name.toLowerCase().indexOf(searchLower) !== -1);
+            accountInfo.account.name.toLowerCase().indexOf(searchLower) !== -1 ||
+            (accountInfo.account.description && accountInfo.account.description.toLowerCase().indexOf(searchLower) !==
+                -1));
 });
 
 const accounts = computed<(AccountInfoElement & { sizeStr: string })[]>(() => {
@@ -77,8 +79,11 @@ watch(search, () => {
                                 :key="accountInfo.program.name + '::' + accountInfo.account.name"
                                 clickable
                                 @click="selectAccount(accountInfo)">
-                            <q-item-section>
+                            <q-item-section class="q-py-sm">
                                 <q-item-label><b>{{ accountInfo.program.name }}</b>::{{ accountInfo.account.name }}
+                                </q-item-label>
+                                <q-item-label caption v-if="accountInfo.account.description">
+                                    {{ accountInfo.account.description }}
                                 </q-item-label>
                             </q-item-section>
                             <q-item-section side v-if="showSize">

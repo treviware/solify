@@ -4,8 +4,10 @@ import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import TransactionGroupView from 'components/apps/TxBuilderPage/TransactionGroupView.vue';
 import TransactionSummary from 'components/apps/TxBuilderPage/TransactionSummary.vue';
+import {useGlobalStore} from 'stores/global';
 
 const txBuilderApp = useTxBuilderApp();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
 const {
@@ -16,6 +18,7 @@ const {
 
 // COMPUTED -------------------------------------------------------------------
 const canRemoveGroup = computed(() => groups.value.length > 1);
+const isMobile = computed(() => globalStore.windowWidth <= 1000);
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
@@ -76,18 +79,28 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
             </q-tabs>
         </div>
         <div class="container q-pa-lg row justify-center items-start no-wrap gap-md col">
-            <div class="tx-container col full-height">
-                <q-scroll-area class="full-width full-height">
-                    <TransactionGroupView/>
-                </q-scroll-area>
-            </div>
-            <div class="summary full-height">
-                <div class="full-width full-height">
-                    <q-scroll-area class="full-width full-height">
-                        <TransactionSummary/>
+            <template v-if="!isMobile">
+                <div class="tx-container col full-height">
+                    <q-scroll-area class="full-width full-height" content-active-style="full-width">
+                        <TransactionGroupView/>
                     </q-scroll-area>
                 </div>
-            </div>
+                <div class="summary full-height">
+                    <div class="full-width full-height">
+                        <q-scroll-area class="full-width full-height">
+                            <TransactionSummary/>
+                        </q-scroll-area>
+                    </div>
+                </div>
+            </template>
+            <q-scroll-area class="full-width full-height" v-else>
+                <div class="summary q-mb-lg">
+                    <TransactionSummary/>
+                </div>
+                <div class="tx-container col">
+                    <TransactionGroupView/>
+                </div>
+            </q-scroll-area>
         </div>
     </div>
 </template>
@@ -112,14 +125,6 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
 @media (max-width: 1000px) {
     .summary {
         width: 100%;
-    }
-
-    .container {
-        flex-direction: column-reverse;
-
-        .tx-container {
-            width: 100%;
-        }
     }
 }
 </style>

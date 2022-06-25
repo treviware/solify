@@ -42,8 +42,6 @@ function addTransaction(index: number) {
 <template>
     <div class="column justify-start flex-center">
         <template v-if="transactions.length !== 0">
-            <div class="q-pt-xs bg-grey-9 rounded-borders full-width shadow-2"></div>
-            <div class="tx-v-bar"></div>
             <template v-for="(_, i) in transactions" :key="i">
                 <div>
                     <q-btn unelevated
