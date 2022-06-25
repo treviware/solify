@@ -94,7 +94,7 @@ removeStoreDataFromUriOnUnmounted();
             <div>The airdrop will not work in mainnet</div>
         </AlertBox>
         <div class="text-secondary text-caption text-bold q-mt-md">Account</div>
-        <PubkeyInput v-model="account" accept-null/>
+        <PubkeyInput v-model="account" accept-null show-wallet-button/>
         <div class="text-secondary text-caption text-bold q-mt-md">Amount</div>
         <SolTokenAmountInput v-model="amount"/>
         <AlertBox type="warning" class="q-my-md" v-if="isGreaterThan2">
