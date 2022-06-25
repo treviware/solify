@@ -17,7 +17,7 @@ defineProps<{
         <q-item-section>
             <q-item-label class="text-bold">#{{ index + 1 }} {{ argument.name }}</q-item-label>
             <q-item-label caption class="text-bold">{{ argument.description }}</q-item-label>
-            <div class="row items-center gap-x-lg q-mt-sm">
+            <div class="badges row items-center gap-x-lg q-mt-sm">
                 <div class="text-bold text-caption">
                     Readonly:
                     <q-badge v-if="argument.readonly" class="text-bold" color="green" text-color="black">Yes</q-badge>
@@ -38,4 +38,11 @@ defineProps<{
     </q-item>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media (max-width: 660px) {
+    .badges {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
