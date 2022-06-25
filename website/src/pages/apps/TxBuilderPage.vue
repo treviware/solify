@@ -11,16 +11,13 @@ const txBuilderApp = useTxBuilderApp();
 const {
     groups,
     groupIndex,
+    currentGroup,
 } = storeToRefs(txBuilderApp);
 
 // COMPUTED -------------------------------------------------------------------
 const canRemoveGroup = computed(() => groups.value.length > 1);
 
 // METHODS --------------------------------------------------------------------
-function copyLink() {
-    console.log('TODO: copy link');
-}
-
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -58,11 +55,20 @@ function copyLink() {
                 <q-space/>
                 <q-separator vertical/>
                 <div class="q-mx-sm row no-wrap gap-sm">
-                    <q-btn @click="txBuilderApp.addGroup()" flat round class="rounded-borders" dense size="sm">
+                    <q-btn @click="txBuilderApp.addGroup()"
+                           flat
+                           round
+                           class="rounded-borders"
+                           color="primary"
+                           dense
+                           size="sm">
                         <q-icon name="fa-solid fa-plus"/>
                     </q-btn>
-                    <q-btn @click="copyLink" flat round class="rounded-borders" dense size="sm">
-                        <q-icon name="fa-solid fa-link"/>
+                    <q-btn flat round class="rounded-borders" dense size="sm">
+                        <q-icon name="fa-solid fa-pencil" size="14px"/>
+                        <q-popup-edit v-model="currentGroup.name" auto-save v-slot="scope">
+                            <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
+                        </q-popup-edit>
                     </q-btn>
                 </div>
             </q-tabs>
