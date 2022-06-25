@@ -3,6 +3,7 @@ import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import TransactionGroupView from 'components/apps/TxBuilderPage/TransactionGroupView.vue';
+import TransactionSummary from 'components/apps/TxBuilderPage/TransactionSummary.vue';
 
 const txBuilderApp = useTxBuilderApp();
 
@@ -71,7 +72,7 @@ function copyLink() {
                 <TransactionGroupView/>
             </div>
             <div class="summary">
-                Menu
+                <TransactionSummary/>
             </div>
         </div>
     </div>

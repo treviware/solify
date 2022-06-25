@@ -2,7 +2,6 @@
 import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
-import {formatRealValue} from 'src/utils/tokens';
 import {PACKET_DATA_SIZE} from '@solana/web3.js';
 import AlertBox from 'components/general/AlertBox.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
@@ -16,7 +15,6 @@ const txBuilderApp = useTxBuilderApp();
 // REFS -----------------------------------------------------------------------
 const {
     currentGroup,
-    web3Transactions,
     encodedTransactions,
 } = storeToRefs(txBuilderApp);
 
@@ -26,8 +24,6 @@ const transaction = computed(() => transactions.value[props.index]);
 const canMoveUp = computed(() => props.index > 0);
 const canMoveDown = computed(() => props.index < transactions.value.length - 1);
 const totalBytes = computed(() => encodedTransactions.value[props.index].length);
-const totalSignatures = computed(() => web3Transactions.value[props.index].signatures.length);
-const totalNetworkFees = computed(() => formatRealValue(0.000005 * totalSignatures.value, 9));
 const isBiggerThanPackageSize = computed(() => totalBytes.value > PACKET_DATA_SIZE);
 
 // COMPUTED -------------------------------------------------------------------
@@ -74,27 +70,6 @@ function addInstruction(index: number) {
                            size="sm"
                            @click="moveDown"/>
                     <q-btn dense flat icon="fa-solid fa-trash" size="sm" color="negative" @click="remove"/>
-                </div>
-            </div>
-            <q-separator class="q-my-sm"/>
-            <div class="row flex-center gap-x-lg gap-y-sm">
-                <div>Instructions:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">
-                        {{ transaction.instructions.length }}
-                    </q-badge>
-                </div>
-                <div>Signatures:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalSignatures }}</q-badge>
-                </div>
-                <div>Bytes:
-                    <q-badge class="text-bold q-ml-sm"
-                             :color="isBiggerThanPackageSize ? 'negative' : 'white'"
-                             text-color="dark">{{ totalBytes }}
-                    </q-badge>
-                </div>
-                <div>Network fees:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalNetworkFees }} SOL
-                    </q-badge>
                 </div>
             </div>
             <q-separator class="q-my-sm"/>

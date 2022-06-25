@@ -4,23 +4,16 @@ import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import {PublicKey} from '@solana/web3.js';
-import {formatRealValue} from 'src/utils/tokens';
 
 const txBuilderApp = useTxBuilderApp();
 
 // REFS -----------------------------------------------------------------------
 const {
     currentGroup,
-    web3Transactions,
-    encodedTransactions,
 } = storeToRefs(txBuilderApp);
 
 // COMPUTED -------------------------------------------------------------------
 const transactions = computed(() => currentGroup.value.transactions);
-const totalInstructions = computed(() => transactions.value.reduce((acc, tx) => acc + tx.instructions.length, 0));
-const totalBytes = computed(() => encodedTransactions.value.reduce((acc, tx) => acc + tx.length, 0));
-const totalSignatures = computed(() => web3Transactions.value.reduce((acc, tx) => acc + tx.signatures.length, 0));
-const totalNetworkFees = computed(() => formatRealValue(0.000005 * totalSignatures.value, 9));
 
 // METHODS --------------------------------------------------------------------
 function addTransaction(index: number) {
@@ -49,28 +42,7 @@ function addTransaction(index: number) {
 <template>
     <div class="column justify-start flex-center">
         <template v-if="transactions.length !== 0">
-            <div class="q-pa-sm bg-grey-9 rounded-borders full-width row flex-center shadow-2 gap-x-lg gap-y-sm">
-                <div>Transactions:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{
-                            transactions.length
-                        }}
-                    </q-badge>
-                </div>
-                <div>Instructions:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalInstructions }}
-                    </q-badge>
-                </div>
-                <div>Signatures:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalSignatures }}</q-badge>
-                </div>
-                <div>Bytes:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalBytes }}</q-badge>
-                </div>
-                <div>Network fees:
-                    <q-badge class="text-bold q-ml-sm" color="white" text-color="dark">{{ totalNetworkFees }} SOL
-                    </q-badge>
-                </div>
-            </div>
+            <div class="q-pt-xs bg-grey-9 rounded-borders full-width shadow-2"></div>
             <div class="tx-v-bar"></div>
             <template v-for="(_, i) in transactions" :key="i">
                 <div>
