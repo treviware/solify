@@ -100,5 +100,6 @@ const paddingRight = computed(() => {
 
 .main-layout-page:deep(.q-scrollarea__content) {
     max-width: 100vw;
+    height: 0;
 }
 </style>

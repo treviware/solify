@@ -14,7 +14,7 @@ const appButtons = APP_BUTTONS;
 </script>
 
 <template>
-    <div class="full-width full-height column left-drawer">
+    <div class="full-width full-height column left-drawer no-wrap">
         <div class="row justify-center items-center logo-container">
             <img src="/logos/Logo.png"/>
             <div class="text-bold q-ml-md text-h6">
