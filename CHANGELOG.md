@@ -18,6 +18,8 @@ The minor version will be incremented upon a breaking change and the patch versi
 * general: Add social links.
 * general: Add support link.
 * transactions: Link to solana explorer to simulate the transaction.
+* transactions: Add copy/paste feature for instructions/transactions/groups. This feature must allow copying between
+  browsers.
 * signing: Add multi-wallet local signatures.
 * signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
 * signing: Add remote message signature to easily login into third-party apps. In this case the client app pays for n

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref} from 'vue';
-import AccountSizeSelector from 'components/general/selectors/AccountSelector.vue';
+import AccountSelector from 'components/general/selectors/AccountSelector.vue';
 import {AccountInfoElement} from 'src/types/accounts';
 
 const props = defineProps<{
@@ -62,7 +62,7 @@ function onSelect(account: AccountInfoElement) {
         <template v-slot:append>
             <q-btn round class="rounded-borders q-px-sm" @click="showSplDialog = true" flat no-caps>Account</q-btn>
             <q-dialog v-model="showSplDialog">
-                <AccountSizeSelector @select="onSelect" show-size/>
+                <AccountSelector @select="onSelect" show-size/>
             </q-dialog>
         </template>
     </q-input>

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import {PACKET_DATA_SIZE} from '@solana/web3.js';
 import AlertBox from 'components/general/AlertBox.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
+import InstructionSelector from 'components/general/selectors/InstructionSelector.vue';
+import {InstructionInfoElement} from 'src/types/instructions';
 
 const props = defineProps<{
     index: number;
@@ -17,6 +19,8 @@ const {
     currentGroup,
     encodedTransactions,
 } = storeToRefs(txBuilderApp);
+const ixnPosition = ref(0);
+const showIxnSelectorDialog = ref(false);
 
 // COMPUTED -------------------------------------------------------------------
 const transactions = computed(() => currentGroup.value.transactions);
@@ -42,8 +46,15 @@ function moveDown() {
 }
 
 // METHODS --------------------------------------------------------------------
-function addInstruction(index: number) {
-    console.log('TODO: addInstruction', index);
+function openIxnSelector(index: number) {
+    ixnPosition.value = index;
+    showIxnSelectorDialog.value = true;
+}
+
+function selectInstruction(instruction: InstructionInfoElement) {
+    transaction.value.instructions.splice(ixnPosition.value, 0, instruction.instruction);
+    showIxnSelectorDialog.value = false;
+    ixnPosition.value = 0;
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -86,6 +97,20 @@ function addInstruction(index: number) {
             </div>
         </AlertBox>
         <div class="column flex-center">
+            <template v-for="(ixn, i) in transaction.instructions" :key="i">
+                <div class="tx-v-bar"></div>
+                <q-btn unelevated
+                       color="secondary"
+                       text-color="dark"
+                       size="sm"
+                       label="Add instruction"
+                       class="text-bold"
+                       @click="openIxnSelector(i)"/>
+                <div class="tx-v-bar"></div>
+                <div>
+                    {{ ixn }}
+                </div>
+            </template>
             <div class="tx-v-bar"></div>
             <q-btn unelevated
                    color="secondary"
@@ -93,9 +118,12 @@ function addInstruction(index: number) {
                    size="sm"
                    label="Add instruction"
                    class="text-bold"
-                   @click="addInstruction(transactions.length)"/>
+                   @click="openIxnSelector(transaction.instructions.length)"/>
             <div class="tx-v-bar"></div>
         </div>
+        <q-dialog v-model="showIxnSelectorDialog">
+            <InstructionSelector @select="selectInstruction"/>
+        </q-dialog>
     </div>
 </template>
 

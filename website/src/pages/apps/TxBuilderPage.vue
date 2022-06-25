@@ -63,9 +63,11 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
                            dense
                            size="sm">
                         <q-icon name="fa-solid fa-plus"/>
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Add group</q-tooltip>
                     </q-btn>
                     <q-btn flat round class="rounded-borders" dense size="sm">
                         <q-icon name="fa-solid fa-pencil" size="14px"/>
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Rename group</q-tooltip>
                         <q-popup-edit v-model="currentGroup.name" auto-save v-slot="scope">
                             <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
                         </q-popup-edit>
