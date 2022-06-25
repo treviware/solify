@@ -4,7 +4,9 @@ import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import {PublicKey} from '@solana/web3.js';
+import {useWallet} from 'solana-wallets-vue';
 
+const wallet = useWallet();
 const txBuilderApp = useTxBuilderApp();
 
 // REFS -----------------------------------------------------------------------
@@ -21,11 +23,23 @@ function addTransaction(index: number) {
     while (true) {
         const name = `Transaction ${n}`;
         if (!transactions.value.some(tx => tx.name === name)) {
+            let payer = wallet.publicKey.value;
+
+            if (payer == null) {
+                if (transactions.value.length === 0) {
+                    payer = PublicKey.default;
+                } else if (index === 0) {
+                    payer = transactions.value[0]?.payer ?? PublicKey.default;
+                } else {
+                    payer = transactions.value[index - 1]?.payer ?? PublicKey.default;
+                }
+            }
+
             transactions.value.splice(index, 0, {
                 name,
                 instructions: [],
                 data: [],
-                payer: transactions.value[transactions.value.length - 1]?.payer ?? PublicKey.default,
+                payer,
             });
 
             break;

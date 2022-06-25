@@ -40,6 +40,7 @@ const ARGUMENTS = [{
     description: 'Number of bytes of memory to allocate',
     data: {
         type: 'number',
+        min: 0,
     },
 }, {
     id: 'programId',

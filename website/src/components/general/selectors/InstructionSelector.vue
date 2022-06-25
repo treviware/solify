@@ -63,7 +63,7 @@ watch(search, () => {
 </script>
 
 <template>
-    <q-card class="token-selector">
+    <q-card class="instruction-selector">
         <q-card-section class="full-height column">
             <h6 class="text-center q-mb-sm">Instruction selector</h6>
             <SearchBar v-model="search" placeholder="Search instruction" :debounce="300"/>
@@ -99,7 +99,7 @@ watch(search, () => {
 </template>
 
 <style lang="scss" scoped>
-.token-selector {
+.instruction-selector {
     width: 500px;
     max-width: 100vw;
     height: 999px;

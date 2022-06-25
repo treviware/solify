@@ -3,6 +3,7 @@ import {computed} from 'vue';
 import {TransactionDefinition} from 'src/types/transactions/transactionDefinition';
 import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
+import InstructionArgumentBox from 'components/apps/TxBuilderPage/InstructionArgumentBox.vue';
 
 const props = defineProps<{
     transaction: TransactionDefinition<any, any>
@@ -19,6 +20,7 @@ const {
 // COMPUTED -------------------------------------------------------------------
 const transactions = computed(() => currentGroup.value.transactions);
 const transactionMut = computed(() => props.transaction);
+const data = computed(() => props.transaction.data[props.index]);
 const instruction = computed(() => props.transaction.instructions[props.index]);
 const canMoveUp = computed(() => props.index > 0);
 const canMoveDown = computed(() => props.index < props.transaction.instructions.length - 1);
@@ -100,6 +102,12 @@ function moveToNextTransaction() {
                 </div>
             </div>
             <div class="ellipsis text-caption text-bold">{{ instruction.description }}</div>
+            <div v-for="account in instruction.accounts" :key="account.id">
+                <InstructionArgumentBox :argument="account" :data="data"/>
+            </div>
+            <div v-for="arg in instruction.arguments" :key="arg.id">
+                <InstructionArgumentBox :argument="arg" :data="data"/>
+            </div>
         </div>
     </div>
 </template>

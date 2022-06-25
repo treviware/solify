@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import BN from 'bn.js';
 
-defineProps<{
-    modelValue: BN;
+const props = defineProps<{
+    modelValue: BN; min?: BN; max?: BN;
 }>();
 const emits = defineEmits<{
     (e: 'update:model-value', value: BN): void,
@@ -11,10 +11,18 @@ const emits = defineEmits<{
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
-
 function onUpdate(value: string) {
     try {
-        const bn = new BN(value);
+        let bn = new BN(value);
+
+        if (props.max !== undefined && props.max.lt(bn)) {
+            bn = props.max;
+        }
+
+        if (props.min !== undefined && props.min.gt(bn)) {
+            bn = props.min;
+        }
+
         emits('update:model-value', bn);
     } catch (e) {
         // ignore

@@ -67,11 +67,16 @@ export interface ProgramIxnBoolArgument {
 export interface ProgramIxnNumberArgument {
     type: 'number';
     defaultValue?: number;
+    min?: number;
+    max?: number;
+    float?: boolean;
 }
 
 export interface ProgramIxnBigNumberArgument {
     type: 'bignum';
     defaultValue?: BN;
+    min?: BN;
+    max?: BN;
 }
 
 export interface ProgramIxnBpsArgument {
@@ -83,6 +88,7 @@ export interface ProgramIxnBpsArgument {
 export interface ProgramIxnStringArgument {
     type: 'string';
     defaultValue?: string;
+    maxLength?: number;
 }
 
 export interface ProgramIxnProgramArgument {

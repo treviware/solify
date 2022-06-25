@@ -3,15 +3,15 @@ import {computed, ref, watch} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
 import {QInfiniteScroll} from 'quasar';
 import {useProgramExplorerAppStore} from 'stores/apps/programExplorer';
-import {AccountInfoElement} from 'src/types/accounts';
+import {ProgramDefinition} from 'src/types/programs/programDefinition';
 
 const tokensPerPage = 20;
 
 const props = defineProps<{
-    initialSearch?: string, showSize?: boolean
+    initialSearch?: string
 }>();
 const emits = defineEmits<{
-    (e: 'select', account: AccountInfoElement): void,
+    (e: 'select', program: ProgramDefinition<any, any>): void,
 }>();
 
 const programExplorerAppStore = useProgramExplorerAppStore();
@@ -21,35 +21,24 @@ const search = ref(props.initialSearch ?? '');
 const maxPage = ref(0);
 
 // COMPUTED -------------------------------------------------------------------
-const baseAccounts = computed<AccountInfoElement[]>(
-    () => programExplorerAppStore.programs.map(p => p.accounts.map(v => ({
-        program: p,
-        account: v,
-    } as AccountInfoElement))).reduce((a, b) => a.concat(b), []));
-
-const filteredAccount = computed<AccountInfoElement[]>(() => {
+const filteredPrograms = computed<ProgramDefinition<any, any>[]>(() => {
     if (search.value === '') {
-        return baseAccounts.value.slice(0);
+        return programExplorerAppStore.programs.slice(0);
     }
 
     const searchLower = search.value.toLowerCase();
-    return baseAccounts.value
-        .filter(accountInfo => accountInfo.program.name.toLowerCase().indexOf(searchLower) !== -1 ||
-            accountInfo.account.name.toLowerCase().indexOf(searchLower) !== -1 ||
-            (accountInfo.account.description && accountInfo.account.description.toLowerCase().indexOf(searchLower) !==
-                -1));
+    return programExplorerAppStore.programs
+        .filter(program => program.name.toLowerCase().indexOf(searchLower) !== -1 ||
+            (program.description && program.description.toLowerCase().indexOf(searchLower) !== -1));
 });
 
-const accounts = computed<(AccountInfoElement & { sizeStr: string })[]>(() => {
-    return filteredAccount.value.slice(0, tokensPerPage * (maxPage.value + 1)).map(v => ({
-        ...v,
-        sizeStr: `${v.account.minSize} B`,
-    }));
+const programs = computed(() => {
+    return filteredPrograms.value.slice(0, tokensPerPage * (maxPage.value + 1));
 });
 
 // METHODS --------------------------------------------------------------------
-function selectAccount(account: AccountInfoElement) {
-    emits('select', account);
+function selectProgram(program: ProgramDefinition<any, any>) {
+    emits('select', program);
 }
 
 function onLoad(index: number, done: () => void) {
@@ -67,27 +56,26 @@ watch(search, () => {
 </script>
 
 <template>
-    <q-card class="account-selector">
+    <q-card class="program-selector">
         <q-card-section class="full-height column">
-            <h6 class="text-center q-mb-sm">Account selector</h6>
-            <SearchBar v-model="search" placeholder="Search account" :debounce="300"/>
+            <h6 class="text-center q-mb-sm">Program selector</h6>
+            <SearchBar v-model="search" placeholder="Search program" :debounce="300"/>
             <div class="overflow-auto col q-mt-md">
                 <q-infinite-scroll @load="onLoad" :offset="250" ref="infiniteScroll" class="full-width">
                     <q-list dense>
                         <q-item class="q-mb-xs"
-                                v-for="accountInfo in accounts"
-                                :key="accountInfo.program.name + '::' + accountInfo.account.name"
+                                v-for="program in programs"
+                                :key="program.name"
                                 clickable
-                                @click="selectAccount(accountInfo)">
+                                @click="selectProgram(program)">
                             <q-item-section class="q-py-sm">
-                                <q-item-label><b>{{ accountInfo.program.name }}</b>::{{ accountInfo.account.name }}
+                                <q-item-label><b>{{
+                                        program.name
+                                    }}</b>
                                 </q-item-label>
-                                <q-item-label caption v-if="accountInfo.account.description">
-                                    {{ accountInfo.account.description }}
+                                <q-item-label caption v-if="program.description">
+                                    {{ program.description }}
                                 </q-item-label>
-                            </q-item-section>
-                            <q-item-section side v-if="showSize">
-                                <q-item-label>{{ accountInfo.sizeStr }}</q-item-label>
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -104,7 +92,7 @@ watch(search, () => {
 </template>
 
 <style lang="scss" scoped>
-.account-selector {
+.program-selector {
     width: 500px;
     max-width: 100vw;
     height: 999px;

@@ -42,7 +42,7 @@ type ArgumentsType = Mutable<typeof ARGUMENTS>;
 export type SolifyProgramFeeIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
 export const SOLIFY_PROGRAM_FEE_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
     name: 'Solify Fee',
-    description: 'Instruction to charge users with a fee when sending a transaction with Solify',
+    description: 'Sends a fee to Solify to help it to maintain and improve its services',
     accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 
