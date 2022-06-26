@@ -11,6 +11,7 @@ const {
     currentGroup,
     web3Transactions,
     encodedTransactions,
+    showSignDialog,
 } = storeToRefs(txBuilderApp);
 
 // COMPUTED -------------------------------------------------------------------
@@ -81,6 +82,15 @@ const totalNetworkFees = computed(() => formatRealValue(0.000005 * totalSignatur
                 <div class="text-caption text-right text-bold">{{ totalNetworkFees }} SOL</div>
             </div>
         </q-card-section>
+        <q-card-actions>
+            <q-btn @click="showSignDialog = true"
+                   color="primary"
+                   unelevated
+                   class="full-width"
+                   no-caps
+                   :disable="transactions.length === 0">Sign group
+            </q-btn>
+        </q-card-actions>
     </q-card>
 </template>
 

@@ -14,15 +14,15 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
+* transactions: Add button to clone transactions into a new transaction group.
 * transactions: Add template app for transactions.
 * transactions: Add copy/paste feature for instructions/transactions/groups. This feature must allow copying between
   browsers.
-* signing: Add multi-wallet local signatures.
 * signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
 * signing: Add remote message signature to easily login into third-party apps. In this case the client app pays for n
   logins / month.
-* tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
-* tools: Add `NFT Tool` view to create/mint/burn NFTs.
+* tools: Add `SPL Tool` view to create/mint/burn SPL tokens. Allow to paste the transaction into the builder.
+* tools: Add `NFT Tool` view to create/mint/burn NFTs. Allow to paste the transaction into the builder.
 * tools: Add `PDA Tool` view to generate PDAs.
 * tools: Add `Token Accounts Tool` view to manage token accounts, create or remove accounts, close empty accounts, etc.
 * tools: Add `Token Burner Tool` view to burn tokens from accounts.
@@ -64,6 +64,7 @@ The minor version will be incremented upon a breaking change and the patch versi
   with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
 * transactions: Link to solana explorer to simulate the transaction.
 * settings: Add autoload setting for wallets.
+* signing: Add multi-wallet local signatures.
 
 ### Fixes
 

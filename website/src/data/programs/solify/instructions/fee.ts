@@ -22,6 +22,7 @@ const ACCOUNTS = [{
     description: 'The account that will receive the fee',
     signer: false,
     mutable: true,
+    readonly: true,
     data: {
         type: 'address',
         defaultValue: FEE_WALLET,

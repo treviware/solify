@@ -15,19 +15,12 @@ const wallet = useWallet();
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
 function onUpdate(value: string) {
-    if (props.acceptNull) {
-        try {
-            const pubkey = new PublicKey(value);
-            emits('update:model-value', pubkey);
-        } catch (e) {
+    try {
+        const pubkey = new PublicKey(value);
+        emits('update:model-value', pubkey);
+    } catch (e) {
+        if (props.acceptNull) {
             emits('update:model-value', null);
-        }
-    } else {
-        try {
-            const pubkey = new PublicKey(value);
-            emits('update:model-value', pubkey);
-        } catch (e) {
-            // ignore
         }
     }
 }

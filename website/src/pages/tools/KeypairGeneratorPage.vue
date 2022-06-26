@@ -33,6 +33,7 @@ function update(value: string) {
         const json = JSON.parse(value);
         const bytes = Uint8Array.from(json);
         keypair.value = Keypair.fromSecretKey(bytes);
+        return;
     } catch (e) {
     }
 

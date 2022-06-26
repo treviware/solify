@@ -21,6 +21,7 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
                 }],
             }] as TransactionGroupDefinition[],
             groupIndex: 0,
+            showSignDialog: false,
         };
     },
     getters: {
@@ -28,8 +29,8 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
         web3Transactions(): Transaction[] {
             return this.currentGroup.transactions.map(tx => {
                 const finalTx = new Transaction();
-                finalTx.instructions =
-                    tx.instructions.map((ixn: ProgramIxnDefinition<any, any>, i: number) => ixn.build(ixn, tx.data[i]));
+                finalTx.add(...tx.instructions.map(
+                    (ixn: ProgramIxnDefinition<any, any>, i: number) => ixn.build(ixn, tx.data[i])));
                 finalTx.feePayer = tx.payer;
                 finalTx.recentBlockhash = PublicKey.default.toBase58();
 

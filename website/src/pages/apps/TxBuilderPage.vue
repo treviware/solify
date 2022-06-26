@@ -5,6 +5,7 @@ import {computed} from 'vue';
 import TransactionGroupView from 'components/apps/TxBuilderPage/TransactionGroupView.vue';
 import TransactionSummary from 'components/apps/TxBuilderPage/TransactionSummary.vue';
 import {useGlobalStore} from 'stores/global';
+import TransactionLocalSigning from 'components/apps/TxBuilderPage/TransactionLocalSigning.vue';
 
 const txBuilderApp = useTxBuilderApp();
 const globalStore = useGlobalStore();
@@ -14,6 +15,7 @@ const {
     groups,
     groupIndex,
     currentGroup,
+    showSignDialog,
 } = storeToRefs(txBuilderApp);
 
 // COMPUTED -------------------------------------------------------------------
@@ -101,6 +103,9 @@ function addGroup() {
                 </div>
             </q-scroll-area>
         </div>
+        <q-dialog v-model="showSignDialog" :maximized="globalStore.isMobile" persistent>
+            <TransactionLocalSigning/>
+        </q-dialog>
     </div>
 </template>
 

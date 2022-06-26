@@ -74,37 +74,30 @@ async function simulate() {
 
 <template>
     <div class="tx-box shadow-2 full-width rounded-borders overflow-hidden">
-        <div class="q-pa-sm bg-grey-9 full-width">
-            <div class="row items-center">
-                <div class="cursor-pointer ellipsis">
-                    <b style="font-size: 16px">#{{ index + 1 }} {{ transaction.name }}</b>
-                    <q-popup-edit v-model="transaction.name" auto-save v-slot="scope">
-                        <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
-                    </q-popup-edit>
-                </div>
-                <q-space/>
-                <div class="row gap-sm">
-                    <q-btn dense flat icon="fa-solid fa-laptop-file" size="sm" @click="simulate">
-                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Simulate in Solana Explorer
-                        </q-tooltip>
-                    </q-btn>
-                    <q-separator vertical/>
-                    <q-btn dense flat icon="fa-solid fa-chevron-up" :disable="!canMoveUp" size="sm" @click="moveUp"/>
-                    <q-btn dense
-                           flat
-                           icon="fa-solid fa-chevron-down"
-                           :disable="!canMoveDown"
-                           size="sm"
-                           @click="moveDown"/>
-                    <q-btn dense flat icon="fa-solid fa-trash" size="sm" color="negative" @click="remove"/>
-                </div>
+        <q-bar>
+            <div class="cursor-pointer ellipsis">
+                <b>#{{ index + 1 }} {{ transaction.name }}</b>
+                <q-popup-edit v-model="transaction.name" auto-save v-slot="scope">
+                    <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
+                </q-popup-edit>
             </div>
-            <q-separator class="q-my-sm"/>
-            <div class="row flex-center no-wrap gap-sm">
-                <div>Fee payer:</div>
-                <PubkeyInput v-model="transaction.payer" dense class="fee-payer-input col" show-wallet-button/>
+            <q-space/>
+            <div class="row gap-sm">
+                <q-btn dense flat icon="fa-solid fa-laptop-file" size="sm" @click="simulate">
+                    <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Simulate in Solana Explorer
+                    </q-tooltip>
+                </q-btn>
+                <q-separator vertical/>
+                <q-btn dense flat icon="fa-solid fa-chevron-up" :disable="!canMoveUp" size="sm" @click="moveUp"/>
+                <q-btn dense flat icon="fa-solid fa-chevron-down" :disable="!canMoveDown" size="sm" @click="moveDown"/>
+                <q-btn dense flat icon="fa-solid fa-trash" size="sm" color="negative" @click="remove"/>
             </div>
-        </div>
+        </q-bar>
+        <q-separator/>
+        <q-bar class="justify-center gap-x-md">
+            <div>Fee payer:</div>
+            <PubkeyInput v-model="transaction.payer" dense class="fee-payer-input col" show-wallet-button/>
+        </q-bar>
         <AlertBox type="error" v-if="isBiggerThanPackageSize">
             <div>The size of this transaction exceeds the maximum allowed for a single transaction which is {{
                     PACKET_DATA_SIZE
@@ -138,7 +131,7 @@ async function simulate() {
             <div class="tx-v-bar"></div>
         </div>
         <q-dialog v-model="showIxnSelectorDialog">
-            <InstructionSelector @select="selectInstruction"/>
+            <InstructionSelector @select="selectInstruction" v-if="showIxnSelectorDialog"/>
         </q-dialog>
     </div>
 </template>
@@ -156,5 +149,11 @@ async function simulate() {
 
 .fee-payer-input {
     max-width: 450px;
+
+    &:deep(.q-field__control),
+    &:deep(.q-field__append),
+    {
+        height: 26px;
+    }
 }
 </style>
