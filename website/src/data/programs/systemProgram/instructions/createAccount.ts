@@ -7,7 +7,6 @@ const ACCOUNTS = [{
     id: 'fundingAccount',
     name: 'Funding account',
     description: 'The account that will pay the lamports to fund the new account',
-    isAccount: true,
     signer: true,
     mutable: true,
     data: {
@@ -17,7 +16,6 @@ const ACCOUNTS = [{
     id: 'newAccount',
     name: 'New account',
     description: 'The new account to generate',
-    isAccount: true,
     signer: true,
     mutable: true,
     data: {
