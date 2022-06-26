@@ -64,15 +64,18 @@ function updatePubkeyValue(value: PublicKey) {
 </script>
 
 <template>
-    <div class="q-px-md">
-        <div class="text-secondary text-caption text-bold q-mt-md row justify-between">
-            <div>{{ argument.name }}</div>
-            <div class="row gap-x-sm">
-                <q-badge color="blue" text-color="white" v-if="argument.mutable" class="text-bold">Mutable</q-badge>
-                <q-badge color="secondary" text-color="dark" v-if="argument.signer" class="text-bold">Signer</q-badge>
+    <div class="q-px-md q-mt-md">
+        <div class="col">
+            <div class="text-secondary text-caption text-bold row justify-between">
+                <div>{{ argument.name }}</div>
+                <div class="row gap-x-sm">
+                    <q-badge color="blue" text-color="white" v-if="argument.mutable" class="text-bold">Mutable</q-badge>
+                    <q-badge color="secondary" text-color="dark" v-if="argument.signer" class="text-bold">Signer
+                    </q-badge>
+                </div>
             </div>
+            <div class="text-caption text-bold" v-if="argument.description">{{ argument.description }}</div>
         </div>
-        <div class="text-caption text-bold" v-if="argument.description">{{ argument.description }}</div>
         <div v-if="argument.data.type === 'bool'">
             <q-toggle v-model="dataMut[argument.id]" dense :disable="argument.readonly"/>
         </div>

@@ -21,6 +21,11 @@ const canRemoveGroup = computed(() => groups.value.length > 1);
 const isMobile = computed(() => globalStore.windowWidth <= 1000);
 
 // METHODS --------------------------------------------------------------------
+function addGroup() {
+    txBuilderApp.addGroup();
+    groupIndex.value = groups.value.length - 1;
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -58,13 +63,7 @@ const isMobile = computed(() => globalStore.windowWidth <= 1000);
                 <q-space/>
                 <q-separator vertical/>
                 <div class="q-mx-sm row no-wrap gap-sm">
-                    <q-btn @click="txBuilderApp.addGroup()"
-                           flat
-                           round
-                           class="rounded-borders"
-                           color="primary"
-                           dense
-                           size="sm">
+                    <q-btn @click="addGroup" flat round class="rounded-borders" color="primary" dense size="sm">
                         <q-icon name="fa-solid fa-plus"/>
                         <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Add group</q-tooltip>
                     </q-btn>

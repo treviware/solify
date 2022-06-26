@@ -2,21 +2,27 @@ import {defineStore} from 'pinia';
 import {TransactionGroupDefinition} from 'src/types/transactions/groupDefinition';
 import {PublicKey, Transaction} from '@solana/web3.js';
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
+import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
+import {useWallet} from 'solana-wallets-vue';
 
 let groupNumber = 2;
 export const useTxBuilderApp = defineStore('txBuilderApp', {
-    state: () => ({
-        groups: [{
-            name: 'Group 1',
-            transactions: [{
-                name: 'Transaction 1',
-                instructions: [],
-                data: [],
-                payer: PublicKey.default,
-            }],
-        }] as TransactionGroupDefinition[],
-        groupIndex: 0,
-    }),
+    state: () => {
+        const wallet = useWallet();
+
+        return {
+            groups: [{
+                name: 'Group 1',
+                transactions: [{
+                    name: 'Transaction 1',
+                    instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
+                    data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
+                    payer: wallet.publicKey.value ?? PublicKey.default,
+                }],
+            }] as TransactionGroupDefinition[],
+            groupIndex: 0,
+        };
+    },
     getters: {
         currentGroup: (state) => state.groups[state.groupIndex],
         web3Transactions(): Transaction[] {
@@ -39,13 +45,15 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
     },
     actions: {
         addGroup() {
+            const wallet = useWallet();
+
             this.groups.push({
                 name: `Group ${groupNumber}`,
                 transactions: [{
                     name: 'Transaction 1',
-                    instructions: [],
-                    data: [],
-                    payer: PublicKey.default,
+                    instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
+                    data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
+                    payer: wallet.publicKey.value ?? PublicKey.default,
                 }],
             });
 

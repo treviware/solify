@@ -5,6 +5,7 @@ import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import {PublicKey} from '@solana/web3.js';
 import {useWallet} from 'solana-wallets-vue';
+import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
 
 const wallet = useWallet();
 const txBuilderApp = useTxBuilderApp();
@@ -37,8 +38,8 @@ function addTransaction(index: number) {
 
             transactions.value.splice(index, 0, {
                 name,
-                instructions: [],
-                data: [],
+                instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
+                data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
                 payer,
             });
 
