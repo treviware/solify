@@ -2,6 +2,7 @@
 import LeftDrawerMenuButton from 'components/MainLayout/LeftDrawerMenuButton.vue';
 import {APP_BUTTONS} from 'src/constants/apps';
 import {useMenuStore} from 'stores/menu';
+import {SOCIAL_LINKS} from 'src/constants/social';
 
 const menuStore = useMenuStore();
 const appButtons = APP_BUTTONS;
@@ -9,6 +10,10 @@ const appButtons = APP_BUTTONS;
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
+function openLink(link: string) {
+    window.open(link, '_blank');
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -39,6 +44,18 @@ const appButtons = APP_BUTTONS;
                                       v-for="(button, i) in menuStore.recentMenuTools"
                                       :index="i"
                                       :key="button.name"></LeftDrawerMenuButton>
+                <q-separator/>
+                <q-item class="row flex-center gap-sm">
+                    <q-btn v-for="link in SOCIAL_LINKS"
+                           flat
+                           round
+                           size="sm"
+                           class="rounded-borders"
+                           :key="link.network"
+                           @click="openLink(link.url)">
+                        <q-icon :name="link.icon"/>
+                    </q-btn>
+                </q-item>
             </q-list>
         </div>
     </div>
