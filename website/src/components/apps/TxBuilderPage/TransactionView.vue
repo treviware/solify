@@ -8,6 +8,7 @@ import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import InstructionSelector from 'components/general/selectors/InstructionSelector.vue';
 import {InstructionInfoElement} from 'src/types/instructions';
 import InstructionView from 'components/apps/TxBuilderPage/InstructionView.vue';
+import {encodeToURI} from 'src/utils/strings';
 
 const props = defineProps<{
     index: number;
@@ -18,6 +19,7 @@ const txBuilderApp = useTxBuilderApp();
 // REFS -----------------------------------------------------------------------
 const {
     currentGroup,
+    web3Transactions,
     encodedTransactions,
 } = storeToRefs(txBuilderApp);
 const ixnPosition = ref(0);
@@ -59,6 +61,13 @@ function selectInstruction(instruction: InstructionInfoElement) {
     ixnPosition.value = 0;
 }
 
+async function simulate() {
+    const tx = web3Transactions.value[props.index];
+    const encoded = tx.serializeMessage().toString('base64');
+    const uriEncoded = encodeToURI(encoded);
+    window.open(`https://explorer.solana.com/tx/inspector?message=${uriEncoded}`);
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -75,6 +84,11 @@ function selectInstruction(instruction: InstructionInfoElement) {
                 </div>
                 <q-space/>
                 <div class="row gap-sm">
+                    <q-btn dense flat icon="fa-solid fa-laptop-file" size="sm" @click="simulate">
+                        <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Simulate in Solana Explorer
+                        </q-tooltip>
+                    </q-btn>
+                    <q-separator vertical/>
                     <q-btn dense flat icon="fa-solid fa-chevron-up" :disable="!canMoveUp" size="sm" @click="moveUp"/>
                     <q-btn dense
                            flat

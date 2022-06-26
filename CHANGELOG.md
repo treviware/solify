@@ -14,8 +14,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
-* general: Add tabs to transaction, so we can add tabs when people select something.
-* transactions: Link to solana explorer to simulate the transaction.
+* transactions: Add template app for transactions.
 * transactions: Add copy/paste feature for instructions/transactions/groups. This feature must allow copying between
   browsers.
 * signing: Add multi-wallet local signatures.
@@ -63,6 +62,7 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Keypair Generator Tool` view to generate new keypairs and change them between different encodings.
 * tools: Add `Vanity Address Tool` view to generate keypairs whose base58 encoding follows some rules. Start
   with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
+* transactions: Link to solana explorer to simulate the transaction.
 * settings: Add autoload setting for wallets.
 
 ### Fixes
