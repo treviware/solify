@@ -12,6 +12,7 @@ import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import WalletButton from 'components/MainLayout/WalletButton.vue';
 import {useQuasar} from 'quasar';
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
+import SignatureBadge from 'components/general/SignatureBadge.vue';
 
 const quasar = useQuasar();
 const txBuilderApp = useTxBuilderApp();
@@ -28,6 +29,7 @@ const currentTransaction = ref(-1);
 const waitingForWallet = ref(false);
 const sendingTransaction = ref(false);
 const finalTransactions = ref<Transaction[]>([]);
+const resultSignatures = ref<{ txIndex: number, signature: string }[]>([]);
 
 // COMPUTED -------------------------------------------------------------------
 const transactions = computed(() => currentGroup.value.transactions);
@@ -106,6 +108,7 @@ const isSigning = computed(() => currentTransaction.value > -1);
 
 // METHODS --------------------------------------------------------------------
 async function initSigning() {
+    resultSignatures.value.splice(0, resultSignatures.value.length);
     finalTransactions.value = transactions.value.map(tx => {
         const finalTx = new Transaction();
         finalTx.add(
@@ -252,7 +255,11 @@ async function serialSendTransaction() {
     const txDef = transactions.value[currentTransaction.value];
     const tx = finalTransactions.value[currentTransaction.value];
     try {
-        await solanaStore.connection.sendRawTransaction(tx.serialize());
+        const signature = await solanaStore.connection.sendRawTransaction(tx.serialize());
+        resultSignatures.value.push({
+            txIndex: currentTransaction.value,
+            signature,
+        });
         quasar.notify({
             message: `${txDef.name} sent`,
             color: 'positive',
@@ -294,7 +301,11 @@ async function parallelSendTransaction() {
         const txDef = transactions.value[i];
         const tx = finalTransactions.value[i];
 
-        promises.push(solanaStore.connection.sendRawTransaction(tx.serialize()).then(() => {
+        promises.push(solanaStore.connection.sendRawTransaction(tx.serialize()).then(signature => {
+            resultSignatures.value.push({
+                txIndex: i,
+                signature,
+            });
             quasar.notify({
                 message: `${txDef.name} sent`,
                 color: 'positive',
@@ -375,7 +386,8 @@ watch(wallet.publicKey, (publicKey) => {
         </template>
         <template v-else>
             <q-card-section>
-                <p>Please follow the steps to sign the transaction:</p>
+                <p>Please connect the wallets one by one to sign the transaction. It will be sent automatically when all
+                    signatures are present.</p>
                 <q-list dense separator>
                     <q-item v-for="sig in signingInfo.keypairSignatures" :key="sig.pubkey.toBase58()">
                         <q-item-section class="q-py-sm">
@@ -406,6 +418,24 @@ watch(wallet.publicKey, (publicKey) => {
                     <q-spinner/>
                 </div>
             </q-card-actions>
+        </template>
+
+        <template v-if="resultSignatures.length > 0">
+            <q-separator/>
+            <q-card-section>
+                <q-list dense separator>
+                    <q-item v-for="sig in resultSignatures" :key="sig.signature">
+                        <q-item-section>
+                            <q-item-label style="word-break: break-all;"><u><b>{{ transactions[sig.txIndex].name }}</b></u>:
+                                <span class="text-caption text-bold"><SignatureBadge long
+                                                                                     show-copy
+                                                                                     show-menu
+                                                                                     :signature="sig.signature"/></span>
+                            </q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-card-section>
         </template>
     </q-card>
 </template>

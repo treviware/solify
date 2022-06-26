@@ -1,25 +1,17 @@
 <script lang="ts" setup>
-import {PublicKey} from '@solana/web3.js';
 import {computed, ref} from 'vue';
-import {abbreviatePubkey} from 'src/utils/wallets';
+import {abbreviateSignature} from 'src/utils/wallets';
 import {copyToClipboard} from 'quasar';
 
 const props = defineProps<{
-    pubkey: PublicKey, showCopy?: boolean, long?: boolean, showMenu?: boolean;
+    signature: string, showCopy?: boolean, showMenu?: boolean;
 }>();
 
 // REFS -----------------------------------------------------------------------
 const copied = ref(false);
 
 // COMPUTED -------------------------------------------------------------------
-
-const publicKey = computed(() => {
-    if (props.long) {
-        return props.pubkey.toBase58();
-    } else {
-        return abbreviatePubkey(props.pubkey);
-    }
-});
+const finalSignature = computed(() => abbreviateSignature(props.signature));
 const finalShowCopy = computed(() => {
     return props.showMenu && (props.showCopy ?? true);
 });
@@ -31,7 +23,7 @@ function copy() {
         return;
     }
 
-    copyToClipboard(props.pubkey.toBase58());
+    copyToClipboard(props.signature);
     copied.value = true;
 
     setTimeout(() => {
@@ -40,11 +32,11 @@ function copy() {
 }
 
 function openSolscan() {
-    window.open(`https://solscan.io/account/${props.pubkey}`, '_blank');
+    window.open(`https://solscan.io/tx/${props.signature}`, '_blank');
 }
 
 function openSolanaExplorer() {
-    window.open(`https://explorer.solana.com/address/${props.pubkey}`, '_blank');
+    window.open(`https://explorer.solana.com/tx/${props.signature}`, '_blank');
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -53,7 +45,7 @@ function openSolanaExplorer() {
 
 <template>
     <q-badge class="text-bold text-white" :class="{'cursor-pointer': finalShowCopy}">
-        <code>{{ publicKey }}</code>
+        <code>{{ finalSignature }}</code>
         <q-icon v-if="finalShowCopy && !copied" name="fa-solid fa-location" class="q-ml-xs"/>
         <q-icon v-if="finalShowCopy && copied" name="fa-solid fa-circle-check" class="q-ml-xs"/>
 

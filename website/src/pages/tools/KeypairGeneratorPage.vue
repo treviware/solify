@@ -5,8 +5,9 @@ import {Keypair} from '@solana/web3.js';
 import base58 from 'bs58';
 import {useKeypairGeneratorToolStore} from 'stores/tools/keypairGenerator';
 import {storeToRefs} from 'pinia';
-import {copyToClipboard} from 'quasar';
+import {copyToClipboard, useQuasar} from 'quasar';
 
+const quasar = useQuasar();
 const keypairGeneratorToolStore = useKeypairGeneratorToolStore();
 
 // REFS -----------------------------------------------------------------------
@@ -44,8 +45,22 @@ function update(value: string) {
     }
 }
 
-function copy(data: string) {
-    copyToClipboard(data);
+async function copy(data: string) {
+    try {
+        await copyToClipboard(data);
+        quasar.notify({
+            message: 'Copied!',
+            color: 'positive',
+            badgeColor: 'positive',
+        });
+    } catch (e) {
+        console.error('Error copying to clipboard', e);
+        quasar.notify({
+            message: 'Error copying to clipboard',
+            color: 'negative',
+            badgeColor: 'negative',
+        });
+    }
 }
 
 // WATCHES --------------------------------------------------------------------

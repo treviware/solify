@@ -9,11 +9,13 @@ import InstructionSelector from 'components/general/selectors/InstructionSelecto
 import {InstructionInfoElement} from 'src/types/instructions';
 import InstructionView from 'components/apps/TxBuilderPage/InstructionView.vue';
 import {encodeToURI} from 'src/utils/strings';
+import {copyToClipboard, useQuasar} from 'quasar';
 
 const props = defineProps<{
     index: number;
 }>();
 
+const quasar = useQuasar();
 const txBuilderApp = useTxBuilderApp();
 
 // REFS -----------------------------------------------------------------------
@@ -68,6 +70,27 @@ async function simulate() {
     window.open(`https://explorer.solana.com/tx/inspector?message=${uriEncoded}`);
 }
 
+async function copyEncoded() {
+    const tx = web3Transactions.value[props.index];
+    const encoded = tx.serializeMessage().toString('base64');
+
+    try {
+        await copyToClipboard(encoded);
+        quasar.notify({
+            message: 'Copied!',
+            color: 'positive',
+            badgeColor: 'positive',
+        });
+    } catch (e) {
+        console.error('Error copying to clipboard', e);
+        quasar.notify({
+            message: 'Error copying to clipboard',
+            color: 'negative',
+            badgeColor: 'negative',
+        });
+    }
+}
+
 // WATCHES --------------------------------------------------------------------
 // HOOKS ----------------------------------------------------------------------
 </script>
@@ -83,6 +106,9 @@ async function simulate() {
             </div>
             <q-space/>
             <div class="row gap-sm">
+                <q-btn dense flat icon="fa-solid fa-file" size="sm" @click="copyEncoded">
+                    <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy encoded</q-tooltip>
+                </q-btn>
                 <q-btn dense flat icon="fa-solid fa-laptop-file" size="sm" @click="simulate">
                     <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Simulate in Solana Explorer
                     </q-tooltip>

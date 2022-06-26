@@ -3,12 +3,14 @@ import {VanityAddressResult} from 'src/types/tools/vanityAddress';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import base58 from 'bs58';
 import {computed} from 'vue';
-import {copyToClipboard} from 'quasar';
+import {copyToClipboard, useQuasar} from 'quasar';
 import {useGlobalStore} from 'stores/global';
 
 const props = defineProps<{
     result: VanityAddressResult; index: number
 }>();
+
+const quasar = useQuasar();
 const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
@@ -16,8 +18,22 @@ const globalStore = useGlobalStore();
 const keypairStr = computed(() => base58.encode(props.result.keypair.secretKey));
 
 // METHODS --------------------------------------------------------------------
-function copyKeypair() {
-    copyToClipboard(keypairStr.value);
+async function copyKeypair() {
+    try {
+        await copyToClipboard(keypairStr.value);
+        quasar.notify({
+            message: 'Copied!',
+            color: 'positive',
+            badgeColor: 'positive',
+        });
+    } catch (e) {
+        console.error('Error copying to clipboard', e);
+        quasar.notify({
+            message: 'Error copying to clipboard',
+            color: 'negative',
+            badgeColor: 'negative',
+        });
+    }
 }
 
 // WATCHES --------------------------------------------------------------------
