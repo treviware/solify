@@ -95,7 +95,8 @@ onBeforeMount(() => {
                     <ProgramInstructionCard :instruction="instruction"
                                             v-for="(instruction, i) in instructions"
                                             :key="instruction.name"
-                                            :index="i"/>
+                                            :index="i"
+                                            class="q-mb-lg"/>
                 </template>
             </div>
             <div class="q-mt-xl">
