@@ -53,6 +53,7 @@ export type ProgramIxnAccountData =
 export type ProgramIxnArgumentData =
     ProgramIxnBoolArgument
     | ProgramIxnNumberArgument
+    | ProgramIxnBytesArgument
     | ProgramIxnBigNumberArgument
     | ProgramIxnBpsArgument
     | ProgramIxnStringArgument
@@ -70,6 +71,12 @@ export interface ProgramIxnNumberArgument {
     min?: number;
     max?: number;
     float?: boolean;
+}
+
+export interface ProgramIxnBytesArgument {
+    type: 'bytes';
+    defaultValue?: number;
+    max?: number;
 }
 
 export interface ProgramIxnBigNumberArgument {
@@ -118,6 +125,7 @@ export function defaultInstantiateSolanaInstruction(ixnDefinition: ProgramIxnDef
                 result[argument.id] = argument.data.defaultValue ?? false;
                 break;
             case 'number':
+            case 'bytes':
                 result[argument.id] = argument.data.defaultValue ?? 0;
                 break;
             case 'bignum':
@@ -172,4 +180,4 @@ export type ProgramIxnAccountsData<T extends ProgramIxnAccountDefinition[]> = {
 export type ProgramIxnArgumentsData<T extends ProgramIxnArgumentDefinition[]> = {
     [P in ArrayIndex<T> as T[P]['id']]: FilterProgramIxnType<T[P]['data']>;
 };
-export type FilterProgramIxnType<T extends ProgramIxnArgumentData, D = T['type']> = D extends 'bool' ? boolean : D extends 'number' ? number : D extends 'bignum' | 'bps' ? BN : D extends 'string' ? string : D extends 'program' ? PublicKey : D extends 'address' ? PublicKey | Keypair : never;
+export type FilterProgramIxnType<T extends ProgramIxnArgumentData, D = T['type']> = D extends 'bool' ? boolean : D extends 'number' | 'bytes' ? number : D extends 'bignum' | 'bps' ? BN : D extends 'string' ? string : D extends 'program' ? PublicKey : D extends 'address' ? PublicKey | Keypair : never;

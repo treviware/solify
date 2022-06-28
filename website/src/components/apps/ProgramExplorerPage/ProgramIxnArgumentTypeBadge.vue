@@ -15,6 +15,8 @@ const realType = computed(() => {
         case 'number':
         case 'bignum':
             return 'Number';
+        case 'bytes':
+            return 'Bytes';
         case 'bps':
             return 'Token Basis Points';
         case 'string':

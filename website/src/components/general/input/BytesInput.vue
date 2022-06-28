@@ -4,7 +4,7 @@ import AccountSelector from 'components/general/selectors/AccountSelector.vue';
 import {AccountInfoElement} from 'src/types/accounts';
 
 const props = defineProps<{
-    modelValue: number;
+    modelValue: number; max?: number
 }>();
 const emits = defineEmits<{
     (e: 'update:modelValue', value: number): void;
@@ -38,6 +38,16 @@ const byteInHigherUnits = computed(() => {
 // METHODS --------------------------------------------------------------------
 
 function onBytesUpdate(newValue: number) {
+    newValue = Math.floor(newValue);
+
+    if (props.max) {
+        newValue = Math.min(newValue, props.max);
+    }
+
+    if (isNaN(newValue)) {
+        newValue = 0;
+    }
+
     emits('update:modelValue', Math.floor(newValue));
 }
 

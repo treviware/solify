@@ -9,6 +9,7 @@ import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import {isPubkey} from 'src/types/filters';
 import {Keypair, PublicKey} from '@solana/web3.js';
 import ProgramInput from 'components/general/input/ProgramInput.vue';
+import BytesInput from 'components/general/input/BytesInput.vue';
 
 const props = defineProps<{
     argument: ProgramIxnArgumentDefinition | ProgramIxnAccountDefinition; data: any;
@@ -85,6 +86,13 @@ function updatePubkeyValue(value: PublicKey) {
                      outlined
                      dense
                      @update:model-value="updateNumberValue"/>
+        </div>
+        <div v-else-if="argument.data.type === 'bytes'">
+            <BytesInput v-model="dataMut[argument.id]"
+                        :readonly="argument.readonly"
+                        :max="argument.data.max"
+                        outlined
+                        dense/>
         </div>
         <div v-else-if="argument.data.type === 'bignum'">
             <BignumInput v-model="dataMut[argument.id]"
