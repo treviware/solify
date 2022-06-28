@@ -28,11 +28,16 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
         currentGroup: (state) => state.groups[state.groupIndex],
         web3Transactions(): Transaction[] {
             return this.currentGroup.transactions.map(tx => {
-                const finalTx = new Transaction();
-                finalTx.add(...tx.instructions.map(
-                    (ixn: ProgramIxnDefinition<any, any>, i: number) => ixn.build(ixn, tx.data[i])));
-                finalTx.feePayer = tx.payer;
-                finalTx.recentBlockhash = PublicKey.default.toBase58();
+                const finalTx = new Transaction({
+                    feePayer: tx.payer,
+                    recentBlockhash: PublicKey.default.toBase58(),
+                });
+                const txs = tx.instructions.map(
+                    (ixn: ProgramIxnDefinition<any, any>, i: number) => ixn.build(ixn, tx.data[i]));
+
+                if (txs.length !== 0) {
+                    finalTx.add(...txs);
+                }
 
                 return finalTx;
             });
