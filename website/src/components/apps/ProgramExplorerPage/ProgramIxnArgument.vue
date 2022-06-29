@@ -16,14 +16,14 @@ defineProps<{
 <template>
     <q-item>
         <q-item-section>
-            <div class="row justify-between items-start">
+            <div class="row justify-between items-start container gap-x-md">
                 <div>
                     <q-item-label class="text-bold">#{{ index + 1 }} {{ argument.name }}</q-item-label>
                     <q-item-label caption class="text-bold">{{ argument.description }}</q-item-label>
                 </div>
                 <div>
                     <q-item-label caption>
-                        <ProgramIxnArgumentTypeBadge class="text-bold q-ml-xs q-mt-xs"
+                        <ProgramIxnArgumentTypeBadge class="text-bold q-mt-xs"
                                                      color="white"
                                                      text-color="black"
                                                      :type="argument.data.type"/>
@@ -34,4 +34,10 @@ defineProps<{
     </q-item>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media (max-width: 1000px) {
+    .container {
+        flex-direction: column;
+    }
+}
+</style>
