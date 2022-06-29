@@ -18,7 +18,7 @@
     "@solana/buffer-layout": "^4.0.0",
     "@solana/buffer-layout-utils": "^0.2.0",
     "@solana/spl-token": "^0.2.0",
-    "@solana/wallet-adapter-wallets": "^0.15.5",
+    "@solana/wallet-adapter-wallets": "^0.16.3",
     "@solana/web3.js": "^1.43.6",
     "axios": "^0.21.1",
     "bn.js": "^5.2.1",
@@ -26,7 +26,7 @@
     "core-js": "^3.6.5",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
-    "solana-wallets-vue": "^0.3.2",
+    "solana-wallets-vue": "^0.4.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
   },
