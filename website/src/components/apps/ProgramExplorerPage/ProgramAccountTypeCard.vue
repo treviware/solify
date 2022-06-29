@@ -4,7 +4,7 @@ import ProgramAccountStructTypeField from 'components/apps/ProgramExplorerPage/P
 import ProgramAccountEnumTypeVariant from 'components/apps/ProgramExplorerPage/ProgramAccountEnumTypeVariant.vue';
 
 defineProps<{
-    type: ProgramAccountTypeDefinition; index: number;
+    type: ProgramAccountTypeDefinition;
 }>();
 
 // REFS -----------------------------------------------------------------------
@@ -15,38 +15,35 @@ defineProps<{
 </script>
 
 <template>
-    <div class="row items-start gap-md">
-        <h6>#{{ index + 1 }}</h6>
-        <q-card class="col">
-            <q-card-section>
-                <div class="code">
-                    <p v-if="type.description"><span class="comment doc">/// {{ type.description }}</span></p>
-                    <p><span class="keyword">{{ type.type.type }}</span> <span class="type">{{ type.name }}</span> {</p>
-                    <template v-if="type.type.type === 'struct'">
-                        <template v-if="type.type.fields.length > 0">
-                            <ProgramAccountStructTypeField :field="field"
-                                                           v-for="(field, i) in type.type.fields"
-                                                           class="q-pl-md"
-                                                           :class="{'q-mt-sm': i > 0}"
-                                                           :key="field.id"/>
-                        </template>
-                        <p v-else class="q-pl-md"><span class="comment">// Empty</span></p>
+    <q-card class="col overflow-auto">
+        <q-card-section>
+            <div class="code">
+                <p v-if="type.description"><span class="comment doc">/// {{ type.description }}</span></p>
+                <p><span class="keyword">{{ type.type.type }}</span> <span class="type">{{ type.name }}</span> {</p>
+                <template v-if="type.type.type === 'struct'">
+                    <template v-if="type.type.fields.length > 0">
+                        <ProgramAccountStructTypeField :field="field"
+                                                       v-for="(field, i) in type.type.fields"
+                                                       class="q-pl-md"
+                                                       :class="{'q-mt-sm': i > 0}"
+                                                       :key="field.id"/>
                     </template>
-                    <template v-else>
-                        <template v-if="type.type.variants.length > 0">
-                            <ProgramAccountEnumTypeVariant :variant="variant"
-                                                           v-for="(variant, i) in type.type.variants"
-                                                           class="q-pl-md"
-                                                           :class="{'q-mt-sm': i > 0}"
-                                                           :key="variant.id"/>
-                        </template>
-                        <p v-else class="q-pl-md"><span class="comment">// Empty</span></p>
+                    <p v-else class="q-pl-md"><span class="comment">// Empty</span></p>
+                </template>
+                <template v-else>
+                    <template v-if="type.type.variants.length > 0">
+                        <ProgramAccountEnumTypeVariant :variant="variant"
+                                                       v-for="(variant, i) in type.type.variants"
+                                                       class="q-pl-md"
+                                                       :class="{'q-mt-sm': i > 0}"
+                                                       :key="variant.id"/>
                     </template>
-                    <p>}</p>
-                </div>
-            </q-card-section>
-        </q-card>
-    </div>
+                    <p v-else class="q-pl-md"><span class="comment">// Empty</span></p>
+                </template>
+                <p>}</p>
+            </div>
+        </q-card-section>
+    </q-card>
 </template>
 
 <style lang="scss" scoped>
@@ -57,6 +54,7 @@ defineProps<{
 
 .code {
     font-family: Inconsolata, monospace;
+    white-space: nowrap;
 
     &:deep(span.name) {
         font-weight: $accent;

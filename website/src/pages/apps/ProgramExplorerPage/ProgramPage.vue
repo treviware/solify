@@ -30,6 +30,7 @@ const program = computed(() => programExplorerAppStore.programs.find(v => v.addr
 const instructions = computed(() => program.value?.instructions ?? []);
 const accounts = computed(() => program.value?.accounts?.accounts ?? []);
 const accountTypes = computed(() => program.value?.accounts?.types ?? []);
+const accountSystemTypes = computed(() => program.value?.accounts?.systemTypes ?? []);
 const pdas = computed(() => program.value?.pdas ?? []);
 const instructionIndexEntries = computed(() => instructions.value.map(v => ({
     name: v.name,
@@ -42,6 +43,10 @@ const accountIndexEntries = computed(() => accounts.value.map(v => ({
 const accountTypeIndexEntries = computed(() => accountTypes.value.map(v => ({
     name: v.name,
     id: encodeToCssId(`Type${v.name}`),
+})));
+const accountSystemTypeIndexEntries = computed(() => accountSystemTypes.value.map(v => ({
+    name: v.name,
+    id: encodeToCssId(`SystemType${v.name}`),
 })));
 const pdasIndexEntries = computed(() => pdas.value.map(v => ({
     name: v.name,
@@ -129,7 +134,7 @@ onBeforeMount(() => {
                 </q-card>
             </div>
             <q-separator class="q-mt-md"/>
-            <div class="row flex-center gap-x-md q-my-sm">
+            <div class="row flex-center gap-md q-my-sm">
                 <q-btn unelevated :color="content !== 'ixn' ? 'grey-8' : 'primary'" @click="content = 'ixn'">
                     {{ instructions.length }}
                     {{ instructions.length === 1 ? 'Instruction' : 'Instructions' }}
@@ -144,9 +149,9 @@ onBeforeMount(() => {
                 </q-btn>
             </div>
             <q-separator/>
-            <div class="q-mt-lg" v-if="content === 'ixn'">
-                <div ref="indexEl" v-if="instructionIndexEntries.length !== 0">
-                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
+            <div v-if="content === 'ixn'">
+                <div ref="indexEl" v-if="instructionIndexEntries.length !== 0" class="q-py-md">
+                    <h6 class="text-center q-mb-xs">Index</h6>
                     <q-list dense>
                         <q-item dense
                                 v-for="(entry, i) in instructionIndexEntries"
@@ -172,33 +177,53 @@ onBeforeMount(() => {
                                             class="q-mb-lg"/>
                 </template>
             </div>
-            <div class="q-mt-lg" v-if="content === 'accounts'">
-                <div ref="indexEl" v-if="accountIndexEntries.length !== 0 || accountTypeIndexEntries.length !== 0">
-                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
-                    <p class="text-bold">Accounts</p>
-                    <q-list dense>
-                        <q-item dense
-                                v-for="(entry, i) in accountIndexEntries"
-                                :key="entry.id"
-                                clickable
-                                @click="goToHash(entry.id)">
-                            <q-item-section>
-                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
-                    <p class="text-bold">Types</p>
-                    <q-list dense>
-                        <q-item dense
-                                v-for="(entry, i) in accountTypeIndexEntries"
-                                :key="entry.id"
-                                clickable
-                                @click="goToHash(entry.id)">
-                            <q-item-section>
-                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
+            <div v-if="content === 'accounts'">
+                <div ref="indexEl"
+                     v-if="accountIndexEntries.length !== 0 || accountTypeIndexEntries.length !== 0 || accountSystemTypeIndexEntries.length !== 0"
+                     class="q-py-md">
+                    <h6 class="text-center q-mb-xs">Index</h6>
+                    <template v-if="accountIndexEntries.length !== 0">
+                        <p class="text-bold">Accounts</p>
+                        <q-list dense>
+                            <q-item dense
+                                    v-for="(entry, i) in accountIndexEntries"
+                                    :key="entry.id"
+                                    clickable
+                                    @click="goToHash(entry.id)">
+                                <q-item-section>
+                                    <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </template>
+                    <template v-if="accountTypeIndexEntries.length !== 0">
+                        <p class="text-bold">Types</p>
+                        <q-list dense>
+                            <q-item dense
+                                    v-for="(entry, i) in accountTypeIndexEntries"
+                                    :key="entry.id"
+                                    clickable
+                                    @click="goToHash(entry.id)">
+                                <q-item-section>
+                                    <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </template>
+                    <template v-if="accountSystemTypeIndexEntries.length !== 0">
+                        <p class="text-bold">System types</p>
+                        <q-list dense>
+                            <q-item dense
+                                    v-for="(entry, i) in accountSystemTypeIndexEntries"
+                                    :key="entry.id"
+                                    clickable
+                                    @click="goToHash(entry.id)">
+                                <q-item-section>
+                                    <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </template>
                 </div>
                 <q-separator class="q-mb-md"/>
                 <div v-if="accounts.length === 0" class="text-bold text-primary text-center">The program does not
@@ -212,10 +237,7 @@ onBeforeMount(() => {
                                         :id="encodeToCssId(account.name)"
                                         class="q-mb-lg"/>
                 </template>
-                <div v-if="accountTypes.length === 0" class="text-bold text-primary text-center">The program does not
-                    contain any type
-                </div>
-                <template v-else>
+                <template v-if="accountTypes.length !== 0">
                     <p class="text-bold text-center q-mb-md">Types</p>
                     <ProgramAccountTypeCard :type="accountType"
                                             v-for="(accountType, i) in accountTypes"
@@ -224,10 +246,19 @@ onBeforeMount(() => {
                                             :id="encodeToCssId(`Type${accountType.name}`)"
                                             class="q-mb-lg"/>
                 </template>
+                <template v-if="accountSystemTypes.length !== 0">
+                    <p class="text-bold text-center q-mb-md">System Types</p>
+                    <ProgramAccountTypeCard :type="accountType"
+                                            v-for="(accountType, i) in accountSystemTypes"
+                                            :key="accountType.name"
+                                            :index="i"
+                                            :id="encodeToCssId(`SystemType${accountType.name}`)"
+                                            class="q-mb-lg"/>
+                </template>
             </div>
-            <div class="q-mt-lg" v-if="content === 'pdas'">
-                <div ref="indexEl" v-if="pdasIndexEntries.length !== 0">
-                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
+            <div v-if="content === 'pdas'">
+                <div ref="indexEl" v-if="pdasIndexEntries.length !== 0" class="q-py-md">
+                    <h6 class="text-center q-mb-xs">Index</h6>
                     <q-list dense>
                         <q-item dense
                                 v-for="(entry, i) in pdasIndexEntries"

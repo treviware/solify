@@ -2,8 +2,9 @@ import {Layout} from '@solana/buffer-layout';
 import {ArrayIndex, PartialRecordKeys} from 'src/types/general';
 import {PublicKey} from '@solana/web3.js';
 
-export interface ProgramAccountsDefinition<Types extends readonly ProgramAccountTypeDefinition[], Accounts extends readonly ProgramAccountDefinition<any>[]> {
+export interface ProgramAccountsDefinition<Types extends readonly ProgramAccountTypeDefinition[], SystemTypes extends readonly ProgramAccountTypeDefinition[], Accounts extends readonly ProgramAccountDefinition<any>[]> {
     readonly types: Types;
+    readonly systemTypes: SystemTypes;
     readonly accounts: Accounts;
 }
 
@@ -21,7 +22,7 @@ export interface ProgramAccountDefinition<Type extends ProgramAccountTypeDefinit
 
 export type ProgramAccountDefinitionBuilder<Type extends ProgramAccountTypeDefinition> = PartialRecordKeys<ProgramAccountDefinition<Type>, 'minSize' | 'actualSizeCalculator' | 'defaultLayout'>;
 
-export function defineProgramAccounts<Types extends readonly ProgramAccountTypeDefinition[], Accounts extends readonly ProgramAccountDefinition<any>[]>(account: ProgramAccountsDefinition<Types, Accounts>): ProgramAccountsDefinition<Types, Accounts> {
+export function defineProgramAccounts<Types extends readonly ProgramAccountTypeDefinition[], SystemTypes extends readonly ProgramAccountTypeDefinition[], Accounts extends readonly ProgramAccountDefinition<any>[]>(account: ProgramAccountsDefinition<Types, SystemTypes, Accounts>): ProgramAccountsDefinition<Types, SystemTypes, Accounts> {
     return account;
 }
 

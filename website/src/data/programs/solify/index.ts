@@ -9,6 +9,7 @@ export const SOLIFY_PROGRAM = defineProgram({
     description: 'The instructions associated with the Solify dapp',
     accounts: {
         types: [],
+        systemTypes: [],
         accounts: [],
     },
     instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],

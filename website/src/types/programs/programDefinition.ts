@@ -3,7 +3,7 @@ import {ProgramAccountsDefinition} from 'src/types/programs/accountDefinition';
 import {PdaDefinition} from 'src/types/programs/pdaDefinition';
 import {PublicKey} from '@solana/web3.js';
 
-export interface ProgramDefinition<Accounts extends ProgramAccountsDefinition<any, any>, Instructions extends ProgramIxnDefinition<any, any>[]> {
+export interface ProgramDefinition<Accounts extends ProgramAccountsDefinition<any, any, any>, Instructions extends ProgramIxnDefinition<any, any>[]> {
     address: PublicKey;
     name: string;
     icon?: string;
@@ -13,6 +13,6 @@ export interface ProgramDefinition<Accounts extends ProgramAccountsDefinition<an
     pdas: PdaDefinition[];
 }
 
-export function defineProgram<Accounts extends ProgramAccountsDefinition<any, any>, Instructions extends ProgramIxnDefinition<any, any>[]>(program: ProgramDefinition<Accounts, Instructions>): ProgramDefinition<Accounts, Instructions> {
+export function defineProgram<Accounts extends ProgramAccountsDefinition<any, any, any>, Instructions extends ProgramIxnDefinition<any, any>[]>(program: ProgramDefinition<Accounts, Instructions>): ProgramDefinition<Accounts, Instructions> {
     return program;
 }
