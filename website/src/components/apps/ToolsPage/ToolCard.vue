@@ -44,7 +44,7 @@ function pin() {
 
 <template>
     <q-card class="tool-card column">
-        <q-card-section class="row items-center no-wrap gap-md">
+        <q-card-section class="row items-center no-wrap gap-md full-width">
             <div class="q-ml-sm" :class="{'text-secondary': isActive}">
                 <q-icon :name="button.icon" size="20px"/>
             </div>
@@ -64,11 +64,11 @@ function pin() {
             </div>
         </q-card-section>
         <q-separator/>
-        <q-card-section class="text-caption text-bold">
+        <q-card-section class="text-caption text-bold full-width">
             {{ button.description }}
         </q-card-section>
         <q-space/>
-        <q-card-section class="flex flex-center">
+        <q-card-section class="flex flex-center full-width">
             <q-btn color="primary" unelevated @click="open" no-caps class="full-width">{{
                     isActive ? 'Close' : 'Open'
                 }}

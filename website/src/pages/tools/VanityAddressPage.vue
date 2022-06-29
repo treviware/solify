@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AlertBox from 'components/general/AlertBox.vue';
-import {useVanityAddressToolStore} from 'stores/pages/tools/vanityAddress';
+import {useVanityAddressToolStore} from 'stores/tools/vanityAddress';
 import {storeToRefs} from 'pinia';
 import {computed, onUnmounted, ref, watch} from 'vue';
 import {decodeVanityAddressRules, encodeVanityAddressRules, VanityAddressMessage} from 'src/types/tools/vanityAddress';

@@ -4,7 +4,7 @@ import {PublicKey} from '@solana/web3.js';
 
 export const useAirdropToolStore = defineStore('airdropTool', {
     state: () => ({
-        account: PublicKey.default,
+        account: null as PublicKey | null,
         amount: new BN(1_000_000_000),
     }),
 });

@@ -32,6 +32,10 @@ async function connect(wallet: Wallet) {
     }
 }
 
+async function cancelConnecting() {
+    walletStore.connecting.value = false;
+}
+
 async function disconnect() {
     try {
         await walletStore.disconnect();
@@ -70,6 +74,9 @@ async function openWallets() {
                         <q-item-section class="text-center text-bold">Show wallets</q-item-section>
                     </q-item>
                     <q-separator/>
+                    <q-item clickable v-close-popup @click="cancelConnecting" v-if="walletStore.connecting.value">
+                        <q-item-section class="text-negative text-center text-bold">Cancel</q-item-section>
+                    </q-item>
                     <q-item clickable v-close-popup @click="disconnect" v-if="walletStore.connected.value">
                         <q-item-section class="text-negative text-center text-bold">Disconnect</q-item-section>
                     </q-item>

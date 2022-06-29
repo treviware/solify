@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
 import {computed, ref, watch} from 'vue';
-import {useAirdropToolStore} from 'stores/pages/tools/airdrop';
+import {useAirdropToolStore} from 'stores/tools/airdrop';
 import SolTokenAmountInput from 'components/general/input/SolTokenAmountInput.vue';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
 import AlertBox from 'components/general/AlertBox.vue';
@@ -29,6 +29,10 @@ const isGreaterThan2 = computed(() => amount.value.gt(new BN(2_000_000_000)));
 async function airdrop() {
     loading.value = true;
 
+    if (account.value === null) {
+        return;
+    }
+
     try {
         await solanaStore.connection.requestAirdrop(account.value, Number(amount.value));
         quasar.notify({
@@ -49,7 +53,7 @@ async function airdrop() {
 
 function writeToUri() {
     return writeToolParamsIntoUri({
-        account: account.value ?? PublicKey.default,
+        account: account.value ?? undefined,
         amount: amount.value ?? new BN(0),
     });
 }
@@ -90,14 +94,20 @@ removeStoreDataFromUriOnUnmounted();
             <div>The airdrop will not work in mainnet</div>
         </AlertBox>
         <div class="text-secondary text-caption text-bold q-mt-md">Account</div>
-        <PubkeyInput v-model="account"/>
+        <PubkeyInput v-model="account" accept-null show-wallet-button/>
         <div class="text-secondary text-caption text-bold q-mt-md">Amount</div>
         <SolTokenAmountInput v-model="amount"/>
         <AlertBox type="warning" class="q-my-md" v-if="isGreaterThan2">
             <div>Trying to airdrop more than 2 SOL at the same time can lead in an error</div>
         </AlertBox>
         <div class="flex flex-center q-mt-md">
-            <q-btn color="secondary" text-color="black" unelevated no-caps :loading="loading" @click="airdrop">
+            <q-btn :disable="!account"
+                   color="secondary"
+                   text-color="black"
+                   unelevated
+                   no-caps
+                   :loading="loading"
+                   @click="airdrop">
                 Airdrop
             </q-btn>
         </div>

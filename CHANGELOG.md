@@ -14,15 +14,21 @@ The minor version will be incremented upon a breaking change and the patch versi
 
 * modes: Add PRO mode to allow users to use advanced features.
 * modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
-* general: Add tabs to transaction, so we can add tabs when people select something.
-* transactions: Link to solana explorer to simulate the transaction.
-* signing: Add multi-wallet local signatures.
+* transactions: Add button to clone transactions into a new transaction group.
+* transactions: Add template app for transactions.
+* transactions: Add copy/paste feature for instructions/transactions/groups. This feature must allow copying between
+  browsers.
 * signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
 * signing: Add remote message signature to easily login into third-party apps. In this case the client app pays for n
   logins / month.
-* tools: Add `SPL Tool` view to create/mint/burn SPL tokens.
-* tools: Add `NFT Tool` view to create/mint/burn NFTs.
+* tools: Add `SPL Tool` view to create/mint/burn SPL tokens. Allow to paste the transaction into the builder.
+* tools: Add `NFT Tool` view to create/mint/burn NFTs. Allow to paste the transaction into the builder.
 * tools: Add `PDA Tool` view to generate PDAs.
+* tools: Add `Token Accounts Tool` view to manage token accounts, create or remove accounts, close empty accounts, etc.
+* tools: Add `Token Burner Tool` view to burn tokens from accounts.
+* programs: Add `System Program` definition.
+* programs: Add `Solana Token Program` definition.
+* programs: Add `Metaplex Program` definition.
 
 ### Fixes
 
@@ -41,6 +47,9 @@ The minor version will be incremented upon a breaking change and the patch versi
 * general: Show NFT info in wallet list.
 * general: Add recent tool list to the left and right menus. Add also the ability to pin some of them.
 * general: Add view to select a tool.
+* general: Make search bars get values from URI.
+* general: Add social links.
+* general: Add support link. Finally, this went to Discord.
 * config: Add support for different vs currencies.
 * config: Add support for different RPC endpoint.
 * config: Add support for different commitment levels.
@@ -53,4 +62,10 @@ The minor version will be incremented upon a breaking change and the patch versi
 * tools: Add `Keypair Generator Tool` view to generate new keypairs and change them between different encodings.
 * tools: Add `Vanity Address Tool` view to generate keypairs whose base58 encoding follows some rules. Start
   with, end with or contain a certain string. Sensible or insensible case matching. Multiple rules at the same time.
+* transactions: Link to solana explorer to simulate the transaction.
 * settings: Add autoload setting for wallets.
+* signing: Add multi-wallet local signatures.
+
+### Fixes
+
+* general: fix wallet list is always pinned.

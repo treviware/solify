@@ -1,17 +1,25 @@
 <script lang="ts" setup>
-import {computed, ref} from 'vue';
+import {computed, onBeforeMount, watch} from 'vue';
 import SearchBar from 'components/general/SearchBar.vue';
 import {TOOL_BUTTONS_BY_CATEGORY} from 'src/constants/tools';
 import {ToolCategory} from 'src/types/tools';
 import ToolCard from 'components/apps/ToolsPage/ToolCard.vue';
 import {useMenuStore} from 'stores/menu';
 import {useGlobalStore} from 'stores/global';
+import {useToolsAppStore} from 'stores/apps/tools';
+import {storeToRefs} from 'pinia';
+import {useRouter} from 'vue-router';
+import {useRouterStore} from 'stores/router';
+
+const router = useRouter();
 
 const menuStore = useMenuStore();
 const globalStore = useGlobalStore();
+const toolsAppStore = useToolsAppStore();
+const routerStore = useRouterStore();
 
 // REFS -----------------------------------------------------------------------
-const search = ref('');
+const {search} = storeToRefs(toolsAppStore);
 
 // COMPUTED -------------------------------------------------------------------
 const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
@@ -37,14 +45,26 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
+watch(search, async (search) => {
+    await routerStore.setQueryEntry('search', search === '' ? undefined : search);
+});
+
 // HOOKS ----------------------------------------------------------------------
+onBeforeMount(() => {
+    const searchUri = router.currentRoute.value.query['search'] as string;
+
+    if (searchUri) {
+        search.value = searchUri;
+    }
+});
+
 </script>
 
 <template>
     <div class="q-pa-lg">
         <div class="viewport-width">
             <div class="row justify-between items-end q-mb-xl">
-                <h3>Tools</h3>
+                <h3 class="q-mb-xs">Tools</h3>
                 <SearchBar v-model="search" placeholder="Search tool" :debounce="300"/>
             </div>
             <template v-if="menuStore.pinnedTools.length > 0">
@@ -69,25 +89,5 @@ const filteredCategories = computed(() => TOOL_BUTTONS_BY_CATEGORY.map(v => {
 <style lang="scss" scoped>
 .searchbar {
     width: 400px;
-}
-
-.menu-card {
-    width: 300px;
-    max-width: 80vw;
-
-    .title {
-        font-size: 20px;
-    }
-
-    &:hover::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 3px;
-    }
 }
 </style>

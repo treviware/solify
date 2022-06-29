@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {computed, ref} from 'vue';
-import AccountSizeSelector from 'components/general/selectors/AccountSizeSelector.vue';
+import AccountSelector from 'components/general/selectors/AccountSelector.vue';
 import {AccountInfoElement} from 'src/types/accounts';
 
 const props = defineProps<{
-    modelValue: number;
+    modelValue: number; max?: number
 }>();
 const emits = defineEmits<{
     (e: 'update:modelValue', value: number): void;
@@ -38,11 +38,21 @@ const byteInHigherUnits = computed(() => {
 // METHODS --------------------------------------------------------------------
 
 function onBytesUpdate(newValue: number) {
+    newValue = Math.floor(newValue);
+
+    if (props.max) {
+        newValue = Math.min(newValue, props.max);
+    }
+
+    if (isNaN(newValue)) {
+        newValue = 0;
+    }
+
     emits('update:modelValue', Math.floor(newValue));
 }
 
 function onSelect(account: AccountInfoElement) {
-    emits('update:modelValue', account.size);
+    emits('update:modelValue', account.account.minSize);
     showSplDialog.value = false;
 }
 
@@ -62,7 +72,7 @@ function onSelect(account: AccountInfoElement) {
         <template v-slot:append>
             <q-btn round class="rounded-borders q-px-sm" @click="showSplDialog = true" flat no-caps>Account</q-btn>
             <q-dialog v-model="showSplDialog">
-                <AccountSizeSelector @select="onSelect" show-size/>
+                <AccountSelector @select="onSelect" show-size/>
             </q-dialog>
         </template>
     </q-input>

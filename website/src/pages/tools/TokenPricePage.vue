@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
-import {useTokenPriceToolStore} from 'stores/pages/tools/tokenPrice';
+import {useTokenPriceToolStore} from 'stores/tools/tokenPrice';
 import AlertBox from 'components/general/AlertBox.vue';
 import SplTokenInput from 'components/general/input/SplTokenInput.vue';
 import {computed, watch} from 'vue';

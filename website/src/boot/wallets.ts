@@ -6,7 +6,7 @@ import {WalletStoreProps} from 'solana-wallets-vue/dist/createWalletStore';
 import {WALLET_AUTO_CONNECT} from 'src/constants';
 
 const walletOptions: WalletStoreProps = {
-    wallets: [new PhantomWalletAdapter(), new SlopeWalletAdapter()],
+    wallets: [new SlopeWalletAdapter(), new PhantomWalletAdapter()],
     autoConnect: localStorage.getItem(WALLET_AUTO_CONNECT) === 'true',
 };
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {storeToRefs} from 'pinia';
-import {useRentExemptionStore} from 'stores/pages/tools/rentExemption';
+import {useRentExemptionStore} from 'stores/tools/rentExemption';
 import {computed, ref, watch} from 'vue';
 import {useSolanaStore} from 'stores/solana';
 import {useQuasar} from 'quasar';

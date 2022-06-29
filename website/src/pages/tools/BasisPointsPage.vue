@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {MAX_SPL_DECIMALS} from 'src/constants';
 import SplDecimalsInput from 'components/general/input/SplDecimalsInput.vue';
-import {useBpsToolStore} from 'stores/pages/tools/basisPoints';
+import {useBpsToolStore} from 'stores/tools/basisPoints';
 import {storeToRefs} from 'pinia';
 import BignumInput from 'components/general/input/BignumInput.vue';
 import BN from 'bn.js';

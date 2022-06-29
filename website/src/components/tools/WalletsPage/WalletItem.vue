@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {useWalletListStore, WalletTokenData} from 'stores/pages/tools/walletList';
+import {useWalletListStore, WalletTokenData} from 'stores/tools/walletList';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
 import {useWallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';

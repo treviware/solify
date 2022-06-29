@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
-import {useRouter} from 'vue-router';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {RightDrawerState} from 'src/types/drawer';
 import {useMenuStore} from 'stores/menu';
 import {MAX_PINNED_TOOLS} from 'src/constants';
 import {useRouterStore} from 'stores/router';
+import {useGlobalStore} from 'stores/global';
+import {useRouter} from 'vue-router';
 
 const props = defineProps<{
     index?: number, icon: string, name?: string, pathName?: string, rightDrawerOption?: RightDrawerState
@@ -15,11 +16,20 @@ const router = useRouter();
 const routerStore = useRouterStore();
 const rightDrawerStore = useRightDrawerStore();
 const menuStore = useMenuStore();
+const globalStore = useGlobalStore();
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
-
 const isActive = computed(() => {
+    if (props.pathName) {
+        return props.pathName === globalStore.currentAppButton?.pathName;
+    } else {
+        return rightDrawerStore.drawerState === props.rightDrawerOption;
+    }
+});
+const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedTools.length);
+const canPin = computed(() => isPinned.value || menuStore.pinnedTools.length < MAX_PINNED_TOOLS);
+const isSamePage = computed(() => {
     if (props.pathName) {
         return props.pathName === router.currentRoute.value.name;
     } else {
@@ -27,15 +37,15 @@ const isActive = computed(() => {
     }
 });
 
-const isPinned = computed(() => props.index != null && props.index < menuStore.pinnedTools.length);
-const canPin = computed(() => isPinned.value || menuStore.pinnedTools.length < MAX_PINNED_TOOLS);
-
 // METHODS --------------------------------------------------------------------
-
 async function open() {
     if (isActive.value) {
         if (props.rightDrawerOption) {
             await rightDrawerStore.close();
+        } else if (!isSamePage.value) {
+            await routerStore.push({
+                name: props.pathName,
+            });
         }
 
         return;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useVanityAddressToolStore} from 'stores/pages/tools/vanityAddress';
+import {useVanityAddressToolStore} from 'stores/tools/vanityAddress';
 import {computed} from 'vue';
 import {isBase58} from 'src/utils/strings';
 
