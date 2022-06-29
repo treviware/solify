@@ -97,15 +97,14 @@ async function copyEncoded() {
 
 <template>
     <div class="tx-box shadow-2 full-width rounded-borders overflow-hidden">
-        <q-bar>
-            <div class="cursor-pointer ellipsis">
+        <q-bar class="justify-between">
+            <div class="cursor-pointer text-no-wrap">
                 <b>#{{ index + 1 }} {{ transaction.name }}</b>
                 <q-popup-edit v-model="transaction.name" auto-save v-slot="scope">
                     <q-input v-model="scope.value" :maxlength="20" dense autofocus @keyup.enter="scope.set"/>
                 </q-popup-edit>
             </div>
-            <q-space/>
-            <div class="row gap-sm">
+            <div class="row no-wrap gap-sm">
                 <q-btn dense flat icon="fa-solid fa-file" size="sm" @click="copyEncoded">
                     <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Copy encoded</q-tooltip>
                 </q-btn>
@@ -163,6 +162,17 @@ async function copyEncoded() {
 </template>
 
 <style lang="scss" scoped>
+.q-bar {
+    flex-wrap: wrap !important;
+    height: unset;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    & > div {
+        margin-left: 0;
+    }
+}
+
 .tx-box {
     border: 1px solid $grey-9;
 }
