@@ -1,14 +1,11 @@
 import {defineProgramAccount} from 'src/types/programs/accountDefinition';
 import {struct} from '@solana/buffer-layout';
+import {WALLET_SYSTEM_PROGRAM_ACCOUNT_TYPE} from 'src/data/programs/systemProgram/accounts/types/wallet';
 
-export const SYSTEM_PROGRAM_WALLET_ACCOUNT = defineProgramAccount({
+export const WALLET_SYSTEM_PROGRAM_ACCOUNT = defineProgramAccount<typeof WALLET_SYSTEM_PROGRAM_ACCOUNT_TYPE>({
     name: 'System account',
     description: 'A system account that doesn\'t contain any data',
-    minSize: 0,
-    layout: struct<Record<string, unknown>>([]),
-
-    // ------------------------------------------------------------------------
-    // ACTIONS ----------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    defaultLayout: () => ({}),
-});
+    fixedSize: 0,
+    type: WALLET_SYSTEM_PROGRAM_ACCOUNT_TYPE,
+    layout: struct([]),
+} as const);

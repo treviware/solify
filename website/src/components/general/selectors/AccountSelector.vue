@@ -22,7 +22,7 @@ const maxPage = ref(0);
 
 // COMPUTED -------------------------------------------------------------------
 const baseAccounts = computed<AccountInfoElement[]>(
-    () => programExplorerAppStore.programs.map(p => p.accounts.map(v => ({
+    () => programExplorerAppStore.programs.map(p => p.accounts.accounts.map(v => ({
         program: p,
         account: v,
     } as AccountInfoElement))).reduce((a, b) => a.concat(b), []));

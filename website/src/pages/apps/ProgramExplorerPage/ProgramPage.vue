@@ -8,6 +8,8 @@ import ProgramInstructionCard from 'components/apps/ProgramExplorerPage/ProgramI
 import {useGlobalStore} from 'stores/global';
 import {encodeToCssId} from 'src/utils/strings';
 import {debounce} from 'quasar';
+import ProgramAccountCard from 'components/apps/ProgramExplorerPage/ProgramAccountCard.vue';
+import ProgramAccountTypeCard from 'components/apps/ProgramExplorerPage/ProgramAccountTypeCard.vue';
 
 const props = defineProps<{
     programId: string;
@@ -27,28 +29,24 @@ const showFab = ref(false);
 const program = computed(() => programExplorerAppStore.programs.find(v => v.address.toString() === props.programId));
 const instructions = computed(() => program.value?.instructions ?? []);
 const accounts = computed(() => program.value?.accounts?.accounts ?? []);
+const accountTypes = computed(() => program.value?.accounts?.types ?? []);
 const pdas = computed(() => program.value?.pdas ?? []);
-const indexEntries = computed(() => {
-    switch (content.value) {
-        case 'ixn':
-            return instructions.value.map(v => ({
-                name: v.name,
-                id: encodeToCssId(v.name),
-            }));
-        case 'accounts':
-            return accounts.value.map(v => ({
-                name: v.name,
-                id: encodeToCssId(v.name),
-            }));
-        case 'pdas':
-            return pdas.value.map(v => ({
-                name: v.name,
-                id: encodeToCssId(v.name),
-            }));
-    }
-
-    return [];
-});
+const instructionIndexEntries = computed(() => instructions.value.map(v => ({
+    name: v.name,
+    id: encodeToCssId(v.name),
+})));
+const accountIndexEntries = computed(() => accounts.value.map(v => ({
+    name: v.name,
+    id: encodeToCssId(v.name),
+})));
+const accountTypeIndexEntries = computed(() => accountTypes.value.map(v => ({
+    name: v.name,
+    id: encodeToCssId(`Type${v.name}`),
+})));
+const pdasIndexEntries = computed(() => pdas.value.map(v => ({
+    name: v.name,
+    id: encodeToCssId(v.name),
+})));
 
 // METHODS --------------------------------------------------------------------
 function goBack() {
@@ -132,44 +130,36 @@ onBeforeMount(() => {
             </div>
             <q-separator class="q-mt-md"/>
             <div class="row flex-center gap-x-md q-my-sm">
-                <q-btn unelevated
-                       :color="content !== 'ixn' ? 'grey-8' : 'primary'"
-                       @click="content = 'ixn'"
-                       v-if="instructions.length > 0">
+                <q-btn unelevated :color="content !== 'ixn' ? 'grey-8' : 'primary'" @click="content = 'ixn'">
                     {{ instructions.length }}
                     {{ instructions.length === 1 ? 'Instruction' : 'Instructions' }}
                 </q-btn>
-                <q-btn unelevated
-                       :color="content !== 'accounts' ? 'grey-8' : 'primary'"
-                       @click="content = 'accounts'"
-                       v-if="accounts.length > 0">
+                <q-btn unelevated :color="content !== 'accounts' ? 'grey-8' : 'primary'" @click="content = 'accounts'">
                     {{ accounts.length }}
                     {{ accounts.length === 1 ? 'Account' : 'Accounts' }}
                 </q-btn>
-                <q-btn unelevated
-                       :color="content !== 'pdas' ? 'grey-8' : 'primary'"
-                       @click="content = 'pdas'"
-                       v-if="pdas.length > 0">
+                <q-btn unelevated :color="content !== 'pdas' ? 'grey-8' : 'primary'" @click="content = 'pdas'">
                     {{ pdas.length }}
                     {{ pdas.length === 1 ? 'PDA' : 'PDAs' }}
                 </q-btn>
             </div>
             <q-separator/>
-            <div ref="indexEl">
-                <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
-                <q-list dense>
-                    <q-item dense v-for="(entry, i) in indexEntries" :key="entry.id">
-                        <q-item-label><a class="index-link" @click="goToHash(entry.id)">{{ i + 1 }}.
-                            {{ entry.name }}</a>
-                        </q-item-label>
-                    </q-item>
-                </q-list>
-            </div>
-            <q-separator/>
             <div class="q-mt-lg" v-if="content === 'ixn'">
-                <h6>{{ instructions.length }} {{ instructions.length === 1 ? 'Instruction' : 'Instructions' }}</h6>
-                <p>On-chain methods that anyone can execute inside a transaction.</p>
-                <q-separator class="q-mt-sm q-mb-md"/>
+                <div ref="indexEl" v-if="instructionIndexEntries.length !== 0">
+                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
+                    <q-list dense>
+                        <q-item dense
+                                v-for="(entry, i) in instructionIndexEntries"
+                                :key="entry.id"
+                                clickable
+                                @click="goToHash(entry.id)">
+                            <q-item-section>
+                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+                <q-separator class="q-mb-md"/>
                 <div v-if="instructions.length === 0" class="text-bold text-primary text-center">The program does not
                     contain any instruction
                 </div>
@@ -183,18 +173,74 @@ onBeforeMount(() => {
                 </template>
             </div>
             <div class="q-mt-lg" v-if="content === 'accounts'">
-                <h6>{{ accounts.length }} {{ accounts.length === 1 ? 'Account' : 'Accounts' }}</h6>
-                <p>Data stored on-chain related to the current program.</p>
-                <q-separator class="q-mt-sm q-mb-md"/>
+                <div ref="indexEl" v-if="accountIndexEntries.length !== 0 || accountTypeIndexEntries.length !== 0">
+                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
+                    <p class="text-bold">Accounts</p>
+                    <q-list dense>
+                        <q-item dense
+                                v-for="(entry, i) in accountIndexEntries"
+                                :key="entry.id"
+                                clickable
+                                @click="goToHash(entry.id)">
+                            <q-item-section>
+                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                    <p class="text-bold">Types</p>
+                    <q-list dense>
+                        <q-item dense
+                                v-for="(entry, i) in accountTypeIndexEntries"
+                                :key="entry.id"
+                                clickable
+                                @click="goToHash(entry.id)">
+                            <q-item-section>
+                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+                <q-separator class="q-mb-md"/>
                 <div v-if="accounts.length === 0" class="text-bold text-primary text-center">The program does not
                     contain any account
                 </div>
-                <template v-else>TODO</template>
+                <template v-else>
+                    <ProgramAccountCard :account="account"
+                                        v-for="(account, i) in accounts"
+                                        :key="account.name"
+                                        :index="i"
+                                        :id="encodeToCssId(account.name)"
+                                        class="q-mb-lg"/>
+                </template>
+                <div v-if="accountTypes.length === 0" class="text-bold text-primary text-center">The program does not
+                    contain any type
+                </div>
+                <template v-else>
+                    <p class="text-bold text-center q-mb-md">Types</p>
+                    <ProgramAccountTypeCard :type="accountType"
+                                            v-for="(accountType, i) in accountTypes"
+                                            :key="accountType.name"
+                                            :index="i"
+                                            :id="encodeToCssId(`Type${accountType.name}`)"
+                                            class="q-mb-lg"/>
+                </template>
             </div>
             <div class="q-mt-lg" v-if="content === 'pdas'">
-                <h6>{{ pdas.length }} {{ pdas.length === 1 ? 'PDA' : 'PDAs' }}</h6>
-                <p>Program Derived Addresses the program uses to assign accounts.</p>
-                <q-separator class="q-mt-sm q-mb-md"/>
+                <div ref="indexEl" v-if="pdasIndexEntries.length !== 0">
+                    <h6 class="text-center q-mt-md q-mb-xs">Index</h6>
+                    <q-list dense>
+                        <q-item dense
+                                v-for="(entry, i) in pdasIndexEntries"
+                                :key="entry.id"
+                                clickable
+                                @click="goToHash(entry.id)">
+                            <q-item-section>
+                                <q-item-label>{{ i + 1 }}. {{ entry.name }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+                <q-separator class="q-mb-md"/>
                 <div v-if="pdas.length === 0" class="text-bold text-primary text-center">The program does not contain
                     any PDA
                 </div>
@@ -210,13 +256,5 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 .program-image {
     width: 40px
-}
-
-.index-link {
-    text-decoration: none;
-
-    &:hover {
-        color: $primary;
-    }
 }
 </style>

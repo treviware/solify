@@ -28,6 +28,65 @@ export function defineInstruction<Accounts extends ProgramIxnAccountDefinition[]
     return instruction as any;
 }
 
+// ----------------------------------------------------------------------------
+// Default methods ------------------------------------------------------------
+// ----------------------------------------------------------------------------
+export function defaultInstantiateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any, any>): any {
+    const result: Record<string, any> = {};
+
+    for (const argument of ixnDefinition.arguments) {
+        switch (argument.data.type) {
+            case 'bool':
+                result[argument.id] = argument.data.defaultValue ?? false;
+                break;
+            case 'number':
+            case 'bytes':
+                result[argument.id] = argument.data.defaultValue ?? 0;
+                break;
+            case 'bignum':
+            case 'bps':
+                result[argument.id] = argument.data.defaultValue ?? new BN(0);
+                break;
+            case 'string':
+                result[argument.id] = argument.data.defaultValue ?? '';
+                break;
+            case 'address':
+                result[argument.id] =
+                    argument.data.defaultValue ?? (argument.data.autogenerate ? Keypair.generate() : PublicKey.default);
+                break;
+            case 'program':
+                result[argument.id] = argument.data.defaultValue ?? PublicKey.default;
+                break;
+        }
+    }
+
+    for (const account of ixnDefinition.accounts) {
+        switch (account.data.type) {
+            case 'address':
+                result[account.id] =
+                    account.data.defaultValue ?? (account.data.autogenerate ? Keypair.generate() : PublicKey.default);
+                break;
+            case 'program':
+                result[account.id] = account.data.defaultValue ?? PublicKey.default;
+                break;
+        }
+    }
+
+    return result;
+}
+
+export function defaultUpdateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any, any>, data: any,
+                                               field: FieldsToArray<any>): PartialRecord<string, string> {
+    data[field.fieldName] = field.value as any;
+
+    // No error messages.
+    return {};
+}
+
+// ----------------------------------------------------------------------------
+// Argument definitions -------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 export interface ProgramIxnAccountDefinition {
     id: string;
     name: string;
@@ -111,61 +170,6 @@ export interface ProgramIxnAddressArgument {
      * Whether to auto generate the initial value or not.
      */
     autogenerate?: boolean;
-}
-
-// ----------------------------------------------------------------------------
-// Default methods ------------------------------------------------------------
-// ----------------------------------------------------------------------------
-export function defaultInstantiateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any, any>): any {
-    const result: Record<string, any> = {};
-
-    for (const argument of ixnDefinition.arguments) {
-        switch (argument.data.type) {
-            case 'bool':
-                result[argument.id] = argument.data.defaultValue ?? false;
-                break;
-            case 'number':
-            case 'bytes':
-                result[argument.id] = argument.data.defaultValue ?? 0;
-                break;
-            case 'bignum':
-            case 'bps':
-                result[argument.id] = argument.data.defaultValue ?? new BN(0);
-                break;
-            case 'string':
-                result[argument.id] = argument.data.defaultValue ?? '';
-                break;
-            case 'address':
-                result[argument.id] =
-                    argument.data.defaultValue ?? (argument.data.autogenerate ? Keypair.generate() : PublicKey.default);
-                break;
-            case 'program':
-                result[argument.id] = argument.data.defaultValue ?? PublicKey.default;
-                break;
-        }
-    }
-
-    for (const account of ixnDefinition.accounts) {
-        switch (account.data.type) {
-            case 'address':
-                result[account.id] =
-                    account.data.defaultValue ?? (account.data.autogenerate ? Keypair.generate() : PublicKey.default);
-                break;
-            case 'program':
-                result[account.id] = account.data.defaultValue ?? PublicKey.default;
-                break;
-        }
-    }
-
-    return result;
-}
-
-export function defaultUpdateSolanaInstruction(ixnDefinition: ProgramIxnDefinition<any, any>, data: any,
-                                               field: FieldsToArray<any>): PartialRecord<string, string> {
-    data[field.fieldName] = field.value as any;
-
-    // No error messages.
-    return {};
 }
 
 // ----------------------------------------------------------------------------

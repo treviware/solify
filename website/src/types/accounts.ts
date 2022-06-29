@@ -3,5 +3,5 @@ import {ProgramAccountDefinition} from 'src/types/programs/accountDefinition';
 
 export interface AccountInfoElement {
     program: ProgramDefinition<any, any>;
-    account: ProgramAccountDefinition<any, any>;
+    account: ProgramAccountDefinition<any>;
 }

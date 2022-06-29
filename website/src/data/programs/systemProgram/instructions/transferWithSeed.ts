@@ -6,43 +6,51 @@ import {isPubkey} from 'src/types/filters';
 const ACCOUNTS = [{
     id: 'fundingAccount',
     name: 'Funding account',
-    description: 'The account that will pay the lamports to fund the new account',
-    signer: true,
+    description: 'Account that will transfer lamports',
+    signer: false,
     mutable: true,
     data: {
         type: 'address',
     },
 }, {
-    id: 'newAccount',
-    name: 'New account',
-    description: 'The new account to generate',
-    signer: true,
+    id: 'recipientAccount',
+    name: 'Recipient Account',
+    description: 'Account that will receive transferred lamports',
+    signer: false,
     mutable: true,
     data: {
         type: 'address',
-        autogenerate: true,
+    },
+}, {
+    id: 'baseAccount',
+    name: 'Base Account',
+    description: 'Account to use to derive the funding account address',
+    signer: true,
+    mutable: false,
+    data: {
+        type: 'address',
     },
 }] as const;
 
 const ARGUMENTS = [{
     id: 'lamports',
     name: 'Lamports',
-    description: 'Number of lamports to transfer to the new account',
+    description: 'Number of lamports to transfer',
     data: {
         type: 'bps',
         tokenAddress: PublicKey.default,
     },
 }, {
-    id: 'space',
-    name: 'Space',
-    description: 'Number of bytes of memory to allocate',
+    id: 'seed',
+    name: 'Seed',
+    description: 'Seed to use to derive the funding account address',
     data: {
-        type: 'bytes',
+        type: 'string',
     },
 }, {
     id: 'programId',
     name: 'Program',
-    description: 'Address of the program that will own the new account',
+    description: 'Program id to use to derive the funding account address',
     data: {
         type: 'program',
     },
@@ -51,10 +59,10 @@ const ARGUMENTS = [{
 type AccountsType = Mutable<typeof ACCOUNTS>;
 type ArgumentsType = Mutable<typeof ARGUMENTS>;
 
-export type SystemProgramCreateAccountIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
-export const SYSTEM_PROGRAM_CREATE_ACCOUNT_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
-    name: 'CreateAccount',
-    description: 'Create a new account',
+export type SystemProgramTransferWithSeedIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
+export const SYSTEM_PROGRAM_TRANSFER_WITH_SEED_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
+    name: 'TransferWithSeed',
+    description: 'Transfer lamports from a derived address',
     accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 
@@ -62,11 +70,12 @@ export const SYSTEM_PROGRAM_CREATE_ACCOUNT_INSTRUCTION = defineInstruction<Accou
     // ACTIONS ----------------------------------------------------------------
     // ------------------------------------------------------------------------
     build(ixnDefinition, data) {
-        return SystemProgram.createAccount({
+        return SystemProgram.transfer({
             fromPubkey: isPubkey(data.fundingAccount) ? data.fundingAccount : data.fundingAccount.publicKey,
-            newAccountPubkey: isPubkey(data.newAccount) ? data.newAccount : data.newAccount.publicKey,
-            lamports: Number(data.lamports),
-            space: data.space,
+            toPubkey: isPubkey(data.recipientAccount) ? data.recipientAccount : data.recipientAccount.publicKey,
+            basePubkey: isPubkey(data.baseAccount) ? data.baseAccount : data.baseAccount.publicKey,
+            lamports: BigInt(data.lamports.toString()),
+            seed: data.seed,
             programId: data.programId,
         });
     },
