@@ -32,7 +32,7 @@ const paddingRight = computed(() => {
 <template>
     <q-layout view="lHr LpR fFf">
         <q-header class="global-toolbar">
-            <q-toolbar class="full-height">
+            <q-toolbar class="full-height" :style="{'padding-right': paddingRight}">
                 <q-btn dense
                        flat
                        icon="fa-solid fa-bars"
@@ -92,6 +92,10 @@ const paddingRight = computed(() => {
     background-color: $dark;
     border-bottom: 2px solid $dark2 !important;
     height: 80px;
+}
+
+.q-toolbar {
+    transition: padding-right 0.15s;
 }
 
 .q-page-container {
