@@ -105,6 +105,20 @@ const signingInfo = computed<TransactionSigningInfo>(() => {
     return signingData;
 });
 const isSigning = computed(() => currentTransaction.value > -1);
+const isConnectedPubkeyNecessary = computed(() => {
+    if (wallet.publicKey.value === null) {
+        return false;
+    }
+
+    // Split signatures by type.
+    for (const signature of signingInfo.value.walletSignatures) {
+        if (signature.pubkey.equals(wallet.publicKey.value)) {
+            return !signature.done;
+        }
+    }
+
+    return false;
+});
 
 // METHODS --------------------------------------------------------------------
 async function initSigning() {
@@ -330,18 +344,22 @@ async function parallelSendTransaction() {
     currentTransaction.value = -1;
 }
 
-async function cancelSigning() {
+function retrySigning() {
+    if (parallelSend.value) {
+        parallelWalletSigning();
+    } else {
+        serialWalletSigning();
+    }
+}
+
+function cancelSigning() {
     currentTransaction.value = -1;
 }
 
 // WATCHES --------------------------------------------------------------------
 watch(wallet.publicKey, (publicKey) => {
     if (publicKey && waitingForWallet.value) {
-        if (parallelSend.value) {
-            parallelWalletSigning();
-        } else {
-            serialWalletSigning();
-        }
+        retrySigning();
     }
 });
 
@@ -411,6 +429,12 @@ watch(wallet.publicKey, (publicKey) => {
 
             <q-card-actions class="flex flex-center gap-md">
                 <WalletButton v-if="waitingForWallet"/>
+                <q-btn @click="retrySigning"
+                       color="primary"
+                       unelevated
+                       no-caps
+                       v-if="waitingForWallet && isConnectedPubkeyNecessary">Retry
+                </q-btn>
                 <q-btn @click="cancelSigning" color="negative" unelevated no-caps v-if="!sendingTransaction">Cancel
                 </q-btn>
                 <div v-else>
