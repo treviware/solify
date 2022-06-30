@@ -8,33 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Note:** Version 0 of Semantic Versioning is handled differently from version 1 and above.
 The minor version will be incremented upon a breaking change and the patch version will be incremented for features.
 
-## [TODO]
-
-### Features
-
-* modes: Add PRO mode to allow users to use advanced features.
-* modes: Add BUSINESS mode to allow users use advanced features but only the business paying for it.
-* transactions: Add button to clone transactions into a new transaction group.
-* transactions: Add template app for transactions.
-* transactions: Add copy/paste feature for instructions/transactions/groups. This feature must allow copying between
-  browsers.
-* signing: Add remote multi-wallet signatures. Everyone needs to be PRO or just one using BUSINESS.
-* signing: Add remote message signature to easily login into third-party apps. In this case the client app pays for n
-  logins / month.
-* tools: Add `SPL Tool` view to create/mint/burn SPL tokens. Allow to paste the transaction into the builder.
-* tools: Add `NFT Tool` view to create/mint/burn NFTs. Allow to paste the transaction into the builder.
-* tools: Add `PDA Tool` view to generate PDAs.
-* tools: Add `Token Accounts Tool` view to manage token accounts, create or remove accounts, close empty accounts, etc.
-* tools: Add `Token Burner Tool` view to burn tokens from accounts.
-* programs: Add `System Program` definition.
-* programs: Add `Solana Token Program` definition.
-* programs: Add `Metaplex Program` definition.
-
-### Fixes
-
-* icons: Fix favicon background for ipad.
-
 ## [Unreleased]
+
+## [0.2.0] - 2022-06-30
 
 ### Features
 
