@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [{
     children: [{
         path: '',
         redirect: {
-            name: 'TxBuilder',
+            name: 'Tools',
         },
     }, {
         name: 'TxBuilder',

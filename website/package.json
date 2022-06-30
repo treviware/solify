@@ -1,6 +1,6 @@
 {
   "name": "solify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The Solify dApp website by Treviware",
   "productName": "Solify",
   "author": "Julio Treviño Páez <julio.tpaez@gmail.com>",
@@ -9,8 +9,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "dev": "quasar dev",
-    "build": "quasar build",
-    "deploy": "vercel"
+    "build": "quasar build"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.1.2",
@@ -19,7 +18,7 @@
     "@solana/buffer-layout-utils": "^0.2.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-wallets": "^0.16.3",
-    "@solana/web3.js": "^1.43.6",
+    "@solana/web3.js": "^1.44.3",
     "axios": "^0.21.1",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",

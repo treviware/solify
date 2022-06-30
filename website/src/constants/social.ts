@@ -10,4 +10,9 @@ export const SOCIAL_LINKS: SocialLink[] = [{
     icon: 'fa-brands fa-discord',
     url: 'https://discord.gg/kzwhn89FXA',
     color: '#5865F2',
+}, {
+    network: 'Github',
+    icon: 'fa-brands fa-github',
+    url: 'https://github.com/treviware/solify',
+    color: '#171515',
 }];
