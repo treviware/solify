@@ -49,6 +49,7 @@ export const useSolanaStore = defineStore('solana', {
             }
         },
         async setCommitment(commitment: string) {
+            console.log('setCommitment', commitment);
             const routerStore = useRouterStore();
 
             switch (commitment) {

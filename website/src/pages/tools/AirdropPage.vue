@@ -44,7 +44,7 @@ async function airdrop() {
         console.error('Cannot request the airdrop', e);
         quasar.notify({
             message: 'Cannot request the airdrop',
-            type: 'negative',
+            color: 'negative',
         });
     } finally {
         loading.value = false;

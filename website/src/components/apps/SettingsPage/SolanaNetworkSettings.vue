@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {useSolanaStore} from 'stores/solana';
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 import {clusterApiUrl} from '@solana/web3.js';
 import {validateUrl} from 'src/utils/urls';
 
@@ -40,6 +40,11 @@ function select(url: string) {
 }
 
 // WATCHES --------------------------------------------------------------------
+watch(() => solanaStore.network, (url) => {
+    customRpc.value = url;
+    showError.value = false;
+});
+
 // HOOKS ----------------------------------------------------------------------
 </script>
 

@@ -44,7 +44,7 @@ watch(route, async (route) => {
         await solanaStore.setNetwork(network);
     }
 
-    const commitment = route.query[VS_CURRENCY_SETTINGS_KEY] as string ?? localStorage.getItem(COMMITMENT_SETTINGS_KEY);
+    const commitment = route.query[COMMITMENT_SETTINGS_KEY] as string ?? localStorage.getItem(COMMITMENT_SETTINGS_KEY);
     if (commitment) {
         await solanaStore.setCommitment(commitment);
     }
