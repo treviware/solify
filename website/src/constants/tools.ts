@@ -6,6 +6,7 @@ import AirdropPage from 'pages/tools/AirdropPage.vue';
 import TokenPricePage from 'pages/tools/TokenPricePage.vue';
 import KeypairGeneratorPage from 'pages/tools/KeypairGeneratorPage.vue';
 import VanityAddressPage from 'pages/tools/VanityAddressPage.vue';
+import SignMessagePage from 'pages/tools/SignMessagePage.vue';
 import {ToolCategory} from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -41,6 +42,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
         description: 'Find a Solana address that match some rules',
         rightDrawerOption: RightDrawerState.VanityAddress,
         component: VanityAddressPage,
+    }, {
+        icon: 'fa-solid fa-signature',
+        name: 'Sign Message',
+        description: 'Signs a custom message and returns the signature',
+        rightDrawerOption: RightDrawerState.SignMessage,
+        component: SignMessagePage,
     }],
 }, {
     name: 'SPL Token Tools',
