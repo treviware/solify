@@ -9,6 +9,7 @@ export enum RightDrawerState {
     TokenPrice = 'token-price',
     KeypairGenerator = 'keypair-generator',
     VanityAddress = 'vanity-address',
+    SignMessage = 'sign-message',
 }
 
 export type DrawerButton =
