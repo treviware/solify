@@ -10,6 +10,7 @@ export enum RightDrawerState {
     KeypairGenerator = 'keypair-generator',
     VanityAddress = 'vanity-address',
     SignMessage = 'sign-message',
+    VerifySignature = 'verify-signature',
 }
 
 export type DrawerButton =

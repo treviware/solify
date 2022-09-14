@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
-import {useWallet, Wallet} from 'solana-wallets-vue';
 import {PublicKey} from '@solana/web3.js';
 import {useRightDrawerStore} from 'stores/rightDrawer';
 import {sleep} from 'src/utils/time';
 import {abbreviatePubkey} from 'src/utils/wallets';
 import {RightDrawerState} from 'src/types/drawer';
 import {useGlobalStore} from 'stores/global';
+import {useWallet, Wallet} from 'src/lib/WalletAdapter';
 
 const rightDrawerStore = useRightDrawerStore();
 const walletStore = useWallet();
@@ -109,29 +109,29 @@ async function openWallets() {
 
 <style lang="scss" scoped>
 .wallet-button {
-    min-width: 156px;
+  min-width: 156px;
 
-    &.mobile {
-        min-width: unset;
-    }
+  &.mobile {
+    min-width: unset;
+  }
 }
 
 .dialog-card {
-    min-width: 300px;
-    max-width: 100vw;
+  min-width: 300px;
+  max-width: 100vw;
 
-    h5 {
-        font-size: 30px;
-    }
+  h5 {
+    font-size: 30px;
+  }
 }
 
 .icon-image {
-    height: 16px;
-    width: 16px;
+  height: 16px;
+  width: 16px;
 }
 
 .q-list:deep(.q-item__section--avatar) {
-    min-width: unset;
-    padding-right: 12px;
+  min-width: unset;
+  padding-right: 12px;
 }
 </style>

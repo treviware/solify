@@ -3,7 +3,7 @@ import {TransactionGroupDefinition} from 'src/types/transactions/groupDefinition
 import {PublicKey, Transaction} from '@solana/web3.js';
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
 import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 
 let groupNumber = 2;
 export const useTxBuilderApp = defineStore('txBuilderApp', {

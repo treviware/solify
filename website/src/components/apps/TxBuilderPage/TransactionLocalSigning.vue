@@ -5,7 +5,7 @@ import {computed, reactive, ref, watch} from 'vue';
 import {SignatureInfo, TransactionSigningInfo} from 'src/types/signing';
 import {isPubkey} from 'src/types/filters';
 import TransactionLocalSignature from 'components/apps/TxBuilderPage/TransactionLocalSignature.vue';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 import {useSolanaStore} from 'stores/solana';
 import {PublicKey, Transaction} from '@solana/web3.js';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
@@ -466,6 +466,6 @@ watch(wallet.publicKey, (publicKey) => {
 
 <style lang="scss">
 .persistent-notification-error .q-btn__content {
-    color: white;
+  color: white;
 }
 </style>

@@ -5,9 +5,9 @@ import AlertBox from 'components/general/AlertBox.vue';
 import {copyToClipboard, useQuasar} from 'quasar';
 import {processUriStoreDataOnMounted, removeStoreDataFromUriOnUnmounted, writeToolParamsIntoUri} from 'src/utils/tools';
 import {useSignMessageToolStore} from 'stores/tools/signMessage';
-import {useWallet} from 'solana-wallets-vue';
 import base58 from 'bs58';
 import {watchDebounced} from '@vueuse/core';
+import {useWallet} from 'src/lib/WalletAdapter';
 
 const quasar = useQuasar();
 const wallet = useWallet();

@@ -7,6 +7,7 @@ import TokenPricePage from 'pages/tools/TokenPricePage.vue';
 import KeypairGeneratorPage from 'pages/tools/KeypairGeneratorPage.vue';
 import VanityAddressPage from 'pages/tools/VanityAddressPage.vue';
 import SignMessagePage from 'pages/tools/SignMessagePage.vue';
+import VerifySignaturePage from 'pages/tools/VerifySignaturePage.vue';
 import {ToolCategory} from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -48,6 +49,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
         description: 'Signs a custom message and returns the signature',
         rightDrawerOption: RightDrawerState.SignMessage,
         component: SignMessagePage,
+    }, {
+        icon: 'fa-solid fa-signature',
+        name: 'Verify Signature',
+        description: 'Verifies whether a signature belongs to a wallet or not',
+        rightDrawerOption: RightDrawerState.VerifySignature,
+        component: VerifySignaturePage,
     }],
 }, {
     name: 'SPL Token Tools',

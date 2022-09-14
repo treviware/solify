@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {PublicKey} from '@solana/web3.js';
 import {ref, watch} from 'vue';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 import {Account} from '@solana/spl-token';
 import {Data} from '@metaplex-foundation/mpl-token-metadata/dist/src/generated/types/Data';
 import {TokenStandard} from '@metaplex-foundation/mpl-token-metadata/dist/src/generated/types/TokenStandard';

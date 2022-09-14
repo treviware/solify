@@ -72,7 +72,7 @@ function moveToNextTransaction() {
 <template>
     <div class="ixn-box rounded-borders full-width">
         <div class="q-pa-sm full-width">
-            <div class="row items-center">
+            <div class="row items-center q-px-md">
                 <div class="ellipsis text-bold">#{{ index + 1 }} {{ instruction.name }}</div>
                 <q-space/>
                 <div class="row gap-sm">
@@ -101,7 +101,7 @@ function moveToNextTransaction() {
                     <q-btn dense flat icon="fa-solid fa-trash" size="sm" color="negative" @click="remove"/>
                 </div>
             </div>
-            <div class="ellipsis text-caption text-bold">{{ instruction.description }}</div>
+            <div class="text-caption text-bold q-px-md">{{ instruction.description }}</div>
             <div v-for="account in instruction.accounts" :key="account.id">
                 <InstructionArgumentBox :argument="account" :data="data"/>
             </div>
@@ -114,6 +114,6 @@ function moveToNextTransaction() {
 
 <style lang="scss" scoped>
 .ixn-box {
-    border: 1px solid $grey-9;
+  border: 1px solid $grey-9;
 }
 </style>

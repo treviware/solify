@@ -1,9 +1,7 @@
-import SolanaWallets from 'solana-wallets-vue';
 import {boot} from 'quasar/wrappers';
-import 'solana-wallets-vue/styles.css';
 import {PhantomWalletAdapter, SlopeWalletAdapter} from '@solana/wallet-adapter-wallets';
-import {WalletStoreProps} from 'solana-wallets-vue/dist/createWalletStore';
 import {WALLET_AUTO_CONNECT} from 'src/constants';
+import {SolanaWalletVuePlugin, WalletStoreProps} from 'src/lib/WalletAdapter';
 
 const walletOptions: WalletStoreProps = {
     wallets: [new SlopeWalletAdapter(), new PhantomWalletAdapter()],
@@ -11,5 +9,5 @@ const walletOptions: WalletStoreProps = {
 };
 
 export default boot(({app}) => {
-    app.use(SolanaWallets, walletOptions);
+    app.use(SolanaWalletVuePlugin, walletOptions);
 });

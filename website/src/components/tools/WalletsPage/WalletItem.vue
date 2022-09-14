@@ -2,7 +2,7 @@
 
 import {useWalletListStore, WalletTokenData} from 'stores/tools/walletList';
 import PubkeyBadge from 'components/general/PubkeyBadge.vue';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 import {PublicKey} from '@solana/web3.js';
 import {computed, ref} from 'vue';
 import {useQuasar} from 'quasar';
@@ -244,7 +244,7 @@ async function loadData() {
 
 <style lang="scss" scoped>
 .badge-color {
-    background-color: transparentize(#fff, 0.8);
-    color: #ffffff !important;
+  background-color: transparentize(#ffffff, 0.8);
+  color: #ffffff !important;
 }
 </style>

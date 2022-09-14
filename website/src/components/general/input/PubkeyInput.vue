@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {PublicKey} from '@solana/web3.js';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 
 const props = defineProps<{
     modelValue: PublicKey | null; acceptNull?: boolean, showWalletButton?: boolean, disable?: boolean, readonly?: boolean

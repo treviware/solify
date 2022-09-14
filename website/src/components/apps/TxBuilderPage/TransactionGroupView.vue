@@ -4,7 +4,7 @@ import {useTxBuilderApp} from 'stores/apps/txBuilder';
 import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import {PublicKey} from '@solana/web3.js';
-import {useWallet} from 'solana-wallets-vue';
+import {useWallet} from 'src/lib/WalletAdapter';
 import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
 
 const wallet = useWallet();
@@ -96,8 +96,8 @@ function addTransaction(index: number) {
 
 <style lang="scss" scoped>
 .tx-v-bar {
-    width: 1px;
-    background-color: $grey-9;
-    height: 20px;
+  width: 1px;
+  background-color: $grey-9;
+  height: 20px;
 }
 </style>
