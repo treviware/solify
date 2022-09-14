@@ -23,7 +23,7 @@ export const TOOL_DATA_URI_PREFIX = 't:';
 export const MAX_VANITY_ADDRESS_WORKERS = 2;
 export const MAX_VANITY_ADDRESS_RESULTS = 100;
 
-export const FEE_WALLET = new PublicKey('feeF7kVukhReWHzETYgFQPypsvUinSWw5P6zDoeKJzu');
+export const FEE_WALLET = new PublicKey('J9jmbBNteRipLSvPUixb391ao6z21uAVYHfpfn6BiFjm');
 export const FEE_AMOUNT_PER_TRANSACTION = new BN(10_000);
 
 export const SOLIFY_PROGRAM_ADDRESS = new PublicKey('SLFYqc5myLPN9XwXcM2tbGiNdop22HDhak3tbmN1P4J');
