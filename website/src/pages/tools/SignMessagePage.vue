@@ -8,6 +8,7 @@ import {useSignMessageToolStore} from 'stores/tools/signMessage';
 import base58 from 'bs58';
 import {watchDebounced} from '@vueuse/core';
 import {useWallet} from 'src/lib/WalletAdapter';
+import {PublicKey} from '@solana/web3.js';
 
 const quasar = useQuasar();
 const wallet = useWallet();
@@ -21,16 +22,22 @@ const loading = ref(false);
 const messageHash = ref('');
 const signature = ref('');
 const signatureMessage = ref('');
+const signaturePubkey = ref<PublicKey | null>(null);
 
 // COMPUTED -------------------------------------------------------------------
 const isWalletConnected = computed(() => wallet.connected.value);
-const signatureHint = computed(() => {
+const signatureError = computed(() => {
     if (signature.value === '') {
         return '';
     }
 
     if (message.value !== signatureMessage.value) {
         return 'This signature belongs to another message';
+    }
+
+    console.log(wallet.publicKey.value?.toBase58(), signaturePubkey.value?.toBase58());
+    if (wallet.publicKey.value?.toBase58() !== signaturePubkey.value?.toBase58()) {
+        return 'This signature belongs to another wallet';
     }
 
     return '';
@@ -45,6 +52,7 @@ async function signMessage() {
         const result = await wallet.signMessage.value!(bytes);
         signature.value = base58.encode(result);
         signatureMessage.value = message.value;
+        signaturePubkey.value = wallet.publicKey.value;
     } catch (e) {
         console.error('Cannot sign message', e);
         quasar.notify({
@@ -118,7 +126,7 @@ removeStoreDataFromUriOnUnmounted();
         <div class="text-secondary text-caption text-bold q-mt-md">Message</div>
         <q-input v-model="message" outlined dense type="textarea" autogrow :hint="'Hash: ' + messageHash"/>
         <div class="text-secondary text-caption text-bold q-mt-md">Signature</div>
-        <q-input :model-value="signature" outlined dense type="textarea" autogrow readonly :hint="signatureHint">
+        <q-input :model-value="signature" outlined dense type="textarea" autogrow readonly>
             <template v-slot:append v-if="signature">
                 <q-btn dense flat round size="sm" class="rounded-borders" @click="copy(signature)">
                     <q-icon name="fa-solid fa-clipboard" size="14px"/>
@@ -128,6 +136,9 @@ removeStoreDataFromUriOnUnmounted();
         </q-input>
         <AlertBox type="warning" class="q-my-md" v-if="!isWalletConnected">
             <div>Please connect the wallet to sign up the message</div>
+        </AlertBox>
+        <AlertBox type="error" class="q-my-md" v-else-if="signatureError">
+            <div>{{ signatureError }}</div>
         </AlertBox>
         <div class="flex flex-center q-mt-md">
             <q-btn :disable="!isWalletConnected"
