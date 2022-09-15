@@ -202,23 +202,14 @@ export class WalletStore {
             return;
         }
 
-        const setWallet = (newWallet: Wallet | null) => {
-            this.wallet.value = newWallet;
-            this.readyState.value = newWallet?.readyState ?? WalletReadyState.NotDetected;
-            this.connected.value = newWallet?.connected ?? false;
-            this.connecting.value = newWallet?.connecting ?? false;
-            this.disconnecting.value = false;
-            this.disconnected.value = !(newWallet?.connected ?? false);
-        };
-
         for (const newWallet of this.wallets.value) {
             if (newWallet.name === walletName) {
-                setWallet(newWallet);
+                setWallet(newWallet, this);
                 return;
             }
         }
 
-        setWallet(null);
+        setWallet(null, this);
     }
 
     async connect(): Promise<void> {
@@ -259,6 +250,7 @@ export class WalletStore {
             this.disconnecting.value = true;
             await this.wallet.value.disconnect();
             this.storage.value = null;
+            setWallet(null, this);
         } finally {
             this.disconnecting.value = false;
         }
@@ -281,6 +273,15 @@ export class WalletStore {
         this.onError(error);
         throw error;
     }
+}
+
+function setWallet(newWallet: Wallet | null, self: WalletStore) {
+    self.wallet.value = newWallet;
+    self.readyState.value = newWallet?.readyState ?? WalletReadyState.NotDetected;
+    self.connected.value = newWallet?.connected ?? false;
+    self.connecting.value = newWallet?.connecting ?? false;
+    self.disconnecting.value = false;
+    self.disconnected.value = !(newWallet?.connected ?? false);
 }
 
 // ----------------------------------------------------------------------------
