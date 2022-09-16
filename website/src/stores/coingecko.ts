@@ -4,6 +4,7 @@ import axios from 'axios';
 import {PublicKey} from '@solana/web3.js';
 import {useBlockchainStore} from 'stores/blockchain';
 import {useRouterStore} from 'stores/router';
+import {useLocalStorage} from '@vueuse/core';
 
 const CACHE_RELOAD_INTERVAL = 60 * 1000; // 1 minute
 const API_URL = 'https://api.coingecko.com/api/v3';
@@ -11,7 +12,7 @@ export const VS_CURRENCYS = ['USD', 'EUR'];
 
 export const useCoingeckoStore = defineStore('coingecko', {
     state: () => ({
-        vsCurrencyName: 'USD',
+        vsCurrencyName: useLocalStorage(VS_CURRENCY_SETTINGS_KEY, 'USD'),
         cache: {
             USD: {
                 price: 1,
@@ -30,12 +31,6 @@ export const useCoingeckoStore = defineStore('coingecko', {
             }
 
             this.vsCurrencyName = vsCurrencyName;
-
-            if (vsCurrencyName === 'USD') {
-                localStorage.removeItem(VS_CURRENCY_SETTINGS_KEY);
-            } else {
-                localStorage.setItem(VS_CURRENCY_SETTINGS_KEY, vsCurrencyName);
-            }
 
             await routerStore.setQueryEntry(VS_CURRENCY_SETTINGS_KEY,
                 vsCurrencyName === 'USD' ? undefined : vsCurrencyName);

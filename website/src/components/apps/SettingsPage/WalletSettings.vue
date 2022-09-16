@@ -7,7 +7,7 @@ const solanaStore = useSolanaStore();
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
 function update() {
-    solanaStore.setWalletAutoConnect(!solanaStore.walletAutoConnect);
+    solanaStore.walletAutoConnect = !solanaStore.walletAutoConnect;
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -26,7 +26,7 @@ function update() {
 
 <style lang="scss" scoped>
 .header {
-    height: 80px;
-    border-bottom: 2px solid $dark;
+  height: 80px;
+  border-bottom: 2px solid $dark;
 }
 </style>

@@ -16,12 +16,12 @@ const networks: Record<string, string> = {
 
 export const useSolanaStore = defineStore('solana', {
     state: () => ({
-        network: clusterApiUrl('mainnet-beta'),
+        network: useLocalStorage(NETWORK_SETTINGS_KEY, clusterApiUrl('mainnet-beta')),
         extraNetworks: useLocalStorage<{
             name: string; url: string;
         }[]>(EXTRA_NETWORKS_SETTINGS_KEY, []),
-        commitment: 'confirmed' as Commitment,
-        walletAutoConnect: localStorage.getItem(WALLET_AUTO_CONNECT) === 'true',
+        commitment: useLocalStorage<Commitment>(COMMITMENT_SETTINGS_KEY, 'confirmed'),
+        walletAutoConnect: useLocalStorage(WALLET_AUTO_CONNECT, true),
     }),
     getters: {
         connection: state => new Connection(state.network, state.commitment),
@@ -36,12 +36,6 @@ export const useSolanaStore = defineStore('solana', {
                 if (net === network || url === network) {
                     this.network = url;
 
-                    if (net === 'mainnet-beta') {
-                        localStorage.removeItem(NETWORK_SETTINGS_KEY);
-                    } else {
-                        localStorage.setItem(NETWORK_SETTINGS_KEY, net);
-                    }
-
                     await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, net === 'mainnet-beta' ? undefined : net);
                     return;
                 }
@@ -49,38 +43,20 @@ export const useSolanaStore = defineStore('solana', {
 
             if (validateUrl(network)) {
                 this.network = network;
-                localStorage.setItem(NETWORK_SETTINGS_KEY, network);
 
                 await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, network);
             }
         },
         async setCommitment(commitment: string) {
-            console.log('setCommitment', commitment);
             const routerStore = useRouterStore();
 
             switch (commitment) {
                 case 'confirmed':
-                    this.commitment = commitment;
-                    localStorage.removeItem(COMMITMENT_SETTINGS_KEY);
-
-                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, undefined);
-                    break;
                 case 'processed':
                 case 'finalized':
                     this.commitment = commitment;
-                    localStorage.setItem(COMMITMENT_SETTINGS_KEY, commitment);
-
-                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, commitment);
+                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, undefined);
                     break;
-            }
-        },
-        async setWalletAutoConnect(autoConnect: boolean) {
-            this.walletAutoConnect = autoConnect;
-
-            if (autoConnect) {
-                localStorage.setItem(WALLET_AUTO_CONNECT, autoConnect.toString());
-            } else {
-                localStorage.removeItem(WALLET_AUTO_CONNECT);
             }
         },
     },

@@ -39,18 +39,17 @@ watch(route, async (route) => {
         await rightDrawerStore.close();
     }
 
-    const network = route.query[NETWORK_SETTINGS_KEY] as string ?? localStorage.getItem(NETWORK_SETTINGS_KEY);
+    const network = route.query[NETWORK_SETTINGS_KEY] as string;
     if (network) {
         await solanaStore.setNetwork(network);
     }
 
-    const commitment = route.query[COMMITMENT_SETTINGS_KEY] as string ?? localStorage.getItem(COMMITMENT_SETTINGS_KEY);
+    const commitment = route.query[COMMITMENT_SETTINGS_KEY] as string;
     if (commitment) {
         await solanaStore.setCommitment(commitment);
     }
 
-    const vs_currency = route.query[VS_CURRENCY_SETTINGS_KEY] as string ??
-        localStorage.getItem(VS_CURRENCY_SETTINGS_KEY);
+    const vs_currency = route.query[VS_CURRENCY_SETTINGS_KEY] as string;
     if (vs_currency) {
         await coingeckoStore.setVsCurrency(vs_currency);
     }
