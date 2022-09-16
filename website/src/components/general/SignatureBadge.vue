@@ -2,10 +2,15 @@
 import {computed, ref} from 'vue';
 import {abbreviateSignature} from 'src/utils/wallets';
 import {copyToClipboard} from 'quasar';
+import {ExplorerAction} from 'src/types/explorers';
+import {EXPLORER_DEFINITIONS} from 'src/constants/explorers';
+import {useSolanaStore} from 'stores/solana';
 
 const props = defineProps<{
     signature: string, showCopy?: boolean, showMenu?: boolean;
 }>();
+
+const solanaStore = useSolanaStore();
 
 // REFS -----------------------------------------------------------------------
 const copied = ref(false);
@@ -14,6 +19,10 @@ const copied = ref(false);
 const finalSignature = computed(() => abbreviateSignature(props.signature));
 const finalShowCopy = computed(() => {
     return props.showMenu && (props.showCopy ?? true);
+});
+
+const explorer = computed(() => {
+    return EXPLORER_DEFINITIONS.find((e) => e.url === solanaStore.explorer)!;
 });
 
 // METHODS --------------------------------------------------------------------
@@ -31,12 +40,9 @@ function copy() {
     }, 2000);
 }
 
-function openSolscan() {
-    window.open(`https://solscan.io/tx/${props.signature}`, '_blank');
-}
-
-function openSolanaExplorer() {
-    window.open(`https://explorer.solana.com/tx/${props.signature}`, '_blank');
+function openInExplorer() {
+    const url = explorer.value.resolver(ExplorerAction.Transaction, props.signature, solanaStore.network);
+    window.open(url, '_blank');
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -49,11 +55,8 @@ function openSolanaExplorer() {
         <q-icon v-if="finalShowCopy && !copied" name="fa-solid fa-location" class="q-ml-xs"/>
         <q-icon v-if="finalShowCopy && copied" name="fa-solid fa-circle-check" class="q-ml-xs"/>
 
-        <q-menu anchor="bottom middle" self="top middle" :offset="[20, 0]" v-if="showMenu" :fit="long">
+        <q-menu anchor="bottom middle" self="top middle" :offset="[20, 0]" v-if="showMenu">
             <q-card class="menu-card shadow-9">
-                <q-card-section class="text-center text-caption text-secondary" v-if="!long">
-                    {{ props.pubkey.toBase58() }}
-                </q-card-section>
                 <q-separator/>
                 <q-list dense separator>
                     <q-item clickable @click="copy" v-close-popup>
@@ -64,20 +67,12 @@ function openSolanaExplorer() {
                             <q-item-label>Copy to clipboard</q-item-label>
                         </q-item-section>
                     </q-item>
-                    <q-item clickable @click="openSolscan" v-close-popup>
+                    <q-item clickable @click="openInExplorer" v-close-popup>
                         <q-item-section avatar>
                             <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
                         </q-item-section>
                         <q-item-section>
-                            <q-item-label>View in Solscan</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                    <q-item clickable @click="openSolanaExplorer" v-close-popup>
-                        <q-item-section avatar>
-                            <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>View in Solana Explorer</q-item-label>
+                            <q-item-label>View in {{ explorer.name }}</q-item-label>
                         </q-item-section>
                     </q-item>
                 </q-list>
@@ -88,12 +83,12 @@ function openSolanaExplorer() {
 
 <style lang="scss" scoped>
 .q-badge {
-    background-color: transparentize(#fff, 0.8);
+  background-color: transparentize(#ffffff, 0.8);
 }
 
 .menu-card {
-    &:deep(.q-item__section--avatar) {
-        min-width: 30px;
-    }
+  &:deep(.q-item__section--avatar) {
+    min-width: 30px;
+  }
 }
 </style>

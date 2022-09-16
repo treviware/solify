@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {useSolanaStore} from 'stores/solana';
 import {computed} from 'vue';
-import {clusterApiUrl} from '@solana/web3.js';
 import {useRouterStore} from 'stores/router';
+import {NETWORK_DEFINITIONS} from 'src/constants/networks';
 
 const solanaStore = useSolanaStore();
 const routerStore = useRouterStore();
@@ -11,16 +11,8 @@ const routerStore = useRouterStore();
 // COMPUTED -------------------------------------------------------------------
 
 const text = computed(() => {
-    switch (solanaStore.network) {
-        case clusterApiUrl('mainnet-beta'):
-            return 'Mainnet Beta';
-        case clusterApiUrl('testnet'):
-            return 'Testnet';
-        case clusterApiUrl('devnet'):
-            return 'Devnet';
-        default:
-            return solanaStore.network;
-    }
+    return NETWORK_DEFINITIONS.find(v => v.url === solanaStore.network)?.name ??
+        solanaStore.extraNetworks.find(v => v.url === solanaStore.network)?.name ?? 'Unknown';
 });
 
 // METHODS --------------------------------------------------------------------

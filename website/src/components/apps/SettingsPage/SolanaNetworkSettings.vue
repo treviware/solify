@@ -1,26 +1,16 @@
 <script lang="ts" setup>
 import {useSolanaStore} from 'stores/solana';
 import {computed, ref} from 'vue';
-import {clusterApiUrl, Connection} from '@solana/web3.js';
+import {Connection} from '@solana/web3.js';
 import {storeToRefs} from 'pinia';
 import {useQuasar} from 'quasar';
+import {NETWORK_DEFINITIONS} from 'src/constants/networks';
+import {NetworkType} from 'src/types/networks';
 
 const quasar = useQuasar();
 const solanaStore = useSolanaStore();
 
-const buttons = [{
-    url: clusterApiUrl('mainnet-beta'),
-    name: 'Mainnet-beta',
-}, {
-    url: clusterApiUrl('devnet'),
-    name: 'Devnet',
-}, {
-    url: clusterApiUrl('testnet'),
-    name: 'Testnet',
-}, {
-    url: 'http://localhost:8899',
-    name: 'Localnet',
-}];
+const buttons = NETWORK_DEFINITIONS;
 
 // REFS -----------------------------------------------------------------------
 const {extraNetworks} = storeToRefs(solanaStore);
@@ -93,7 +83,7 @@ function remove(index: number) {
     let [el] = extraNetworks.value.splice(index, 1);
 
     if (el.url === solanaStore.network) {
-        solanaStore.setNetwork(clusterApiUrl('mainnet-beta'));
+        solanaStore.setNetwork(NETWORK_DEFINITIONS.find(n => n.type === NetworkType.MainnetBeta)!.url);
     }
 }
 
