@@ -5,6 +5,7 @@ import RentExemptionPage from 'pages/tools/RentExemptionPage.vue';
 import AirdropPage from 'pages/tools/AirdropPage.vue';
 import TokenPricePage from 'pages/tools/TokenPricePage.vue';
 import KeypairGeneratorPage from 'pages/tools/KeypairGeneratorPage.vue';
+import KeypairFormatterPage from 'pages/tools/KeypairFormatterPage.vue';
 import VanityAddressPage from 'pages/tools/VanityAddressPage.vue';
 import SignMessagePage from 'pages/tools/SignMessagePage.vue';
 import VerifySignaturePage from 'pages/tools/VerifySignaturePage.vue';
@@ -37,6 +38,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
         description: 'Generate new keypairs and change them between different encodings',
         rightDrawerOption: RightDrawerState.KeypairGenerator,
         component: KeypairGeneratorPage,
+    }, {
+        icon: 'fa-solid fa-key',
+        name: 'Keypair Formatter',
+        description: 'Changes the encoding format of a keypair between base58 and byte array encodings',
+        rightDrawerOption: RightDrawerState.KeypairFormatter,
+        component: KeypairFormatterPage,
     }, {
         icon: 'fa-solid fa-shield-heart',
         name: 'Vanity Address',
