@@ -26,7 +26,7 @@ const blockchainStore = useBlockchainStore();
 const loading = ref(false);
 
 // COMPUTED -------------------------------------------------------------------
-const walletData = computed(() => walletListStore.wallets.find(v => v.address.equals(props.address)));
+const walletData = computed(() => walletListStore.wallets.find(v => v.address.equals(props.address))!);
 const isConnected = computed(() => walletData.value.address.equals(wallet.publicKey.value ?? PublicKey.default));
 const index = computed(() => walletListStore.wallets.findIndex(v => v.address.equals(walletData.value.address)));
 const isStart = computed(() => index.value === 0);
@@ -61,6 +61,9 @@ const nfts = computed(
     }));
 
 // METHODS --------------------------------------------------------------------
+function validateWalletName(name: string) {
+    return name.length > 0 && name.length <= 20 && !walletListStore.wallets.some(v => v.name === name);
+}
 
 function remove() {
     walletListStore.wallets.splice(index.value, 1);
@@ -176,13 +179,26 @@ async function loadData() {
         <template v-slot:header>
             <q-item-section>
                 <q-item-label class="text-bold">
-                    <span class="text-secondary q-mr-xs" v-if="isConnected">Connected Wallet</span>
-                    <span class="q-mr-xs" v-else>Wallet</span>
+                    <span class="q-mr-xs">{{ walletData.name }}
+                        <q-popup-edit v-model="walletData.name" v-slot="scope" auto-save :validate="validateWalletName">
+                            <q-input v-model="scope.value" autofocus outlined dense class="col"/>
+                        </q-popup-edit>
+                    </span>
                     <PubkeyBadge :pubkey="walletData.address" show-copy class="badge-color" show-menu/>
                 </q-item-label>
             </q-item-section>
             <q-item-section side>
                 <div>
+                    <q-badge v-if="isConnected"
+                             color="secondary"
+                             text-color="dark"
+                             class="text-bold q-mr-sm"
+                             label="Connected"/>
+                    <q-badge v-if="walletData.keypair !== null"
+                             color="accent"
+                             text-color="dark"
+                             class="text-bold q-mr-sm"
+                             label="Signer"/>
                     <q-btn color="white" flat dense @click="loadData" round class="rounded-borders" :loading="loading">
                         <q-icon name="fa-solid fa-cloud-arrow-down" size="20px"/>
                         <q-tooltip class="text-no-wrap text-white text-bold shadow-2">Load wallet info
