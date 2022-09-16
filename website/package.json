@@ -12,13 +12,14 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@metaplex-foundation/mpl-token-metadata": "^2.1.2",
+    "@metaplex-foundation/mpl-token-metadata": "^2.2.4",
     "@quasar/extras": "^1.0.0",
     "@solana/buffer-layout": "^4.0.0",
     "@solana/buffer-layout-utils": "^0.2.0",
     "@solana/spl-token": "^0.2.0",
-    "@solana/wallet-adapter-wallets": "^0.16.3",
-    "@solana/web3.js": "^1.44.3",
+    "@solana/wallet-adapter-wallets": "^0.17.2",
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/web3.js": "^1.62.0",
     "@vueuse/core": "^9.2.0",
     "axios": "^0.21.1",
     "bn.js": "^5.2.1",
