@@ -99,7 +99,7 @@ export class WalletStore {
                 return;
             }
 
-            return async (transaction: Transaction) => {
+            return async (transaction) => {
                 if (!this.connected.value) {
                     this.throwError(new WalletNotConnectedError());
                 }
@@ -113,7 +113,7 @@ export class WalletStore {
                 return;
             }
 
-            return async (transactions: Transaction[]) => {
+            return async (transactions) => {
                 if (!this.connected.value) {
                     this.throwError(new WalletNotConnectedError());
                 }
