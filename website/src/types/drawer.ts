@@ -8,6 +8,7 @@ export enum RightDrawerState {
     Airdrop = 'airdrop',
     TokenPrice = 'token-price',
     KeypairGenerator = 'keypair-generator',
+    KeypairFormatter = 'keypair-formatter',
     VanityAddress = 'vanity-address',
     SignMessage = 'sign-message',
     VerifySignature = 'verify-signature',

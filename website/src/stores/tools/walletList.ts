@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {PublicKey} from '@solana/web3.js';
+import {Keypair, PublicKey} from '@solana/web3.js';
 import {ref, watch} from 'vue';
 import {useWallet} from 'src/lib/WalletAdapter';
 import {Account} from '@solana/spl-token';
@@ -16,8 +16,17 @@ export const useWalletListStore = defineStore('walletListTool', {
 
         watch(wallet.publicKey, (publicKey) => {
             if (publicKey && !wallets.value.find(v => v.address.equals(publicKey))) {
+                let walletName = '';
+                let index = 0;
+                do {
+                    index += 1;
+                    walletName = `Wallet ${index}`;
+                } while (wallets.value.find(v => v.name === walletName));
+
                 wallets.value.push({
+                    name: walletName,
                     address: publicKey,
+                    keypair: null,
                     listOpen: false,
                     isLoaded: false,
                     tokens: [],
@@ -35,7 +44,9 @@ export const useWalletListStore = defineStore('walletListTool', {
 });
 
 export interface WalletData {
+    name: string,
     address: PublicKey,
+    keypair: Keypair | null,
     isLoaded: boolean,
     listOpen: boolean,
     tokens: WalletTokenData[],

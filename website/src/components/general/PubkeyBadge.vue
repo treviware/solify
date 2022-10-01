@@ -3,16 +3,20 @@ import {PublicKey} from '@solana/web3.js';
 import {computed, ref} from 'vue';
 import {abbreviatePubkey} from 'src/utils/wallets';
 import {copyToClipboard} from 'quasar';
+import {useSolanaStore} from 'stores/solana';
+import {EXPLORER_DEFINITIONS} from 'src/constants/explorers';
+import {ExplorerAction} from 'src/types/explorers';
 
 const props = defineProps<{
     pubkey: PublicKey, showCopy?: boolean, long?: boolean, showMenu?: boolean;
 }>();
 
+const solanaStore = useSolanaStore();
+
 // REFS -----------------------------------------------------------------------
 const copied = ref(false);
 
 // COMPUTED -------------------------------------------------------------------
-
 const publicKey = computed(() => {
     if (props.long) {
         return props.pubkey.toBase58();
@@ -20,8 +24,13 @@ const publicKey = computed(() => {
         return abbreviatePubkey(props.pubkey);
     }
 });
+
 const finalShowCopy = computed(() => {
     return props.showMenu && (props.showCopy ?? true);
+});
+
+const explorer = computed(() => {
+    return EXPLORER_DEFINITIONS.find((e) => e.url === solanaStore.explorer)!;
 });
 
 // METHODS --------------------------------------------------------------------
@@ -39,12 +48,9 @@ function copy() {
     }, 2000);
 }
 
-function openSolscan() {
-    window.open(`https://solscan.io/account/${props.pubkey}`, '_blank');
-}
-
-function openSolanaExplorer() {
-    window.open(`https://explorer.solana.com/address/${props.pubkey}`, '_blank');
+function openInExplorer() {
+    const url = explorer.value.resolver(ExplorerAction.Address, props.pubkey.toBase58(), solanaStore.network);
+    window.open(url, '_blank');
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -72,20 +78,12 @@ function openSolanaExplorer() {
                             <q-item-label>Copy to clipboard</q-item-label>
                         </q-item-section>
                     </q-item>
-                    <q-item clickable @click="openSolscan" v-close-popup>
+                    <q-item clickable @click="openInExplorer" v-close-popup>
                         <q-item-section avatar>
                             <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
                         </q-item-section>
                         <q-item-section>
-                            <q-item-label>View in Solscan</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                    <q-item clickable @click="openSolanaExplorer" v-close-popup>
-                        <q-item-section avatar>
-                            <q-icon name="fa-solid fa-arrow-up-right-from-square" size="14px"/>
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>View in Solana Explorer</q-item-label>
+                            <q-item-label>View in {{ explorer.name }}</q-item-label>
                         </q-item-section>
                     </q-item>
                 </q-list>
@@ -96,12 +94,12 @@ function openSolanaExplorer() {
 
 <style lang="scss" scoped>
 .q-badge {
-    background-color: transparentize(#fff, 0.8);
+  background-color: transparentize(#ffffff, 0.8);
 }
 
 .menu-card {
-    &:deep(.q-item__section--avatar) {
-        min-width: 30px;
-    }
+  &:deep(.q-item__section--avatar) {
+    min-width: 30px;
+  }
 }
 </style>

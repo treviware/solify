@@ -1,21 +1,25 @@
 import {defineStore} from 'pinia';
-import {clusterApiUrl, Commitment, Connection} from '@solana/web3.js';
+import {Commitment, Connection} from '@solana/web3.js';
 import {validateUrl} from 'src/utils/urls';
-import {COMMITMENT_SETTINGS_KEY, NETWORK_SETTINGS_KEY, WALLET_AUTO_CONNECT} from 'src/constants';
+import {
+    COMMITMENT_SETTINGS_KEY, EXTRA_NETWORKS_SETTINGS_KEY, NETWORK_SETTINGS_KEY, PREFERRED_EXPLORER, WALLET_AUTO_CONNECT,
+} from 'src/constants';
 import {useRouterStore} from 'stores/router';
-
-const networks: Record<string, string> = {
-    'mainnet-beta': clusterApiUrl('mainnet-beta'),
-    'devnet': clusterApiUrl('devnet'),
-    'testnet': clusterApiUrl('testnet'),
-    'localnet': 'http://localhost:8899',
-};
+import {useLocalStorage} from '@vueuse/core';
+import {NETWORK_DEFINITIONS} from 'src/constants/networks';
+import {NetworkType} from 'src/types/networks';
+import {EXPLORER_DEFINITIONS} from 'src/constants/explorers';
 
 export const useSolanaStore = defineStore('solana', {
     state: () => ({
-        network: clusterApiUrl('mainnet-beta'),
-        commitment: 'confirmed' as Commitment,
-        walletAutoConnect: localStorage.getItem(WALLET_AUTO_CONNECT) === 'true',
+        network: useLocalStorage(NETWORK_SETTINGS_KEY,
+            NETWORK_DEFINITIONS.find(v => v.type === NetworkType.MainnetBeta)!.url),
+        extraNetworks: useLocalStorage<{
+            name: string; url: string;
+        }[]>(EXTRA_NETWORKS_SETTINGS_KEY, []),
+        commitment: useLocalStorage<Commitment>(COMMITMENT_SETTINGS_KEY, 'confirmed'),
+        walletAutoConnect: useLocalStorage(WALLET_AUTO_CONNECT, true),
+        explorer: useLocalStorage(PREFERRED_EXPLORER, EXPLORER_DEFINITIONS[0].url),
     }),
     getters: {
         connection: state => new Connection(state.network, state.commitment),
@@ -24,57 +28,35 @@ export const useSolanaStore = defineStore('solana', {
         async setNetwork(network: string) {
             const routerStore = useRouterStore();
 
-            for (const net in networks) {
-                const url = networks[net];
+            for (const net of NETWORK_DEFINITIONS) {
+                const netType = net.type;
+                const url = net.url;
 
-                if (net === network || url === network) {
+                if (netType === network || url === network) {
                     this.network = url;
 
-                    if (net === 'mainnet-beta') {
-                        localStorage.removeItem(NETWORK_SETTINGS_KEY);
-                    } else {
-                        localStorage.setItem(NETWORK_SETTINGS_KEY, net);
-                    }
-
-                    await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, net === 'mainnet-beta' ? undefined : net);
+                    await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY,
+                        netType === NetworkType.MainnetBeta ? undefined : netType);
                     return;
                 }
             }
 
             if (validateUrl(network)) {
                 this.network = network;
-                localStorage.setItem(NETWORK_SETTINGS_KEY, network);
 
                 await routerStore.setQueryEntry(NETWORK_SETTINGS_KEY, network);
             }
         },
         async setCommitment(commitment: string) {
-            console.log('setCommitment', commitment);
             const routerStore = useRouterStore();
 
             switch (commitment) {
                 case 'confirmed':
-                    this.commitment = commitment;
-                    localStorage.removeItem(COMMITMENT_SETTINGS_KEY);
-
-                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, undefined);
-                    break;
                 case 'processed':
                 case 'finalized':
                     this.commitment = commitment;
-                    localStorage.setItem(COMMITMENT_SETTINGS_KEY, commitment);
-
-                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, commitment);
+                    await routerStore.setQueryEntry(COMMITMENT_SETTINGS_KEY, undefined);
                     break;
-            }
-        },
-        async setWalletAutoConnect(autoConnect: boolean) {
-            this.walletAutoConnect = autoConnect;
-
-            if (autoConnect) {
-                localStorage.setItem(WALLET_AUTO_CONNECT, autoConnect.toString());
-            } else {
-                localStorage.removeItem(WALLET_AUTO_CONNECT);
             }
         },
     },

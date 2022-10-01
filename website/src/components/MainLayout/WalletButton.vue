@@ -15,9 +15,10 @@ const globalStore = useGlobalStore();
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 const pubkeyAbbreviation = computed(() => abbreviatePubkey(walletStore.publicKey.value ?? PublicKey.default));
+const installedWallets = computed(() => walletStore.wallets.value.filter(w => w.readyState === 'Installed'));
+const otherWallets = computed(() => walletStore.wallets.value.filter(w => w.readyState !== 'Installed'));
 
 // METHODS --------------------------------------------------------------------
-
 async function connect(wallet: Wallet) {
     if (wallet.readyState !== 'Installed') {
         window.open(wallet.url, '_blank');
@@ -82,24 +83,38 @@ async function openWallets() {
                     </q-item>
 
                     <template v-else-if="!walletStore.connecting.value">
-                        <q-item-label header class="q-py-sm q-px-md text-secondary text-caption text-bold">Connect:
-                        </q-item-label>
-                        <q-item v-for="w in walletStore.wallets.value"
-                                :key="w.name"
-                                clickable
-                                v-close-popup
-                                @click="connect(w)">
-                            <q-item-section avatar>
-                                <q-img :src="w.icon" height="20px" width="20px"/>
-                            </q-item-section>
-                            <q-item-section> {{ w.name }}</q-item-section>
-                            <q-item-section side v-if="w.readyState !== 'Installed'">
-                                <q-icon name="fa-solid fa-arrow-up-right-from-square"
-                                        size="10px"
-                                        class="q-ml-xs"
-                                        color="grey-4"/>
-                            </q-item-section>
-                        </q-item>
+                        <template v-if="installedWallets.length > 0">
+                            <q-item-label header class="q-py-sm q-px-md text-secondary text-caption text-bold">
+                                Available:
+                            </q-item-label>
+                            <q-item v-for="w in installedWallets"
+                                    :key="w.name"
+                                    clickable
+                                    v-close-popup
+                                    @click="connect(w)">
+                                <q-item-section avatar>
+                                    <q-img :src="w.icon" height="20px" width="20px"/>
+                                </q-item-section>
+                                <q-item-section> {{ w.name }}</q-item-section>
+                            </q-item>
+                        </template>
+                        <template v-if="otherWallets.length > 0">
+                            <q-item-label header class="q-py-sm q-px-md text-secondary text-caption text-bold">
+                                Not installed:
+                            </q-item-label>
+                            <q-item v-for="w in otherWallets" :key="w.name" clickable v-close-popup @click="connect(w)">
+                                <q-item-section avatar>
+                                    <q-img :src="w.icon" height="20px" width="20px"/>
+                                </q-item-section>
+                                <q-item-section> {{ w.name }}</q-item-section>
+                                <q-item-section side>
+                                    <q-icon name="fa-solid fa-arrow-up-right-from-square"
+                                            size="10px"
+                                            class="q-ml-xs"
+                                            color="grey-4"/>
+                                </q-item-section>
+                            </q-item>
+                        </template>
                     </template>
                 </q-list>
             </q-card>

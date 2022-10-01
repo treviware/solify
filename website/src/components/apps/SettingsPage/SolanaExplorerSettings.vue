@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import {useSolanaStore} from 'stores/solana';
+import {EXPLORER_DEFINITIONS} from 'src/constants/explorers';
 
 const solanaStore = useSolanaStore();
+
+const buttons = EXPLORER_DEFINITIONS;
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
 // METHODS --------------------------------------------------------------------
-function update() {
-    solanaStore.walletAutoConnect = !solanaStore.walletAutoConnect;
+function select(explorer: string) {
+    solanaStore.explorer = explorer;
 }
 
 // WATCHES --------------------------------------------------------------------
@@ -16,10 +19,18 @@ function update() {
 
 <template>
     <div>
-        <h6>Wallet connection</h6>
-        <p>Whether the wallet should auto-connect when the app loads or not.</p>
+        <h6>Preferred Explorer</h6>
+        <p>The preferred explorer will be used when navigating outside to inspect transactions or addresses:</p>
         <div class="row flex-center q-my-md gap-md">
-            <q-toggle :model-value="solanaStore.walletAutoConnect" @update:model-value="update"/>
+            <q-btn color="primary"
+                   no-caps
+                   :unelevated="solanaStore.explorer === button.url"
+                   :flat="solanaStore.explorer !== button.url"
+                   @click="select(button.url)"
+                   v-for="button in buttons"
+                   :key="button.name">
+                {{ button.name }}
+            </q-btn>
         </div>
     </div>
 </template>
