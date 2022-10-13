@@ -33,6 +33,13 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=8192
         run: yarn run build
 
+      # GitHub hack for 404 pages
+      - name: Copy index.html to 404.html
+        run: cp ./dist/spa/index.html ./dist/spa/404.html
+
+      - name: Add CNAME and .nojekyll
+        run: touch ./dist/spa/.nojekyll && echo "suri.domains" > ./dist/spa/CNAME
+
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@v4
         with:
