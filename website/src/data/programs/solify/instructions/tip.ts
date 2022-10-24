@@ -9,7 +9,7 @@ import {useWallet} from 'src/lib/WalletAdapter';
 
 const ACCOUNTS = [{
     id: 'source',
-    name: 'Tip payer account',
+    name: 'Payer account',
     description: 'The account that will pay the tip',
     signer: true,
     mutable: true,
@@ -18,7 +18,7 @@ const ACCOUNTS = [{
     },
 }, {
     id: 'destination',
-    name: 'Tip account',
+    name: 'Receiver account',
     description: 'The account that will receive the tip',
     signer: false,
     mutable: true,
@@ -32,8 +32,7 @@ const ACCOUNTS = [{
 const ARGUMENTS = [{
     id: 'lamports',
     name: 'Tip amount',
-    description: 'The amount of lamports to send as tip',
-    readonly: true,
+    description: 'The amount of lamports to send as tip. Defaults to 2x the network fee',
     data: {
         type: 'bps',
         defaultValue: TIP_AMOUNT_PER_TRANSACTION,
@@ -47,7 +46,7 @@ type ArgumentsType = Mutable<typeof ARGUMENTS>;
 export type SolifyProgramTipIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
 export const SOLIFY_PROGRAM_TIP_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
     name: 'Solify tip',
-    description: 'Sends a tip to Solify in order to maintain and improve its services. This tip is just 2x the network tip. This action is optional, so you can remove this instruction if you want',
+    description: 'Sends a tip to Solify in order to maintain and improve its services. This action is optional, so you can remove this instruction if you want.',
     accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 
