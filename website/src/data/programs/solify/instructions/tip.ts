@@ -4,13 +4,13 @@ import {
 } from 'src/types/programs/instructionDefinition';
 import {Mutable} from 'src/types/general';
 import {isPubkey} from 'src/types/filters';
-import {FEE_AMOUNT_PER_TRANSACTION, FEE_WALLET} from 'src/constants';
+import {FEE_WALLET, TIP_AMOUNT_PER_TRANSACTION} from 'src/constants';
 import {useWallet} from 'src/lib/WalletAdapter';
 
 const ACCOUNTS = [{
     id: 'source',
-    name: 'Fee payer account',
-    description: 'The account that will pay the fee',
+    name: 'Tip payer account',
+    description: 'The account that will pay the tip',
     signer: true,
     mutable: true,
     data: {
@@ -18,8 +18,8 @@ const ACCOUNTS = [{
     },
 }, {
     id: 'destination',
-    name: 'Fee account',
-    description: 'The account that will receive the fee',
+    name: 'Tip account',
+    description: 'The account that will receive the tip',
     signer: false,
     mutable: true,
     readonly: true,
@@ -31,12 +31,12 @@ const ACCOUNTS = [{
 
 const ARGUMENTS = [{
     id: 'lamports',
-    name: 'Fee amount',
-    description: 'The amount of lamports to charge as fee',
+    name: 'Tip amount',
+    description: 'The amount of lamports to send as tip',
     readonly: true,
     data: {
         type: 'bps',
-        defaultValue: FEE_AMOUNT_PER_TRANSACTION,
+        defaultValue: TIP_AMOUNT_PER_TRANSACTION,
         tokenAddress: PublicKey.default,
     },
 }] as const;
@@ -44,10 +44,10 @@ const ARGUMENTS = [{
 type AccountsType = Mutable<typeof ACCOUNTS>;
 type ArgumentsType = Mutable<typeof ARGUMENTS>;
 
-export type SolifyProgramFeeIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
-export const SOLIFY_PROGRAM_FEE_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
-    name: 'Solify Fee',
-    description: 'Sends a fee to Solify in order to maintain and improve its services. This fee is just 2x the network fee and you can remove this instruction if you want',
+export type SolifyProgramTipIxnArgs = ProgramIxnData<AccountsType, ArgumentsType>
+export const SOLIFY_PROGRAM_TIP_INSTRUCTION = defineInstruction<AccountsType, ArgumentsType>({
+    name: 'Solify tip',
+    description: 'Sends a tip to Solify in order to maintain and improve its services. This tip is just 2x the network tip. This action is optional, so you can remove this instruction if you want',
     accounts: ACCOUNTS as AccountsType,
     arguments: ARGUMENTS as ArgumentsType,
 

@@ -5,7 +5,7 @@ import {storeToRefs} from 'pinia';
 import {computed} from 'vue';
 import {PublicKey} from '@solana/web3.js';
 import {useWallet} from 'src/lib/WalletAdapter';
-import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
+import {SOLIFY_PROGRAM_TIP_INSTRUCTION} from 'src/data/programs/solify/instructions/tip';
 
 const wallet = useWallet();
 const txBuilderApp = useTxBuilderApp();
@@ -38,8 +38,8 @@ function addTransaction(index: number) {
 
             transactions.value.splice(index, 0, {
                 name,
-                instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
-                data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
+                instructions: [SOLIFY_PROGRAM_TIP_INSTRUCTION],
+                data: [SOLIFY_PROGRAM_TIP_INSTRUCTION.instantiate(SOLIFY_PROGRAM_TIP_INSTRUCTION)],
                 payer,
             });
 
@@ -96,8 +96,8 @@ function addTransaction(index: number) {
 
 <style lang="scss" scoped>
 .tx-v-bar {
-  width: 1px;
-  background-color: $grey-9;
-  height: 20px;
+    width: 1px;
+    background-color: $grey-9;
+    height: 20px;
 }
 </style>
