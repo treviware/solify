@@ -21,8 +21,19 @@ export type DrawerButton =
 export type DrawerAppButton =
     DrawerButtonBase
     & {
-    pathName: string; pathAlias?: string[];
+    pathName: string; children?: DrawerAppButtonChild[];
 };
+
+export interface DrawerAppButtonChild {
+    name: string;
+    pathName: string;
+    children?: DrawerAppButtonChild[];
+}
+
+export interface DrawerAppBreadcrumbsItem {
+    name: string;
+    pathName: string;
+}
 
 export type DrawerToolButton =
     DrawerButtonBase
