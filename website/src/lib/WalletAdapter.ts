@@ -1,4 +1,4 @@
-import { App, computed, ComputedRef, ref, Ref, ShallowRef, shallowRef, watch, watchEffect } from "vue";
+import { App, computed, ComputedRef, ref, Ref, ShallowRef, shallowRef, watch, watchEffect } from 'vue';
 import {
   Adapter,
   MessageSignerWalletAdapter,
@@ -8,9 +8,9 @@ import {
   WalletNotConnectedError,
   WalletNotReadyError,
   WalletReadyState
-} from "@solana/wallet-adapter-base";
-import type { Connection, PublicKey, Transaction, TransactionSignature } from "@solana/web3.js";
-import { useLocalStorage } from "@vueuse/core";
+} from '@solana/wallet-adapter-base';
+import type { Connection, PublicKey, Transaction, TransactionSignature } from '@solana/web3.js';
+import { useLocalStorage } from '@vueuse/core';
 
 let walletStore: WalletStore | null = null;
 
@@ -32,7 +32,7 @@ export const useWallet = (): WalletStore => {
     return walletStore;
   }
   throw new WalletNotInitializedError(
-    "Wallet not initialized. Please use the `initWallet` method to initialize the wallet.");
+    'Wallet not initialized. Please use the `initWallet` method to initialize the wallet.');
 };
 
 // ----------------------------------------------------------------------------
@@ -67,16 +67,16 @@ export class WalletStore {
   onError: (error: WalletError) => void;
 
   // Methods.
-  signTransaction: ComputedRef<SignerWalletAdapter["signTransaction"] | undefined>;
-  signAllTransactions: ComputedRef<SignerWalletAdapter["signAllTransactions"] | undefined>;
-  signMessage: ComputedRef<MessageSignerWalletAdapter["signMessage"] | undefined>;
+  signTransaction: ComputedRef<SignerWalletAdapter['signTransaction'] | undefined>;
+  signAllTransactions: ComputedRef<SignerWalletAdapter['signAllTransactions'] | undefined>;
+  signMessage: ComputedRef<MessageSignerWalletAdapter['signMessage'] | undefined>;
 
   // CONSTRUCTORS -----------------------------------------------------------
   constructor(props: WalletStoreProps) {
     // Props.
     this.wallets = shallowRef(props.wallets || []);
     this.autoConnect = ref(props.autoConnect || false);
-    this.storage = useLocalStorage(props.localStorageKey || "selectedWallet", null);
+    this.storage = useLocalStorage(props.localStorageKey || 'selectedWallet', null);
 
     // Data.
     this.wallet = shallowRef<Wallet | null>(null);
@@ -95,7 +95,7 @@ export class WalletStore {
     // Methods.
     this.signTransaction = computed(() => {
       const _wallet = this.wallet.value;
-      if (!(_wallet && "signTransaction" in _wallet)) {
+      if (!(_wallet && 'signTransaction' in _wallet)) {
         return;
       }
 
@@ -109,7 +109,7 @@ export class WalletStore {
     });
     this.signAllTransactions = computed(() => {
       const _wallet = this.wallet.value;
-      if (!(_wallet && "signAllTransactions" in _wallet)) {
+      if (!(_wallet && 'signAllTransactions' in _wallet)) {
         return;
       }
 
@@ -123,7 +123,7 @@ export class WalletStore {
     });
     this.signMessage = computed(() => {
       const _wallet = this.wallet.value;
-      if (!(_wallet && "signMessage" in _wallet)) {
+      if (!(_wallet && 'signMessage' in _wallet)) {
         return;
       }
 
@@ -155,23 +155,23 @@ export class WalletStore {
         return;
       }
 
-      _wallet.on("readyStateChange", onReadyStateChange);
-      _wallet.on("connect", onConnect);
-      _wallet.on("disconnect", onDisconnect);
-      _wallet.on("error", this.onError);
+      _wallet.on('readyStateChange', onReadyStateChange);
+      _wallet.on('connect', onConnect);
+      _wallet.on('disconnect', onDisconnect);
+      _wallet.on('error', this.onError);
 
       onInvalidate(() => {
-        _wallet.off("readyStateChange", onReadyStateChange);
-        _wallet.off("connect", onConnect);
-        _wallet.off("disconnect", onDisconnect);
-        _wallet.off("error", this.onError);
+        _wallet.off('readyStateChange', onReadyStateChange);
+        _wallet.off('connect', onConnect);
+        _wallet.off('disconnect', onDisconnect);
+        _wallet.off('error', this.onError);
       });
     });
 
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       // Ensure the wallet listeners are invalidated before refreshing the page.
       // This is because Vue does not unmount components when the page is being refreshed.
-      window.addEventListener("unload", invalidateListeners);
+      window.addEventListener('unload', invalidateListeners);
     }
 
     // Handle autoconnect.
@@ -224,7 +224,7 @@ export class WalletStore {
     }
 
     if (!this.ready.value) {
-      window.open(this.wallet.value.url, "_blank");
+      window.open(this.wallet.value.url, '_blank');
 
       this.throwError(new WalletNotReadyError());
     }
@@ -291,9 +291,9 @@ function setWallet(newWallet: Wallet | null, self: WalletStore) {
 // ----------------------------------------------------------------------------
 
 export class WalletNotSelectedError extends WalletError {
-  name = "WalletNotSelectedError";
+  name = 'WalletNotSelectedError';
 }
 
 export class WalletNotInitializedError extends WalletError {
-  name = "WalletNotSelectedError";
+  name = 'WalletNotSelectedError';
 }
