@@ -29,12 +29,6 @@ const filteredPrograms = computed(() => programExplorerAppStore.programs.filter(
 }) as ProgramDefinition<any, any>[]);
 
 // METHODS --------------------------------------------------------------------
-function goBack() {
-    router.push({
-        name: 'Apps',
-    });
-}
-
 // WATCHES --------------------------------------------------------------------
 watch(search, async (search) => {
     await routerStore.setQueryEntry('search', search === '' ? undefined : search);
@@ -55,15 +49,7 @@ onBeforeMount(() => {
     <div class="q-pa-lg">
         <div class="viewport-width">
             <div class="row justify-between items-end q-mb-xl">
-                <h3 class="q-mb-xs">
-                    <q-btn dense
-                           flat
-                           icon="fa-solid fa-chevron-left"
-                           round
-                           class="rounded-borders q-mr-sm"
-                           @click="goBack"/>
-                    Programs
-                </h3>
+                <h3 class="q-mb-xs">Programs</h3>
                 <SearchBar v-model="search" placeholder="Search program" :debounce="300"/>
             </div>
             <div class="row justify-start items-stretch gap-md" :class="{'justify-center': globalStore.isMobile}">

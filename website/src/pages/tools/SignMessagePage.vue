@@ -35,7 +35,6 @@ const signatureError = computed(() => {
         return 'This signature belongs to another message';
     }
 
-    console.log(wallet.publicKey.value?.toBase58(), signaturePubkey.value?.toBase58());
     if (wallet.publicKey.value?.toBase58() !== signaturePubkey.value?.toBase58()) {
         return 'This signature belongs to another wallet';
     }
