@@ -1,14 +1,21 @@
 <script lang="ts" setup>
 import LeftDrawerMenuButton from 'components/MainLayout/LeftDrawerMenuButton.vue';
-import {APP_BUTTONS} from 'src/constants/apps';
 import {useMenuStore} from 'stores/menu';
 import {SOCIAL_LINKS} from 'src/constants/social';
+import {MENU_BUTTONS} from 'src/constants/menu';
+import {computed} from 'vue';
 
 const menuStore = useMenuStore();
-const appButtons = APP_BUTTONS;
 
 // REFS -----------------------------------------------------------------------
 // COMPUTED -------------------------------------------------------------------
+const menuButtons = computed(() => MENU_BUTTONS.map(b => {
+    let obj = {...b};
+    delete obj.children;
+
+    return obj;
+}));
+
 // METHODS --------------------------------------------------------------------
 function openLink(link: string) {
     window.open(link, '_blank');
@@ -33,7 +40,7 @@ function openLink(link: string) {
             <q-space/>
             <q-list>
                 <LeftDrawerMenuButton v-bind="button"
-                                      v-for="button in appButtons"
+                                      v-for="button in menuButtons"
                                       :key="button.name"></LeftDrawerMenuButton>
             </q-list>
             <q-space/>

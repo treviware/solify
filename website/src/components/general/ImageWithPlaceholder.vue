@@ -22,5 +22,5 @@ function onError() {
 </script>
 
 <template>
-    <q-img :src="imgSrc" @error="onError"/>
+    <q-img no-transition :src="imgSrc" @error="onError"/>
 </template>

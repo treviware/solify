@@ -74,6 +74,16 @@ function moveToNextTransaction() {
         <div class="q-pa-sm full-width">
             <div class="row items-center q-px-md">
                 <div class="ellipsis text-bold">#{{ index + 1 }} {{ instruction.name }}</div>
+                <div class="relative-position">
+                    <q-icon name="fa-regular fa-circle-question" class="q-ml-xs cursor-pointer"/>
+                    <q-tooltip class="bg-secondary text-dark"
+                               style="font-size: 12px"
+                               anchor="bottom middle"
+                               self="top middle"
+                               max-width="250px">
+                        {{ instruction.description }}
+                    </q-tooltip>
+                </div>
                 <q-space/>
                 <div class="row gap-sm">
                     <q-btn dense flat icon="fa-solid fa-chevron-up" size="sm" @click="moveUp" v-if="canMoveUp"/>
@@ -101,7 +111,6 @@ function moveToNextTransaction() {
                     <q-btn dense flat icon="fa-solid fa-trash" size="sm" color="negative" @click="remove"/>
                 </div>
             </div>
-            <div class="text-caption text-bold q-px-md">{{ instruction.description }}</div>
             <div v-for="account in instruction.accounts" :key="account.id">
                 <InstructionArgumentBox :argument="account" :data="data"/>
             </div>
@@ -114,6 +123,6 @@ function moveToNextTransaction() {
 
 <style lang="scss" scoped>
 .ixn-box {
-  border: 1px solid $grey-9;
+    border: 1px solid $grey-9;
 }
 </style>

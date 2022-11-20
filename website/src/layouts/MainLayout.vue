@@ -7,7 +7,10 @@ import NetworkButton from 'components/MainLayout/NetworkButton.vue';
 import WalletButton from 'components/MainLayout/WalletButton.vue';
 import {LEFT_MENU_WIDTH} from 'src/constants';
 import {useGlobalStore} from 'stores/global';
+import {useRoute} from 'vue-router';
+import {getBreadcrumbsForPathName} from 'src/constants/menu';
 
+const route = useRoute();
 const rightDrawerStore = useRightDrawerStore();
 const globalStore = useGlobalStore();
 
@@ -23,6 +26,8 @@ const paddingRight = computed(() => {
 
     return rightDrawerStore.maxSize + 'px';
 });
+
+const breadcrumbs = computed(() => getBreadcrumbsForPathName(route.name as string));
 
 // METHODS --------------------------------------------------------------------
 // WATCHES --------------------------------------------------------------------
@@ -44,8 +49,15 @@ const paddingRight = computed(() => {
                     <div class="text-bold">
                         {{ globalStore.currentAppButton.headerName ?? globalStore.currentAppButton.name }}
                     </div>
-                    <div class="text-caption text-bold ellipsis">
-                        {{ globalStore.currentAppButton.headerDescription ?? globalStore.currentAppButton.description }}
+                    <div class="text-caption text-bold overflow-hidden">
+                        <q-breadcrumbs>
+                            <q-breadcrumbs-el v-for="(breadcrumb, i) in breadcrumbs"
+                                              :icon="i === 0 ? 'fa-solid fa-house' : undefined"
+                                              :label="breadcrumb.name"
+                                              :to="{name: breadcrumb.pathName}"
+                                              :key="breadcrumb.pathName"
+                                              class="no-wrap"/>
+                        </q-breadcrumbs>
                     </div>
                 </q-toolbar-title>
 
@@ -105,5 +117,11 @@ const paddingRight = computed(() => {
 .main-layout-page:deep(.q-scrollarea__content) {
     max-width: 100%;
     height: 0;
+}
+
+.q-breadcrumbs {
+    :deep(> div) {
+        flex-wrap: nowrap;
+    }
 }
 </style>

@@ -9,26 +9,30 @@ const routes: RouteRecordRaw[] = [{
             name: 'Tools',
         },
     }, {
-        name: 'TxBuilder',
-        path: '/builder',
-        component: () => import('pages/apps/TxBuilderPage.vue'),
-    }, {
-        name: 'ProgramExplorer',
-        path: '/programs',
-        component: () => import('pages/apps/ProgramExplorerPage/ProgramExplorerPage.vue'),
-    }, {
-        name: 'Program',
-        path: '/program/:programId',
-        props: true,
-        component: () => import('pages/apps/ProgramExplorerPage/ProgramPage.vue'),
+        name: 'Apps',
+        path: '/apps',
+        component: () => import('pages/AppsPage.vue'),
     }, {
         name: 'Tools',
         path: '/tools',
-        component: () => import('pages/apps/ToolsPage.vue'),
+        component: () => import('pages/ToolsPage.vue'),
     }, {
         name: 'Settings',
         path: '/settings',
-        component: () => import('pages/apps/SettingsPage.vue'),
+        component: () => import('pages/SettingsPage.vue'),
+    }, {
+        name: 'TxBuilderApp',
+        path: '/apps/tx/builder',
+        component: () => import('pages/apps/TxBuilderPage.vue'),
+    }, {
+        name: 'ProgramExplorer',
+        path: '/apps/programs',
+        component: () => import('pages/apps/ProgramExplorerPage/ProgramExplorerPage.vue'),
+    }, {
+        name: 'Program',
+        path: '/apps/programs/:programId',
+        props: true,
+        component: () => import('pages/apps/ProgramExplorerPage/ProgramPage.vue'),
     }],
 },
 

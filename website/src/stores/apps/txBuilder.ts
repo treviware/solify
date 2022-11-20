@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {TransactionGroupDefinition} from 'src/types/transactions/groupDefinition';
 import {PublicKey, Transaction} from '@solana/web3.js';
 import {ProgramIxnDefinition} from 'src/types/programs/instructionDefinition';
-import {SOLIFY_PROGRAM_FEE_INSTRUCTION} from 'src/data/programs/solify/instructions/fee';
+import {SOLIFY_PROGRAM_TIP_INSTRUCTION} from 'src/data/programs/solify/instructions/tip';
 import {useWallet} from 'src/lib/WalletAdapter';
 
 let groupNumber = 2;
@@ -15,8 +15,8 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
                 name: 'Group 1',
                 transactions: [{
                     name: 'Transaction 1',
-                    instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
-                    data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
+                    instructions: [SOLIFY_PROGRAM_TIP_INSTRUCTION],
+                    data: [SOLIFY_PROGRAM_TIP_INSTRUCTION.instantiate(SOLIFY_PROGRAM_TIP_INSTRUCTION)],
                     payer: wallet.publicKey.value ?? PublicKey.default,
                 }],
             }] as TransactionGroupDefinition[],
@@ -57,8 +57,8 @@ export const useTxBuilderApp = defineStore('txBuilderApp', {
                 name: `Group ${groupNumber}`,
                 transactions: [{
                     name: 'Transaction 1',
-                    instructions: [SOLIFY_PROGRAM_FEE_INSTRUCTION],
-                    data: [SOLIFY_PROGRAM_FEE_INSTRUCTION.instantiate(SOLIFY_PROGRAM_FEE_INSTRUCTION)],
+                    instructions: [SOLIFY_PROGRAM_TIP_INSTRUCTION],
+                    data: [SOLIFY_PROGRAM_TIP_INSTRUCTION.instantiate(SOLIFY_PROGRAM_TIP_INSTRUCTION)],
                     payer: wallet.publicKey.value ?? PublicKey.default,
                 }],
             });

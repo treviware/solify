@@ -66,16 +66,24 @@ function updatePubkeyValue(value: PublicKey) {
 
 <template>
     <div class="q-px-md q-mt-md">
-        <div class="col">
-            <div class="text-secondary text-caption text-bold row justify-between">
-                <div>{{ argument.name }}</div>
-                <div class="row gap-x-sm">
-                    <q-badge color="blue" text-color="white" v-if="argument.mutable" class="text-bold">Mutable</q-badge>
-                    <q-badge color="secondary" text-color="dark" v-if="argument.signer" class="text-bold">Signer
-                    </q-badge>
-                </div>
+        <div class="text-secondary text-caption text-bold row q-mb-sm">
+            <div>{{ argument.name }}</div>
+            <div class="relative-position">
+                <q-icon name="fa-regular fa-circle-question" class="q-ml-xs cursor-pointer"/>
+                <q-tooltip class="bg-secondary text-dark"
+                           style="font-size: 12px"
+                           anchor="bottom middle"
+                           self="top middle"
+                           max-width="250px">
+                    {{ argument.description }}
+                </q-tooltip>
             </div>
-            <div class="text-caption text-bold" v-if="argument.description">{{ argument.description }}</div>
+            <q-space/>
+            <div class="row gap-x-sm">
+                <q-badge color="blue" text-color="white" v-if="argument.mutable" class="text-bold">Mutable</q-badge>
+                <q-badge color="secondary" text-color="dark" v-if="argument.signer" class="text-bold">Signer
+                </q-badge>
+            </div>
         </div>
         <div v-if="argument.data.type === 'bool'">
             <q-toggle v-model="dataMut[argument.id]" dense :disable="argument.readonly"/>
