@@ -74,11 +74,16 @@ async function sendTokens() {
 
       let txs = await wallet.signAllTransactions.value!(transactions);
 
-      let txIds = await Promise.all(txs.map(tx => solanaStore.connection.sendRawTransaction(tx.serialize())));
+      let txIds = await Promise.all(txs.map(async tx => {
+        let txId = await solanaStore.connection.sendRawTransaction(tx.serialize());
+        await solanaStore.connection.confirmTransaction(txId, 'confirmed');
+
+        return txId;
+      }));
       console.log('Sent transactions', txIds);
 
       quasar.notify({
-        message: 'STEP 1) SPL tokens sent!',
+        message: 'SPL tokens sent!',
         color: 'positive'
       });
     }

@@ -1,47 +1,42 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import PubkeyInput from 'components/general/input/PubkeyInput.vue';
-import { useCloseEmptyAccountsToolStore } from 'stores/tools/closeEmptyAccounts';
 import { processUriStoreDataOnMounted, writeToolParamsIntoUri } from 'src/utils/tools';
-import { deriveMetadataAccountKey, loadMetadataAccounts, loadWalletTokens } from 'src/utils/solana';
-import { useBlockchainStore } from 'stores/blockchain';
 import { useQuasar } from 'quasar';
 import { useSolanaStore } from 'stores/solana';
+import { storeToRefs } from 'pinia';
+import { useBurnTokensToolStore } from 'stores/tools/burnTokens';
 import { WalletTokenData } from 'stores/tools/walletList';
+import { deriveMetadataAccountKey, loadMetadataAccounts, loadWalletTokens } from 'src/utils/solana';
 import axios, { AxiosResponse } from 'axios';
-import EmptyAccountInfo from 'components/tools/CloseEmptyAccountsPage/EmptyAccountInfo.vue';
+import { useBlockchainStore } from 'stores/blockchain';
+import AccountInfo from 'components/tools/BurnTokensPage/AccountInfo.vue';
+import BN from 'bn.js';
+import { createBurnInstruction, createCloseAccountInstruction } from '@solana/spl-token';
 import { useWallet } from 'src/lib/WalletAdapter';
-import { createCloseAccountInstruction } from '@solana/spl-token';
 
 const quasar = useQuasar();
-const wallet = useWallet();
+const walletStore = useWallet();
 const solanaStore = useSolanaStore();
-const closeEmptyAccountsToolStore = useCloseEmptyAccountsToolStore();
 const blockchainStore = useBlockchainStore();
+const burnTokensToolStore = useBurnTokensToolStore();
 
 // REFS -----------------------------------------------------------------------
 const loading = ref(false);
-const newWallet = ref(closeEmptyAccountsToolStore.wallet ?? '');
-const accounts = ref<WalletTokenData[]>([]);
-const selectedAccounts = ref<PublicKey[]>([]);
 const loaded = ref(false);
+const selectedWallet = ref<PublicKey | null>(null);
+const accounts = ref<(WalletTokenData & { burn: BN })[]>([]);
+const {
+  wallet
+} = storeToRefs(burnTokensToolStore);
 
 // COMPUTED -------------------------------------------------------------------
-const newWalletAsPubkey = computed(() => {
-  try {
-    return new PublicKey(newWallet.value);
-  } catch (e) {
-    return null;
-  }
-});
-const selectedWallet = computed(() => closeEmptyAccountsToolStore.wallet);
-
 // METHODS --------------------------------------------------------------------
 async function loadData() {
   loading.value = true;
 
-  closeEmptyAccountsToolStore.wallet = newWalletAsPubkey.value;
+  selectedWallet.value = wallet.value;
   accounts.value.splice(0, accounts.value.length);
 
   try {
@@ -65,7 +60,7 @@ async function loadData() {
         return;
       }
 
-      let mappedAccounts: WalletTokenData[] = response.filter(v => Number(v.amount) === 0).map(v => ({
+      let mappedAccounts: WalletTokenData[] = response.map(v => ({
         account: v
       }));
 
@@ -102,8 +97,10 @@ async function loadData() {
         }
       }
 
-      accounts.value = mappedAccounts;
-      selectedAccounts.value = mappedAccounts.map(v => v.account.address);
+      accounts.value = mappedAccounts.map(v => ({
+        ...v,
+        burn: new BN(0)
+      }));
       loaded.value = true;
     } catch (e) {
       console.error('Error loading wallet data', e);
@@ -118,34 +115,44 @@ async function loadData() {
   }
 }
 
-async function closeAccounts() {
+async function burnTokens() {
   loading.value = true;
 
   try {
-    let transaction = new Transaction();
+    // Load token accounts.
+    let tokens = accounts.value.filter(v => v.burn.gt(new BN(0)));
 
-    for (let i of selectedAccounts.value) {
-      transaction.add(createCloseAccountInstruction(i, selectedWallet.value!, selectedWallet.value!));
+    if (tokens.length > 0) {
+      // Create txs.
+      let transaction = new Transaction();
+      transaction.feePayer = wallet.value!;
+
+      for (let t of tokens) {
+        transaction.add(createBurnInstruction(t.account.address, t.account.mint, wallet.value!, t.burn.toNumber()));
+
+        let amount = new BN(t.account.amount.toString());
+        if (t.burn.eq(amount)) {
+          transaction.add(createCloseAccountInstruction(t.account.address, wallet.value!, wallet.value!));
+        }
+      }
+
+      transaction.recentBlockhash = (await solanaStore.connection.getLatestBlockhash()).blockhash;
+
+      let tx = await walletStore.signTransaction.value!(transaction);
+      let txId = await solanaStore.connection.sendRawTransaction(tx.serialize());
+      console.log('Sent transaction', txId);
+
+      quasar.notify({
+        message: 'Tokens burned!',
+        color: 'positive'
+      });
+
+      loadData();
     }
-
-    transaction.recentBlockhash = (await solanaStore.connection.getLatestBlockhash()).blockhash;
-    transaction.feePayer = selectedWallet.value!;
-
-    let tx = await wallet.signTransaction.value!(transaction);
-    let txid = await solanaStore.connection.sendRawTransaction(tx.serialize());
-    console.log('Sent transaction', txid);
-
-    accounts.value = accounts.value.filter(v => !selectedAccounts.value.includes(v.account.address));
-    selectedAccounts.value.splice(0, selectedAccounts.value.length);
-
-    quasar.notify({
-      message: 'Accounts closed!',
-      color: 'positive'
-    });
   } catch (e) {
-    console.error('Error closing accounts', e);
+    console.error('Error burning tokens', e);
     quasar.notify({
-      message: 'Error closing accounts',
+      message: 'Error burning tokens',
       color: 'negative'
     });
   }
@@ -155,30 +162,30 @@ async function closeAccounts() {
 
 function writeToUri() {
   return writeToolParamsIntoUri({
-    wallet: selectedWallet.value ?? undefined
+    wallet: wallet.value ?? undefined
   });
 }
 
-function select(account: WalletTokenData) {
-  let position = selectedAccounts.value.indexOf(account.account.address);
-  if (position === -1) {
-    selectedAccounts.value.push(account.account.address);
+function updateBurnAmount(account: WalletTokenData & { burn: BN }, amount: BN) {
+  let max = new BN(account.account.amount.toString());
+  if (amount.lte(max)) {
+    account.burn = amount;
   } else {
-    selectedAccounts.value.splice(position, 1);
+    account.burn = max;
   }
 }
 
 // WATCHES --------------------------------------------------------------------
-watch(selectedWallet, () => {
+watch(wallet, () => {
   writeToUri();
 });
 
 // HOOKS ----------------------------------------------------------------------
 processUriStoreDataOnMounted(async (query) => {
-  const queryWallet = query.wallet;
-  if (queryWallet) {
+  const walletQuery = query.wallet;
+  if (walletQuery) {
     try {
-      closeEmptyAccountsToolStore.wallet = new PublicKey(queryWallet);
+      wallet.value = new PublicKey(walletQuery);
     } catch (e) {
     }
   }
@@ -189,9 +196,8 @@ processUriStoreDataOnMounted(async (query) => {
 
 <template>
   <div class="q-px-lg q-py-md">
-    <p>Select the wallet whose accounts you want to close, then click the load button to load the token accounts from
-      Solana.</p>
-    <PubkeyInput v-model="newWallet" dense show-wallet-button />
+    <div class="text-secondary text-caption text-bold q-mt-md">Wallet</div>
+    <PubkeyInput v-model="wallet" dense show-wallet-button />
     <div class="relative-position">
       <q-separator class="q-my-lg" />
       <q-btn dense
@@ -200,11 +206,11 @@ processUriStoreDataOnMounted(async (query) => {
              unelevated
              no-caps
              :loading="loading"
-             :disable="!newWalletAsPubkey"
+             :disable="!wallet"
              size="md"
              class="q-px-sm q-py-none absolute-center"
              @click="loadData">
-        Load accounts
+        Load token accounts
       </q-btn>
     </div>
     <template v-if="loaded">
@@ -213,11 +219,10 @@ processUriStoreDataOnMounted(async (query) => {
       </template>
       <template v-else>
         <p>Select the accounts to close:</p>
-        <EmptyAccountInfo v-for="account in accounts"
-                          :account="account"
-                          :key="account.account.address.toBase58()"
-                          :selected-accounts="selectedAccounts"
-                          @select="select(account)" />
+        <AccountInfo v-for="account in accounts"
+                     :account="account"
+                     :key="account.account.address.toBase58()"
+                     @update="updateBurnAmount(account, $event)" />
         <div class="flex flex-center">
           <q-btn dense
                  color="secondary"
@@ -225,11 +230,10 @@ processUriStoreDataOnMounted(async (query) => {
                  unelevated
                  no-caps
                  :loading="loading"
-                 :disable="selectedAccounts.length === 0"
                  size="md"
                  class="q-px-sm q-py-none"
-                 @click="closeAccounts">
-            Close accounts
+                 @click="burnTokens">
+            Burn tokens
           </q-btn>
         </div>
       </template>

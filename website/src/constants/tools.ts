@@ -11,6 +11,7 @@ import SignMessagePage from 'pages/tools/SignMessagePage.vue';
 import VerifySignaturePage from 'pages/tools/VerifySignaturePage.vue';
 import CloseEmptyAccountsPage from 'pages/tools/CloseEmptyAccountsPage.vue';
 import SendColdWalletPage from 'pages/tools/SendColdWalletPage.vue';
+import BurnTokensPage from 'pages/tools/BurnTokensPage.vue';
 import { ToolCategory } from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -86,6 +87,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
     description: 'Closes empty token accounts to recover the rent',
     rightDrawerOption: RightDrawerState.CloseEmptyAccounts,
     component: CloseEmptyAccountsPage
+  }, {
+    icon: 'fa-solid fa-fire',
+    name: 'Burn SPL tokens',
+    description: 'Burns SPL tokens from a given account',
+    rightDrawerOption: RightDrawerState.BurnTokens,
+    component: BurnTokensPage
   }]
 }, {
   name: 'Currencies',
