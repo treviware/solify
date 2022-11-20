@@ -13,6 +13,7 @@ export enum RightDrawerState {
   SignMessage = 'sign-message',
   VerifySignature = 'verify-signature',
   CloseEmptyAccounts = 'close-empty-accounts',
+  SendColdWallet = 'send-cold-wallet',
 }
 
 export type DrawerButton =

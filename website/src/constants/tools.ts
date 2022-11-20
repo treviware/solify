@@ -10,6 +10,7 @@ import VanityAddressPage from 'pages/tools/VanityAddressPage.vue';
 import SignMessagePage from 'pages/tools/SignMessagePage.vue';
 import VerifySignaturePage from 'pages/tools/VerifySignaturePage.vue';
 import CloseEmptyAccountsPage from 'pages/tools/CloseEmptyAccountsPage.vue';
+import SendColdWalletPage from 'pages/tools/SendColdWalletPage.vue';
 import { ToolCategory } from 'src/types/tools';
 
 export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
@@ -63,6 +64,12 @@ export const TOOL_BUTTONS_BY_CATEGORY: ToolCategory[] = [{
     description: 'Verifies whether a signature belongs to a wallet or not',
     rightDrawerOption: RightDrawerState.VerifySignature,
     component: VerifySignaturePage
+  }, {
+    icon: 'fa-solid fa-box-archive',
+    name: 'Send to Cold Wallet',
+    description: 'Sends all SPL tokens and SOL from one wallet to another',
+    rightDrawerOption: RightDrawerState.SendColdWallet,
+    component: SendColdWalletPage
   }]
 }, {
   name: 'SPL Token Tools',
