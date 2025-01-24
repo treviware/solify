@@ -1,3 +1,5 @@
+> THIS PROJECT IS NOT MAINTAINED ANYMORE
+
 # Solify - The toolbox for Solana
 
 Solify is a set of tools (small utilities) and apps (fully fledged utilities) for Solana that will make any developer or
